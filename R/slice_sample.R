@@ -4,6 +4,10 @@
 #' @param k the realized value from the Poisson distribution
 #' @param mean the prior mean
 #' @param precision the prior precision
+#' @param ... Other arguments (not used)
+#' @param w The width of each expansion (to the right and left each)
+#' @param nexpand The maximum number of expansions (to the right and left each)
+#' @param ncontract The maximum number of contractions. If this is exceeded, the original value is returned
 #' @details
 #'   This function slice samples \code{L} conditional on \code{k}, \code{mean}, and \code{precision},
 #'   where \code{k ~ Pois(exp(L))} and \code{L ~ N(mean, precision)}.
@@ -14,15 +18,15 @@
 #'   The internals are defined in C++.
 #' @seealso \code{\link{ss_binom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
 #' @export
-ss_pois_reg <- function(L, k, mean, precision) {
+ss_pois_reg <- function(L, k, mean, precision, ..., w = 1, nexpand = 10, ncontract = 100) {
   if(length(L) != length(k)) stop("'L' and 'k' must have the same length")
   mean <- check_one_or_all(mean, length(L))
 
   if(is.matrix(precision)) {
-    slice_sample_pois_mv(L, k, mean, precision)
+    slice_sample_pois_mv(L, k, mean, precision, w = w, nexpand = nexpand, ncontract = ncontract)
   } else {
     precision <- check_one_or_all(precision, length(L))
-    slice_sample_pois(L, k, mean, precision)
+    slice_sample_pois(L, k, mean, precision, w = w, nexpand = nexpand, ncontract = ncontract)
   }
 }
 
@@ -31,9 +35,7 @@ ss_pois_reg <- function(L, k, mean, precision) {
 #'
 #' @param p the previous iteration of the probability
 #' @param k the realized value from the binomial distribution
-#' @param n the number of trials
-#' @param mean the prior mean
-#' @param precision the prior precision
+#' @inheritParams ss_pois_reg
 #' @details
 #'   This function slice samples \code{p} conditional on \code{k}, \code{n}, \code{mean}, and \code{precision},
 #'   where \code{k ~ Binom(n, p)} and \code{p ~ logitN(mean, precision)}.
@@ -43,10 +45,10 @@ ss_pois_reg <- function(L, k, mean, precision) {
 #'   The internals are defined in C++.
 #' @seealso \code{\link{ss_pois_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
 #' @export
-ss_binom_reg <- function(p, k, mean, precision) {
+ss_binom_reg <- function(p, k, mean, precision, ..., w = 1, nexpand = 10, ncontract = 100) {
   if(length(p) != length(k) || length(p) != length(n)) stop("'p' and 'k' and 'n' must all have the same length")
   mean <- check_one_or_all(mean, length(p))
 
   precision <- check_one_or_all(precision, length(p))
-  slice_sample_binom(L, k, n, mean, precision)
+  slice_sample_binom(L, k, n, mean, precision, w = w, nexpand = nexpand, ncontract = ncontract)
 }

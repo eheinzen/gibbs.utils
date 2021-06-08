@@ -16,23 +16,23 @@ double logit(double p) {
 }
 
 // [[Rcpp::export]]
-double one_binom_slice(double p, double k, double n, double mean, double precision) {
-  double w = 1.0;
+double one_binom_slice(double p, double k, double n, double mean, double precision, double w, int nexpand, int ncontract) {
   double y0 = binom_LL(p, k, n, mean, precision) - R::rexp(1.0);
   double left = logit(p) - w;
   double right = logit(p) + w;
   int i = 0;
-  while(binom_LL(expit(left), k, n, mean, precision) > y0 && i++ < 10) {
+  while(binom_LL(expit(left), k, n, mean, precision) > y0 && i++ < ncontract) {
     left -= w;
   }
   i = 0;
-  while(binom_LL(expit(right), k, n, mean, precision) > y0 && i++ < 10) {
+  while(binom_LL(expit(right), k, n, mean, precision) > y0 && i++ < ncontract) {
     right += w;
   }
   left = expit(left);
   right = expit(right);
   double newx = R::runif(left, right);
-  while(binom_LL(newx, k, n, mean, precision) < y0) {
+  i = 0;
+  while(binom_LL(newx, k, n, mean, precision) < y0 && i++ < ncontract) {
     if(newx < p) {
       left = newx;
     } else {
@@ -40,6 +40,7 @@ double one_binom_slice(double p, double k, double n, double mean, double precisi
     }
     newx = R::runif(left, right);
   }
+  if(i == ncontract) return p;
   return newx;
 }
 
@@ -47,10 +48,11 @@ double one_binom_slice(double p, double k, double n, double mean, double precisi
 
 
 // [[Rcpp::export]]
-NumericVector slice_sample_binom(NumericVector p, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision) {
+NumericVector slice_sample_binom(NumericVector p, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision,
+                                 double w, int nexpand, int ncontract) {
   NumericVector out(p.size());
   for(int i=0; i < p.size(); i++) {
-    out[i] = one_bin_slice(p[i], k[i], n[i], mean[i], precision[i]);
+    out[i] = one_binom_slice(p[i], k[i], n[i], mean[i], precision[i], w, nexpand, ncontract);
   }
   return out;
 }
