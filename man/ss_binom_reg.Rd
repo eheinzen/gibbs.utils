@@ -4,12 +4,24 @@
 \alias{ss_binom_reg}
 \title{Slice sample a binomial regression rate}
 \usage{
-ss_binom_reg(p, k, mean, precision, ..., w = 1, nexpand = 10, ncontract = 100)
+ss_binom_reg(
+  p,
+  k,
+  n,
+  mean,
+  precision,
+  ...,
+  w = 1,
+  nexpand = 10,
+  ncontract = 100
+)
 }
 \arguments{
 \item{p}{the previous iteration of the probability}
 
 \item{k}{the realized value from the binomial distribution}
+
+\item{n}{the number of trials}
 
 \item{mean}{the prior mean}
 
