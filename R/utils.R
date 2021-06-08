@@ -1,4 +1,8 @@
 
+#' @useDynLib gibbs.utils
+#' @importFrom Rcpp sourceCpp
+NULL
+
 check_one_or_all <- function(x, len) {
   nm <- deparse(substitute(x))
   if(length(x) == 1) rep_len(x, len) else if(length(x) == len) x else stop(nm, " must be of length 1 or ", len)
