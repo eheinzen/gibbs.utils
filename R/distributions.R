@@ -51,7 +51,7 @@ dmatnorm <- function(x, mu, V, U, log = TRUE) {
 #' @rdname distributions
 #' @export
 dlogitnorm <- function(x, mu, sd, log = FALSE) {
-  out <- stats::dnorm(logit(x), mu = mu, sd = sd, log = TRUE) - log(x) - log(1 - x)
+  out <- stats::dnorm(logit(x), mean = mu, sd = sd, log = TRUE) - log(x) - log(1 - x)
   if(!log) exp(out) else out
 }
 

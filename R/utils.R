@@ -23,5 +23,5 @@ propose_01_logdensity <- function(p, proposal, scale, adjust) {
   logitp <- logit(p)
   sd <- sqrt(abs(logitp)+1)*scale*(0.8^adjust)
   sd <- ifelse(sd < 0.01, 0.01, sd)
-  dlogitnorm(proposal, mean = logitp, sd = sd, log = TRUE)
+  dlogitnorm(proposal, mu = logitp, sd = sd, log = TRUE)
 }

@@ -20,7 +20,7 @@
 conj_norm_mu <- function(y, tau, mu0 = 0, tau0 = 0.001, mult = 1) {
   n <- length(y)
   newtau <- mult*tau0 + n*tau
-  rnorm(
+  stats::rnorm(
     1,
     mean = (tau0*mu0 + tau*sum(y)) / newtau,
     sd = 1 / sqrt(newtau)
