@@ -5,7 +5,7 @@ Version: 0.1.0
 Authors@R: c(
     person("Ethan", "Heinzen", email = "heinzen.ethan@mayo.edu", role = c("aut", "cre"))
   )
-Description: Utilities for Gibbs Sampling
+Description: Utilities for Gibbs Sampling.
 Encoding: UTF-8
 LazyData: true
 Imports:
