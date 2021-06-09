@@ -25,9 +25,9 @@ conj_matlm_beta(y, X, V, U = NULL, mu0, Q0)
 
 conj_norm_tau(y, mu, a0 = 0.001, b0 = 0.001)
 
-conj_mvnorm_Q(y, mu, V0, v0, V0_inv = my_inv(V0))
+conj_mvnorm_Q(y, mu, V0, v0, V0_inv = chol_inv(V0))
 
-conj_matnorm_V(y, mu, U = NULL, V0, v0, V0_inv = my_inv(V0))
+conj_matnorm_V(y, mu, U = NULL, V0, v0, V0_inv = chol_inv(V0))
 
 conj_lm_tau(y, X, beta, Xbeta = X \%*\% beta, a0 = 0.001, b0 = 0.001)
 
@@ -39,7 +39,7 @@ conj_matlm_sigma(
   U = NULL,
   V0,
   v0,
-  V0_inv = my_inv(V0)
+  V0_inv = chol_inv(V0)
 )
 }
 \arguments{

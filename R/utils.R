@@ -10,11 +10,11 @@ check_one_or_all <- function(x, len) {
 
 #' Other Utilities
 #'
-#' @param x A matrix for \code{my_inv} or a numeric vector for \code{expit}
+#' @param x A matrix for \code{chol_inv} or a numeric vector for \code{expit}
 #' @param p A numeric vector
 #' @rdname utilities
 #' @export
-my_inv <- function(x) {
+chol_inv <- function(x) {
   chol2inv(chol(x))
 }
 
