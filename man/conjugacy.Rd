@@ -15,7 +15,7 @@
 \usage{
 conj_norm_mu(y, tau, mu0 = 0, tau0 = 0.001, mult = 1)
 
-conj_mvnorm_mu(y, Q, mu0 = rep_len(0, n), Q0 = diag(0.001, n), mult = 1)
+conj_mvnorm_mu(y, Q, mu0 = rep_len(0, p), Q0 = diag(0.001, p), mult = 1)
 
 conj_matnorm_mu(y, V, U = NULL, mu0, Q0)
 
@@ -43,7 +43,8 @@ conj_matlm_sigma(
 )
 }
 \arguments{
-\item{y}{realizations from the distribution whose parameter is being drawn}
+\item{y}{realizations from the distribution whose parameter is being drawn. For multivariate conjugacy,
+this is an n-by-p matrix}
 
 \item{mu0}{the prior mean of \code{mu} or \code{beta}.}
 

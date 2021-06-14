@@ -3,7 +3,8 @@
 #'
 #' Sample from the posterior (conditional on all other parameters) in the conjugate setting.
 #'
-#' @param y realizations from the distribution whose parameter is being drawn
+#' @param y realizations from the distribution whose parameter is being drawn. For multivariate conjugacy,
+#'   this is an n-by-p matrix
 #' @param Q,tau the precision of the (multivariate) normal distribution from which \code{y} comes
 #' @param mu0 the prior mean of \code{mu} or \code{beta}.
 #' @param Q0,tau0 the prior precision of \code{mu}.
@@ -29,7 +30,9 @@ conj_norm_mu <- function(y, tau, mu0 = 0, tau0 = 0.001, mult = 1) {
 
 #' @rdname conjugacy
 #' @export
-conj_mvnorm_mu <- function(y, Q, mu0 = rep_len(0, n), Q0 = diag(0.001, n), mult = 1) {
+conj_mvnorm_mu <- function(y, Q, mu0 = rep_len(0, p), Q0 = diag(0.001, p), mult = 1) {
+  if(!is.matrix(y)) y <- matrix(y, nrow = 1)
+  p <- ncol(y)
   n <- nrow(y)
   newQ <- mult*Q0 + n*Q
   newQ.inv <- chol_inv(newQ)
@@ -43,7 +46,7 @@ conj_mvnorm_mu <- function(y, Q, mu0 = rep_len(0, n), Q0 = diag(0.001, n), mult 
 #' @rdname conjugacy
 #' @export
 conj_matnorm_mu <- function(y, V, U = NULL, mu0, Q0) {
-  y <- as.numeric(y)
+  if(is.matrix(y)) y <- as.numeric(y)
   if(is.null(U)) U <- diag(nrow(Q0) / nrow(V))
   VxU <- V %x% U
   newQ <- VxU + Q0
@@ -70,8 +73,8 @@ conj_lm_beta <- function(y, X, XtX = crossprod(X), tau, mu0, Q0) {
 #' @rdname conjugacy
 #' @export
 conj_matlm_beta <- function(y, X, V, U = NULL, mu0, Q0) {
-  y <- as.numeric(y)
-  mu0 <- as.numeric(mu0)
+  if(is.matrix(y)) y <- as.numeric(y)
+  if(is.matrix(mu0)) mu0 <- as.numeric(mu0)
 
   XtU <- if(is.null(U)) t(X) else crossprod(X, U)
   newQ <- V %x% (XtU %*% X) + Q0
@@ -108,7 +111,12 @@ conj_norm_tau <- function(y, mu, a0 = 0.001, b0 = 0.001) {
 #' @rdname conjugacy
 #' @export
 conj_mvnorm_Q <- function(y, mu, V0, v0, V0_inv = chol_inv(V0)) {
+  if(!is.matrix(y)) y <- matrix(y, nrow = 1)
+  p <- ncol(y)
   n <- nrow(y)
+  if(!is.matrix(mu) && length(mu) == p) {
+    mu <- matrix(rep(mu, each = n), nrow = n, ncol = p)
+  }
   stopifnot(identical(dim(y), dim(mu)))
   xmu <- y - mu
   tmp <- Reduce(`+`, lapply(1:n, function(i) {
