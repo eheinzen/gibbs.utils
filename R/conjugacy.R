@@ -46,14 +46,13 @@ conj_mvnorm_mu <- function(y, Q, mu0 = rep_len(0, p), Q0 = diag(0.001, p), mult 
 #' @rdname conjugacy
 #' @export
 conj_matnorm_mu <- function(y, V, U = NULL, mu0, Q0) {
-  if(is.matrix(y)) y <- as.numeric(y)
+  if(!is.matrix(y)) stop("'y' must be a matrix")
   if(is.null(U)) U <- diag(nrow(Q0) / nrow(V))
-  VxU <- V %x% U
-  newQ <- VxU + Q0
+  newQ <- V %x% U + Q0
   newQ.inv <- chol_inv(newQ)
   MASS::mvrnorm(
     1,
-    mu = newQ.inv %*% (Q0 %*% mu0 + VxU %*% y),
+    mu = newQ.inv %*% (Q0 %*% mu0 + as.numeric(U %*% y %*% V)),
     Sigma = newQ.inv
   )
 }
@@ -73,7 +72,7 @@ conj_lm_beta <- function(y, X, XtX = crossprod(X), tau, mu0, Q0) {
 #' @rdname conjugacy
 #' @export
 conj_matlm_beta <- function(y, X, V, U = NULL, mu0, Q0) {
-  if(is.matrix(y)) y <- as.numeric(y)
+  if(!is.matrix(y)) stop("'y' must be a matrix")
   if(is.matrix(mu0)) mu0 <- as.numeric(mu0)
 
   XtU <- if(is.null(U)) t(X) else crossprod(X, U)
@@ -81,7 +80,7 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0, Q0) {
   newQ.inv <- chol_inv(newQ)
   MASS::mvrnorm(
     1,
-    mu = newQ.inv %*% (Q0 %*% mu0 + (V %x% XtU) %*% y),
+    mu = newQ.inv %*% (Q0 %*% mu0 + as.numeric(XtU %*% y %*% V)),
     Sigma = newQ.inv
   )
 }

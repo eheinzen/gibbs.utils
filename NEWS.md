@@ -1,3 +1,7 @@
+# v0.2.0
+
+- Improved matrix normal conjugacies by using a Kronecker product trick.
+
 # v0.1.2
 
 - Fixed a bug in defaults for `conj_mvnorm_mu()`, where the length was accidentally the number of observations instead of variables.

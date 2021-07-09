@@ -69,23 +69,32 @@ $$
 \end{align}
 $$
 
-The inverse of $\tilde{Q}$ is used to complete the square, and together with the transpose of the second line gives us the posterior mean:
+Of course, if $U$ is the identity, we can precompute $X^\intercal X$ for additional efficiency.
+
+The inverse of $\tilde{Q}$ is used to complete the square, and together with the transpose of the second line gives us the posterior mean.
+We gain additional efficiency with one more trick: for appropriate matrices, $(C^\intercal \otimes A) \vect(B) = \vect(ABC)$. Note that $V$ is symmetric.
 
 $$
 \begin{align}
 \tilde{\mu} &= \tilde{Q}^{-1}((I_p \otimes X^\intercal) (V \otimes U) \vect{y} + Q_0 \mu_0) \\
 &= \tilde{Q}^{-1}\left[((I_pV) \otimes (X^\intercal U))\vect{y} + Q_0 \mu_0 \right] \\
-&= \tilde{Q}^{-1}\left[(V \otimes (X^\intercal U))\vect{y} + Q_0 \mu_0 \right]
+&= \tilde{Q}^{-1}\left[(V \otimes (X^\intercal U))\vect{y} + Q_0 \mu_0 \right] \\
+&= \tilde{Q}^{-1}\left[\vect{(X^\intercal UyV)} + Q_0 \mu_0 \right]
 \end{align}
 $$
+
+Finally, if $U$ is the identity matrix, we get a further efficiency by precomputing $X^\intercal y$
+
+$$\tilde{\mu} = \tilde{Q}^{-1}\left[\vect{(X^\intercal yV)} + Q_0 \mu_0 \right]$$
+
 
 
 ## Normal Regression: beta
 
 In this scenario, we look for the posterior for the model
 
-$$y \sim \mathcal{N}_{p}(X\beta, Q)$$
-$$\beta \sim \Norm_(\mu_0, Q_0)$$
+$$y \sim \Norm(X\beta, Q)$$
+$$\beta \sim \Norm(\mu_0, Q_0)$$
 
 This is a specific case of the matrix normal regression, with $V \equiv 1$ and $U \equiv Q$.
 We immediately get the posterior precision and mean:
@@ -94,10 +103,10 @@ $$\tilde{\mu} = \tilde{Q}^{-1}(X^\intercal Q y + Q_0 \mu_0)$$
 
 
 
-Usually we set $Q = \equiv \tau I_p$:
+We set $Q \equiv \tau I_p$ for independence among observations:
 
-$$y \sim \mathcal{N}_{p}(X\beta, \tau I_p)$$
-$$\beta \sim \Norm_(\mu_0, Q_0)$$
+$$y \sim \Norm(X\beta, \tau I_p)$$
+$$\beta \sim \Norm(\mu_0, Q_0)$$
 
 We immediately get the posterior precision and mean:
 $$\tilde{Q} = \tau X^\intercal X + Q_0$$
@@ -109,25 +118,27 @@ $$\tilde{\mu} = \tilde{Q}^{-1}(\tau X^\intercal y + Q_0 \mu_0)$$
 In this scenario, we look for the posterior for the model
 
 $$y \sim \mathcal{MN}_{n,p}(\beta, U, V)$$
-$$\vect(\beta) \sim \Norm_(\mu_0, Q_0)$$
+$$\vect(\beta) \sim \Norm(\mu_0, Q_0)$$
 
 If there is only one realization, this is a specific case of the matrix normal regression, with $X \equiv I_n$.
 We immediately get the posterior precision and mean:
 $$\tilde{Q} = V \otimes U + Q_0$$
-$$\tilde{\mu} = \tilde{Q}^{-1}\left[(V \otimes U)\vect{y} + Q_0 \mu_0 \right]$$
+$$\tilde{\mu} = \tilde{Q}^{-1}\left[\vect{(UyV)} + Q_0 \mu_0 \right]$$
+
+Again, if $U$ is the identity, we collapse even further to
+$$\tilde{\mu} = \tilde{Q}^{-1}\left[\vect{(yV)} + Q_0 \mu_0 \right]$$
+
 
 ## Multivariate Normal: mu
 
 In this scenario, we look for the posterior for the model
 
-$$y \sim \mathcal{N}_{p}(\mu, Q)$$
-$$\mu \sim \Norm_(\mu_0, Q_0)$$
+$$y \sim \Norm(\mu, Q)$$
+$$\mu \sim \Norm(\mu_0, Q_0)$$
 
 If there is only one realization, this is a specific case of the normal regression, with $X \equiv I_p$. However, usually more
 than one realization is observed. We'll call the number of realizations $n$.
 
-This is a specific case of the normal regression, with $X \equiv I_n$.
-We immediately get the posterior precision and mean:
 $$\tilde{Q} = nQ + Q_0$$
 $$\tilde{\mu} = \tilde{Q}^{-1}(Q \sum_{i=1}^{n}y_i + Q_0 \mu_0)$$
 
@@ -135,8 +146,8 @@ $$\tilde{\mu} = \tilde{Q}^{-1}(Q \sum_{i=1}^{n}y_i + Q_0 \mu_0)$$
 
 In this scenario, we look for the posterior for the model
 
-$$y \sim \mathcal{N}(\mu, \tau)$$
-$$\mu \sim \Norm_(\mu_0, \tau_0)$$
+$$y \sim \Norm(\mu, \tau)$$
+$$\mu \sim \Norm(\mu_0, \tau_0)$$
 
 This is a specific case of the multivariate normal, with $Q \equiv \tau$.
 We immediately get the posterior precision and mean:
