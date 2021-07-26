@@ -17,7 +17,7 @@ ss_binom_reg(
 )
 }
 \arguments{
-\item{p}{the previous iteration of the probability}
+\item{p}{the previous iteration of the logit-probability}
 
 \item{k}{the realized value from the binomial distribution}
 
@@ -40,9 +40,10 @@ Slice sample a binomial regression rate
 }
 \details{
 This function slice samples \code{p} conditional on \code{k}, \code{n}, \code{mean}, and \code{precision},
-  where \code{k ~ Binom(n, p)} and \code{p ~ logitN(mean, precision)}.
+  where \code{k ~ Binom(n, expit(p))} and \code{p ~ N(mean, precision)}.
 
-  This is vectorized over \code{p}, \code{k}, \code{n}, and \code{mean}.
+  This is vectorized over \code{p}, \code{k}, \code{n}, and \code{mean}. If \code{precision} is a matrix,
+  \code{p} is assumed to be multivariately distributed, and a different function is used.
 
   The internals are defined in C++.
 }

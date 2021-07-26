@@ -3,33 +3,22 @@ using namespace Rcpp;
 
 
 double binom_LL(double p, double k, double n, double mean, double precision) {
-  double pp = log(p);
-  double qq = log(1.0 - p);
-  return k*pp + (n-k)*qq - pp - qq - 0.5*precision*(pp - qq - mean)*(pp - qq - mean);
-}
-
-double expit(double x) {
-  return 1.0 / (1.0 + exp(-x));
-}
-double logit(double p) {
-  return log(p) - log(1.0 - p);
+  return -k*log(1.0 + exp(-p)) - (n-k)*log(1.0 + exp(p)) - 0.5*precision*(p - mean)*(p - mean);
 }
 
 // [[Rcpp::export]]
 double one_binom_slice(double p, double k, double n, double mean, double precision, double w, int nexpand, int ncontract) {
   double y0 = binom_LL(p, k, n, mean, precision) - R::rexp(1.0);
-  double left = logit(p) - w;
-  double right = logit(p) + w;
+  double left = p - w;
+  double right = p + w;
   int i = 0;
-  while(binom_LL(expit(left), k, n, mean, precision) > y0 && i++ < ncontract) {
+  while(binom_LL(left, k, n, mean, precision) > y0 && i++ < ncontract) {
     left -= w;
   }
   i = 0;
-  while(binom_LL(expit(right), k, n, mean, precision) > y0 && i++ < ncontract) {
+  while(binom_LL(right, k, n, mean, precision) > y0 && i++ < ncontract) {
     right += w;
   }
-  left = expit(left);
-  right = expit(right);
   double newx = R::runif(left, right);
   i = 0;
   while(binom_LL(newx, k, n, mean, precision) < y0 && i++ < ncontract) {
@@ -57,3 +46,56 @@ NumericVector slice_sample_binom(NumericVector p, NumericVector k, NumericVector
   return out;
 }
 
+
+
+
+
+double binom_LL_mv(NumericVector p, NumericVector k, NumericVector n, NumericVector mean, NumericMatrix Q) {
+  double mm = 0.0;
+  for(int i = 0; i < p.size(); i++) {
+    mm += -k[i]*log(1.0 + exp(-p[i])) - (n[i]-k[i])*log(1.0 + exp(p[i])) - 0.5*sum((p - mean) * Q(_, i)) * (p[i] - mean[i]);
+  }
+  return mm;
+}
+
+NumericVector replace_itt(NumericVector x, int i, double value) {
+  NumericVector out = clone(x);
+  out[i] = value;
+  return out;
+}
+
+// [[Rcpp::export]]
+double one_binom_slice_mv(NumericVector p, NumericVector k, NumericVector n, NumericVector mean, NumericMatrix Q, int i, double w, int nexpand, int ncontract) {
+  double y0 = binom_LL_mv(p, k, n, mean, Q) - R::rexp(1.0);
+  double left = p[i] - w;
+  double right = p[i] + w;
+  int j = 0;
+  while(binom_LL_mv(replace_itt(p, i, left), k, n, mean, Q) > y0 && j++ < nexpand) {
+    left -= w;
+  }
+  j = 0;
+  while(binom_LL_mv(replace_itt(p, i, right), k, n, mean, Q) > y0 && j++ < nexpand) {
+    right += w;
+  }
+  double newx = R::runif(left, right);
+  j = 0;
+  while(binom_LL_mv(replace_itt(p, i, newx), k, n, mean, Q) < y0 && j++ < ncontract) {
+    if(newx < p[i]) {
+      left = newx;
+    } else {
+      right = newx;
+    }
+    newx = R::runif(left, right);
+  }
+  if(j == ncontract) return p[i];
+  return newx;
+}
+
+// [[Rcpp::export]]
+NumericVector slice_sample_binom_mv(NumericVector p, NumericVector k, NumericVector n, NumericVector mean, NumericMatrix Q, double w, int nexpand, int ncontract) {
+  NumericVector out = clone(p);
+  for(int i=0; i < p.size(); i++) {
+    out[i] = one_binom_slice_mv(out, k, n, mean, Q, i, w, nexpand, ncontract);
+  }
+  return out;
+}

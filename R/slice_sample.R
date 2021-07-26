@@ -23,25 +23,27 @@ ss_pois_reg <- function(L, k, mean, precision, ..., w = 1, nexpand = 10, ncontra
   mean <- check_one_or_all(mean, length(L))
 
   if(is.matrix(precision)) {
-    slice_sample_pois_mv(L, k, mean, precision, w = w, nexpand = nexpand, ncontract = ncontract)
+    FUN <- slice_sample_pois_mv
   } else {
     precision <- check_one_or_all(precision, length(L))
-    slice_sample_pois(L, k, mean, precision, w = w, nexpand = nexpand, ncontract = ncontract)
+    FUN <- slice_sample_pois
   }
+  FUN(L, k, mean, precision, w = w, nexpand = nexpand, ncontract = ncontract)
 }
 
 
 #' Slice sample a binomial regression rate
 #'
-#' @param p the previous iteration of the probability
+#' @param p the previous iteration of the logit-probability
 #' @param k the realized value from the binomial distribution
 #' @param n the number of trials
 #' @inheritParams ss_pois_reg
 #' @details
 #'   This function slice samples \code{p} conditional on \code{k}, \code{n}, \code{mean}, and \code{precision},
-#'   where \code{k ~ Binom(n, p)} and \code{p ~ logitN(mean, precision)}.
+#'   where \code{k ~ Binom(n, expit(p))} and \code{p ~ N(mean, precision)}.
 #'
-#'   This is vectorized over \code{p}, \code{k}, \code{n}, and \code{mean}.
+#'   This is vectorized over \code{p}, \code{k}, \code{n}, and \code{mean}. If \code{precision} is a matrix,
+#'   \code{p} is assumed to be multivariately distributed, and a different function is used.
 #'
 #'   The internals are defined in C++.
 #' @seealso \code{\link{ss_pois_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
@@ -50,6 +52,11 @@ ss_binom_reg <- function(p, k, n, mean, precision, ..., w = 1, nexpand = 10, nco
   if(length(p) != length(k) || length(p) != length(n)) stop("'p' and 'k' and 'n' must all have the same length")
   mean <- check_one_or_all(mean, length(p))
 
-  precision <- check_one_or_all(precision, length(p))
-  slice_sample_binom(p, k, n, mean, precision, w = w, nexpand = nexpand, ncontract = ncontract)
+  if(is.matrix(precision)) {
+    FUN <- slice_sample_binom_mv
+  } else {
+    precision <- check_one_or_all(precision, length(p))
+    FUN <- slice_sample_binom
+  }
+  FUN(p, k, n, mean, precision, w = w, nexpand = nexpand, ncontract = ncontract)
 }

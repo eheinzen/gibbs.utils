@@ -1,3 +1,7 @@
+# v0.3.0
+
+- Updated `ss_binom_reg()` to take in and output logit-p instead of p.
+
 # v0.2.0
 
 - Improved matrix normal conjugacies by using a Kronecker product trick.
