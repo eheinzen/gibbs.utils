@@ -91,10 +91,12 @@ double one_pois_slice_mv(NumericVector L, NumericVector k, NumericVector mean, N
 }
 
 // [[Rcpp::export]]
-NumericVector slice_sample_pois_mv(NumericVector L, NumericVector k, NumericVector mean, NumericMatrix Q, double w, int nexpand, int ncontract) {
-  NumericVector out = clone(L);
-  for(int i=0; i < L.size(); i++) {
-    out[i] = one_pois_slice_mv(out, k, mean, Q, i, w, nexpand, ncontract);
+NumericMatrix slice_sample_pois_mv(NumericMatrix L, NumericMatrix k, NumericMatrix mean, NumericMatrix Q, double w, int nexpand, int ncontract) {
+  NumericMatrix out = clone(L);
+  for(int r=0; r < L.nrow(); r++) {
+    for(int i=0; i < L.ncol(); i++) {
+      out(r, i) = one_pois_slice_mv(out(r, _), k(r, _), mean(r, _), Q, i, w, nexpand, ncontract);
+    }
   }
   return out;
 }

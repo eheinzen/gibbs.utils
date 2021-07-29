@@ -1,3 +1,9 @@
+# v0.3.1
+
+- Updated `ss_pois_reg()` and `ss_binom_reg()` to allow for matrix (multivariate) inputs.
+
+- Added tests.
+
 # v0.3.0
 
 - Updated `ss_binom_reg()` to take in and output logit-p instead of p.

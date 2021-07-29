@@ -92,10 +92,12 @@ double one_binom_slice_mv(NumericVector p, NumericVector k, NumericVector n, Num
 }
 
 // [[Rcpp::export]]
-NumericVector slice_sample_binom_mv(NumericVector p, NumericVector k, NumericVector n, NumericVector mean, NumericMatrix Q, double w, int nexpand, int ncontract) {
-  NumericVector out = clone(p);
-  for(int i=0; i < p.size(); i++) {
-    out[i] = one_binom_slice_mv(out, k, n, mean, Q, i, w, nexpand, ncontract);
+NumericMatrix slice_sample_binom_mv(NumericMatrix p, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q, double w, int nexpand, int ncontract) {
+  NumericMatrix out = clone(p);
+  for(int r=0; r < p.nrow(); r++) {
+    for(int i=0; i < p.ncol(); i++) {
+      out(r, i) = one_binom_slice_mv(out(r, _), k(r, _), n(r, _), mean(r, _), Q, i, w, nexpand, ncontract);
+    }
   }
   return out;
 }

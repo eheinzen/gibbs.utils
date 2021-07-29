@@ -21,14 +21,24 @@
 ss_pois_reg <- function(L, k, mean, precision, ..., w = 1, nexpand = 10, ncontract = 100) {
   if(length(L) != length(k)) stop("'L' and 'k' must have the same length")
   mean <- check_one_or_all(mean, length(L))
+  d <- dim(L)
 
   if(is.matrix(precision)) {
     FUN <- slice_sample_pois_mv
+    tmp <- is.matrix(L) + is.matrix(k)
+    if(!(tmp %in% c(0, 2))) stop("Both of 'L' and 'k' must be matrices, or neither must be.")
+    if(!is.matrix(L)) {
+      L <- matrix(L, nrow = 1)
+      k <- matrix(k, nrow = 1)
+    }
+    dim(mean) <- dim(L)
   } else {
     precision <- check_one_or_all(precision, length(L))
     FUN <- slice_sample_pois
   }
-  FUN(L, k, mean, precision, w = w, nexpand = nexpand, ncontract = ncontract)
+  out <- FUN(L, k, mean, precision, w = w, nexpand = nexpand, ncontract = ncontract)
+  dim(out) <- d # could be NULL
+  out
 }
 
 
@@ -51,12 +61,23 @@ ss_pois_reg <- function(L, k, mean, precision, ..., w = 1, nexpand = 10, ncontra
 ss_binom_reg <- function(p, k, n, mean, precision, ..., w = 1, nexpand = 10, ncontract = 100) {
   if(length(p) != length(k) || length(p) != length(n)) stop("'p' and 'k' and 'n' must all have the same length")
   mean <- check_one_or_all(mean, length(p))
+  d <- dim(p)
 
   if(is.matrix(precision)) {
     FUN <- slice_sample_binom_mv
+    tmp <- is.matrix(p) + is.matrix(k) + is.matrix(n)
+    if(!(tmp %in% c(0, 3))) stop("All of 'p', 'k', and 'n' must be matrices, or none must be.")
+    if(!is.matrix(p)) {
+      p <- matrix(p, nrow = 1)
+      k <- matrix(k, nrow = 1)
+      n <- matrix(n, nrow = 1)
+    }
+    dim(mean) <- dim(p)
   } else {
     precision <- check_one_or_all(precision, length(p))
     FUN <- slice_sample_binom
   }
-  FUN(p, k, n, mean, precision, w = w, nexpand = nexpand, ncontract = ncontract)
+  out <- FUN(p, k, n, mean, precision, w = w, nexpand = nexpand, ncontract = ncontract)
+  dim(out) <- d # could be NULL
+  out
 }
