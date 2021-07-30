@@ -2,7 +2,7 @@ prec <- matrix(c(10, 1, 2,
                  1, 20, 3,
                  2, 3, 30), byrow = TRUE, ncol = 3)
 
-test_that("slice sampling works for Poisson (1)", {
+test_that("univariate slice sampling works for Poisson", {
   L <- 1:3
   k <- c(3, 9, 27)
 
@@ -17,7 +17,7 @@ test_that("slice sampling works for Poisson (1)", {
   expect_true(!is.matrix(one))
 })
 
-test_that("slice sampling works for Poisson (2)", {
+test_that("multivariate slice sampling works for Poisson", {
   L <- 1:3
   k <- c(3, 9, 27)
   set.seed(20210729)
@@ -31,7 +31,7 @@ test_that("slice sampling works for Poisson (2)", {
   expect_true(!is.matrix(one))
 })
 
-test_that("slice sampling works for Poisson (3)", {
+test_that("multivariate slice sampling works for Poisson (matrix)", {
   k <- c(3, 9, 27)
   L <- matrix(rep(1:3, each = 3), nrow = 3)
   expect_error(ss_pois_reg(L, k, mean = 2, precision = prec), "'L' and 'k' must have the same length")
@@ -53,7 +53,7 @@ test_that("slice sampling works for Poisson (3)", {
 # binom -------------------------------------------------------------------
 
 
-test_that("slice sampling works for binomial (1)", {
+test_that("unviariate slice sampling works for binomial", {
   p <- 1:3
   k <- c(3, 9, 10)
   n <- 10
@@ -70,7 +70,7 @@ test_that("slice sampling works for binomial (1)", {
   expect_true(!is.matrix(one))
 })
 
-test_that("slice sampling works for binomial (2)", {
+test_that("multivariate slice sampling works for binomial", {
   p <- 1:3
   k <- c(3, 9, 10)
   n <- rep(10, 3)
@@ -85,7 +85,7 @@ test_that("slice sampling works for binomial (2)", {
   expect_true(!is.matrix(one))
 })
 
-test_that("slice sampling works for binomial (3)", {
+test_that("multivariate slice sampling works for binomial (matrix)", {
   k <- c(3, 9, 27)
   p <- matrix(rep(1:3, each = 3), nrow = 3)
   n <- matrix(10, nrow = 3, ncol = 3)
