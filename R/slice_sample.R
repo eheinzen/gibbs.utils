@@ -49,14 +49,17 @@ ss_pois_reg <- function(L, k, mean, precision, ..., w = 1, nexpand = 10, ncontra
 #' @param n the number of trials
 #' @inheritParams ss_pois_reg
 #' @details
-#'   This function slice samples \code{p} conditional on \code{k}, \code{n}, \code{mean}, and \code{precision},
+#'   \code{ss_binom_reg} slice samples and \code{mh_binom_reg} Metropolis-samples
+#'   \code{p} conditional on \code{k}, \code{n}, \code{mean}, and \code{precision},
 #'   where \code{k ~ Binom(n, expit(p))} and \code{p ~ N(mean, precision)}.
 #'
-#'   This is vectorized over \code{p}, \code{k}, \code{n}, and \code{mean}. If \code{precision} is a matrix,
-#'   \code{p} is assumed to be multivariately distributed, and a different function is used.
+#'   Both vectorized over \code{p}, \code{k}, \code{n}, and \code{mean}. If \code{precision} is a matrix,
+#'   \code{p} is assumed to be multivariately distributed, and different internals are used.
 #'
 #'   The internals are defined in C++.
-#' @seealso \code{\link{ss_pois_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
+#' @seealso \code{\link{ss_pois_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling},
+#' \url{https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm}
+#' @name binom_reg
 #' @export
 ss_binom_reg <- function(p, k, n, mean, precision, ..., w = 1, nexpand = 10, ncontract = 100) {
   if(length(p) != length(k) || length(p) != length(n)) stop("'p' and 'k' and 'n' must all have the same length")

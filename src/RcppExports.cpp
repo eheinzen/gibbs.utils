@@ -10,6 +10,38 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// mh_binom
+NumericVector mh_binom(NumericVector p, NumericVector proposal, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision);
+RcppExport SEXP _gibbs_utils_mh_binom(SEXP pSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP precisionSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type p(pSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type proposal(proposalSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type n(nSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type precision(precisionSEXP);
+    rcpp_result_gen = Rcpp::wrap(mh_binom(p, proposal, k, n, mean, precision));
+    return rcpp_result_gen;
+END_RCPP
+}
+// mh_binom_mv
+NumericVector mh_binom_mv(NumericMatrix p, NumericMatrix proposal, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q);
+RcppExport SEXP _gibbs_utils_mh_binom_mv(SEXP pSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP QSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type p(pSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type proposal(proposalSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type k(kSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type n(nSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
+    rcpp_result_gen = Rcpp::wrap(mh_binom_mv(p, proposal, k, n, mean, Q));
+    return rcpp_result_gen;
+END_RCPP
+}
 // one_binom_slice
 double one_binom_slice(double p, double k, double n, double mean, double precision, double w, int nexpand, int ncontract);
 RcppExport SEXP _gibbs_utils_one_binom_slice(SEXP pSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP precisionSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
@@ -154,6 +186,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_gibbs_utils_mh_binom", (DL_FUNC) &_gibbs_utils_mh_binom, 6},
+    {"_gibbs_utils_mh_binom_mv", (DL_FUNC) &_gibbs_utils_mh_binom_mv, 6},
     {"_gibbs_utils_one_binom_slice", (DL_FUNC) &_gibbs_utils_one_binom_slice, 8},
     {"_gibbs_utils_slice_sample_binom", (DL_FUNC) &_gibbs_utils_slice_sample_binom, 8},
     {"_gibbs_utils_one_binom_slice_mv", (DL_FUNC) &_gibbs_utils_one_binom_slice_mv, 9},
