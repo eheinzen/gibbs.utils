@@ -25,9 +25,12 @@ NumericVector mh_binom_mv(NumericMatrix p, NumericMatrix proposal, NumericMatrix
   NumericMatrix out = clone(p);
   LogicalMatrix accept(p.nrow(), p.ncol());
   for(int r=0; r < p.nrow(); r++) {
+    NumericVector kk = k(r, _);
+    NumericVector nn = k(r, _);
+    NumericVector mm = mean(r, _);
     for(int i = 0; i < p.ncol(); i++) {
-      double ratio = binom_LL_mv(proposal(r, _), k(r, _), n(r, _), mean(r, _), Q, i);
-      ratio -= binom_LL_mv(p(r, _), k(r, _), n(r, _), mean(r, _), Q, i);
+      double ratio = binom_LL_mv(replace_it(out(r, _), i, proposal(r, i)), kk, nn, mm, Q, i);
+      ratio -= binom_LL_mv(out(r, _), kk, nn, mm, Q, i);
       bool a = log(R::runif(0.0, 1.0)) <= ratio;
       accept(r, i) = a;
       if(a) {

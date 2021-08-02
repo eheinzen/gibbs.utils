@@ -76,8 +76,10 @@ double one_pois_slice_mv(NumericVector L, NumericVector k, NumericVector mean, N
 NumericMatrix slice_sample_pois_mv(NumericMatrix L, NumericMatrix k, NumericMatrix mean, NumericMatrix Q, double w, int nexpand, int ncontract) {
   NumericMatrix out = clone(L);
   for(int r=0; r < L.nrow(); r++) {
+    NumericVector kk = k(r, _);
+    NumericVector mm = mean(r, _);
     for(int i=0; i < L.ncol(); i++) {
-      out(r, i) = one_pois_slice_mv(out(r, _), k(r, _), mean(r, _), Q, i, w, nexpand, ncontract);
+      out(r, i) = one_pois_slice_mv(out(r, _), kk, mm, Q, i, w, nexpand, ncontract);
     }
   }
   return out;

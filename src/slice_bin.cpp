@@ -74,8 +74,11 @@ double one_binom_slice_mv(NumericVector p, NumericVector k, NumericVector n, Num
 NumericMatrix slice_sample_binom_mv(NumericMatrix p, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q, double w, int nexpand, int ncontract) {
   NumericMatrix out = clone(p);
   for(int r=0; r < p.nrow(); r++) {
+    NumericVector kk = k(r, _);
+    NumericVector nn = n(r, _);
+    NumericVector mm = mean(r, _);
     for(int i=0; i < p.ncol(); i++) {
-      out(r, i) = one_binom_slice_mv(out(r, _), k(r, _), n(r, _), mean(r, _), Q, i, w, nexpand, ncontract);
+      out(r, i) = one_binom_slice_mv(out(r, _), kk, nn, mm, Q, i, w, nexpand, ncontract);
     }
   }
   return out;
