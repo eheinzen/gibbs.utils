@@ -5,8 +5,7 @@
 #' @param mu the mean
 #' @param sd the standard deviation
 #' @param Q the precision matrix
-#' @param V,U the precision matrices for the matrix-normal distribution, or (V) the parameter to the Wishart distribution
-#' @param v the degree-of-freedom parameter for the Wishart distribution
+#' @param V,U the precision matrices for the matrix-normal distribution
 #' @param log Should the log-density be returned?
 #' @rdname distributions
 #' @export
@@ -54,21 +53,4 @@ dlogitnorm <- function(x, mu, sd, log = FALSE) {
   out <- stats::dnorm(logit(x), mean = mu, sd = sd, log = TRUE) - log(x) - log(1 - x)
   if(!log) exp(out) else out
 }
-
-
-#' @rdname distributions
-#' @export
-rwish <- function(V, v){
-  if (v < nrow(V)) stop("v is less than the dimension of V in rwish().\n")
-
-  p <- nrow(V)
-  L <- chol(V)
-  A <- matrix(0, p, p)
-  diag(A) <- sqrt(stats::rchisq(p, v:(v - p + 1)))
-  if(p > 1) {
-    A[upper.tri(A)] <- stats::rnorm(p*(p-1)/2)
-  }
-  crossprod(A %*% L)
-}
-
 

@@ -123,10 +123,11 @@ conj_mvnorm_Q <- function(y, mu, V0, v0, V0_inv = chol_inv(V0)) {
     t(txmu) %*% txmu
   }))
   V2 <- chol_inv(V0_inv + tmp)
-  rwish(
-    V = V2,
-    v = n + v0
-  )
+  stats::rWishart(
+    1,
+    Sigma = V2,
+    df = n + v0
+  )[, , 1]
 }
 
 #' @rdname conjugacy
@@ -139,10 +140,11 @@ conj_matnorm_V <- function(y, mu, U = NULL, V0, v0, V0_inv = chol_inv(V0)) {
   ymu2 <- if(is.null(U)) t(ymu) else crossprod(ymu, U)
 
   V2 <- chol_inv(V0_inv + ymu2 %*% ymu)
-  rwish(
-    V = V2,
-    v = n + v0
-  )
+  stats::rWishart(
+    1,
+    Sigma = V2,
+    df = n + v0
+  )[, , 1]
 }
 
 #' @rdname conjugacy

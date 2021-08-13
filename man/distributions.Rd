@@ -4,7 +4,6 @@
 \alias{dmvnorm}
 \alias{dmatnorm}
 \alias{dlogitnorm}
-\alias{rwish}
 \title{Statistical Distributions}
 \usage{
 dmvnorm(x, mu, Q, log = TRUE)
@@ -12,8 +11,6 @@ dmvnorm(x, mu, Q, log = TRUE)
 dmatnorm(x, mu, V, U, log = TRUE)
 
 dlogitnorm(x, mu, sd, log = FALSE)
-
-rwish(V, v)
 }
 \arguments{
 \item{x}{vector of quantiles}
@@ -24,11 +21,9 @@ rwish(V, v)
 
 \item{log}{Should the log-density be returned?}
 
-\item{V, U}{the precision matrices for the matrix-normal distribution, or (V) the parameter to the Wishart distribution}
+\item{V, U}{the precision matrices for the matrix-normal distribution}
 
 \item{sd}{the standard deviation}
-
-\item{v}{the degree-of-freedom parameter for the Wishart distribution}
 }
 \description{
 Statistical Distributions

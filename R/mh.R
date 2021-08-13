@@ -17,12 +17,12 @@ mh_binom_reg <- function(p, k, n, mean, precision, ..., proposal_sd = 1) {
       k <- matrix(k, nrow = 1)
       n <- matrix(n, nrow = 1)
     }
-    proposal <- rnorm(length(p), p, proposal_sd)
+    proposal <- stats::rnorm(length(p), p, proposal_sd)
     dim(proposal) <- dim(mean) <- dim(p)
   } else {
     precision <- check_one_or_all(precision, length(p))
     FUN <- mh_binom
-    proposal <- rnorm(length(p), p, proposal_sd)
+    proposal <- stats::rnorm(length(p), p, proposal_sd)
   }
   out <- FUN(p, proposal, k, n, mean, precision)
   dim(out) <- d # could be NULL

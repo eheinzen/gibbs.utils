@@ -1,3 +1,7 @@
+# v0.3.2
+
+- Defer to `stats::rWishart()` instead of `rwish()`, since the former is faster.
+
 # v0.3.1
 
 - Updated `ss_pois_reg()` and `ss_binom_reg()` to allow for matrix (multivariate) inputs.
