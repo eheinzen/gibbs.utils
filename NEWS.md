@@ -2,6 +2,12 @@
 
 - Defer to `stats::rWishart()` instead of `rwish()`, since the former is faster.
 
+- Added `mh_binom_reg()` (and proceeded to fix one critical bug in 61de4f70).
+
+- Sped up multivariate log-likelihood.
+
+- Fixed one test.
+
 # v0.3.1
 
 - Updated `ss_pois_reg()` and `ss_binom_reg()` to allow for matrix (multivariate) inputs.
