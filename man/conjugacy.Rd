@@ -15,13 +15,20 @@
 \usage{
 conj_norm_mu(y, tau, mu0 = 0, tau0 = 0.001, mult = 1)
 
-conj_mvnorm_mu(y, Q, mu0 = rep_len(0, p), Q0 = diag(0.001, p), mult = 1)
+conj_mvnorm_mu(
+  y,
+  Q,
+  mu0 = rep_len(0, p),
+  Q0 = diag(0.001, p),
+  mult = 1,
+  use.chol = FALSE
+)
 
-conj_matnorm_mu(y, V, U = NULL, mu0, Q0)
+conj_matnorm_mu(y, V, U = NULL, mu0, Q0, use.chol = FALSE)
 
-conj_lm_beta(y, X, XtX = crossprod(X), tau, mu0, Q0)
+conj_lm_beta(y, X, XtX = crossprod(X), tau, mu0, Q0, use.chol = FALSE)
 
-conj_matlm_beta(y, X, V, U = NULL, mu0, Q0)
+conj_matlm_beta(y, X, V, U = NULL, mu0, Q0, use.chol = FALSE)
 
 conj_norm_tau(y, mu, a0 = 0.001, b0 = 0.001)
 
@@ -53,6 +60,8 @@ this is an n-by-p matrix}
 \item{Q, tau}{the precision of the (multivariate) normal distribution from which \code{y} comes}
 
 \item{Q0, tau0}{the prior precision of \code{mu}.}
+
+\item{use.chol}{Logical, determining whether to use \code{MASS::\link{mvrnorm}()} (\code{FALSE}, the default) or \code{\link{chol_mvrnorm}}.}
 
 \item{V, U}{the precision matrices for the matrix-normal distribution}
 

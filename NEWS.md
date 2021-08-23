@@ -1,3 +1,8 @@
+# v0.4.0
+
+- Include an option to use (the new function) `chol_mvrnorm()` to draw multivariate normal samples instead of `MASS::mvrnorm()` 
+  (which uses eigen decomposition instead of Cholesky).
+
 # v0.3.2
 
 - Defer to `stats::rWishart()` instead of `rwish()`, since the former is faster.

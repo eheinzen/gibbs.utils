@@ -12,10 +12,31 @@ check_one_or_all <- function(x, len) {
 #'
 #' @param x A matrix for \code{chol_inv} or a numeric vector for \code{expit}
 #' @param p A numeric vector
+#' @param n Number of samples to draw
+#' @param mu,Sigma,Precision parameters for a multivariate normal distribution. One of \code{Sigma} and
+#'   \code{Precision} must be supplied.
+#' @details
+#'   Unlike \code{MASS::\link[MASS]{mvrnorm}()}, \code{chol_mvrnorm()} uses the Cholesky decomposition
+#'   to draw random samples. This is usually faster; the largest gains are seen when \code{n} is small
+#'   (when \code{n} is large, the matrix multiplication becomes the limiting factor).
 #' @rdname utilities
 #' @export
 chol_inv <- function(x) {
   chol2inv(chol(x))
+}
+
+#' @rdname utilities
+#' @export
+chol_mvrnorm <- function(n = 1, mu, Sigma, Precision) {
+  if(missing(Sigma)) {
+    p <- nrow(Precision)
+    A <- backsolve(chol(Precision), diag(1, p))
+  } else {
+    p <- nrow(Sigma)
+    A <- t(chol(Sigma))
+  }
+  mu <- check_one_or_all(mu, p)
+  t(mu + A %*% matrix(stats::rnorm(p*n), nrow = p))
 }
 
 #' @rdname utilities
