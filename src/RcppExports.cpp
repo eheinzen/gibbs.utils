@@ -10,6 +10,22 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// impute_conj_mvnorm_mu_cpp
+NumericMatrix impute_conj_mvnorm_mu_cpp(NumericMatrix y, NumericMatrix mu, LogicalMatrix impute, NumericMatrix Q, NumericVector mu0, NumericVector tau0);
+RcppExport SEXP _gibbs_utils_impute_conj_mvnorm_mu_cpp(SEXP ySEXP, SEXP muSEXP, SEXP imputeSEXP, SEXP QSEXP, SEXP mu0SEXP, SEXP tau0SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< LogicalMatrix >::type impute(imputeSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mu0(mu0SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type tau0(tau0SEXP);
+    rcpp_result_gen = Rcpp::wrap(impute_conj_mvnorm_mu_cpp(y, mu, impute, Q, mu0, tau0));
+    return rcpp_result_gen;
+END_RCPP
+}
 // mh_binom
 NumericVector mh_binom(NumericVector p, NumericVector proposal, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision);
 RcppExport SEXP _gibbs_utils_mh_binom(SEXP pSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP precisionSEXP) {
@@ -186,6 +202,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_gibbs_utils_impute_conj_mvnorm_mu_cpp", (DL_FUNC) &_gibbs_utils_impute_conj_mvnorm_mu_cpp, 6},
     {"_gibbs_utils_mh_binom", (DL_FUNC) &_gibbs_utils_mh_binom, 6},
     {"_gibbs_utils_mh_binom_mv", (DL_FUNC) &_gibbs_utils_mh_binom_mv, 6},
     {"_gibbs_utils_one_binom_slice", (DL_FUNC) &_gibbs_utils_one_binom_slice, 8},
