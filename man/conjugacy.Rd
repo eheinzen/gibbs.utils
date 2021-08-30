@@ -13,7 +13,7 @@
 \alias{conj_matlm_sigma}
 \title{Draw Conjugate Samples}
 \usage{
-conj_norm_mu(y, tau, mu0 = 0, tau0 = 0.001, mult = 1)
+conj_norm_mu(y, tau, mu0 = 0, tau0 = 0.001, mult = 1, params.only = FALSE)
 
 conj_mvnorm_mu(
   y,
@@ -21,22 +21,57 @@ conj_mvnorm_mu(
   mu0 = rep_len(0, p),
   Q0 = diag(0.001, p),
   mult = 1,
-  use.chol = FALSE
+  use.chol = FALSE,
+  params.only = FALSE
 )
 
-conj_matnorm_mu(y, V, U = NULL, mu0, Q0, use.chol = FALSE)
+conj_matnorm_mu(y, V, U = NULL, mu0, Q0, use.chol = FALSE, params.only = FALSE)
 
-conj_lm_beta(y, X, XtX = crossprod(X), tau, mu0, Q0, use.chol = FALSE)
+conj_lm_beta(
+  y,
+  X,
+  XtX = crossprod(X),
+  tau,
+  mu0,
+  Q0,
+  use.chol = FALSE,
+  params.only = FALSE
+)
 
-conj_matlm_beta(y, X, V, U = NULL, mu0, Q0, use.chol = FALSE)
+conj_matlm_beta(
+  y,
+  X,
+  V,
+  U = NULL,
+  mu0,
+  Q0,
+  use.chol = FALSE,
+  params.only = FALSE
+)
 
-conj_norm_tau(y, mu, a0 = 0.001, b0 = 0.001)
+conj_norm_tau(y, mu, a0 = 0.001, b0 = 0.001, params.only = FALSE)
 
-conj_mvnorm_Q(y, mu, V0, v0, V0_inv = chol_inv(V0))
+conj_mvnorm_Q(y, mu, V0, v0, V0_inv = chol_inv(V0), params.only = FALSE)
 
-conj_matnorm_V(y, mu, U = NULL, V0, v0, V0_inv = chol_inv(V0))
+conj_matnorm_V(
+  y,
+  mu,
+  U = NULL,
+  V0,
+  v0,
+  V0_inv = chol_inv(V0),
+  params.only = FALSE
+)
 
-conj_lm_tau(y, X, beta, Xbeta = X \%*\% beta, a0 = 0.001, b0 = 0.001)
+conj_lm_tau(
+  y,
+  X,
+  beta,
+  Xbeta = X \%*\% beta,
+  a0 = 0.001,
+  b0 = 0.001,
+  params.only = FALSE
+)
 
 conj_matlm_sigma(
   y,
@@ -46,7 +81,8 @@ conj_matlm_sigma(
   U = NULL,
   V0,
   v0,
-  V0_inv = chol_inv(V0)
+  V0_inv = chol_inv(V0),
+  params.only = FALSE
 )
 }
 \arguments{
@@ -56,6 +92,8 @@ this is an n-by-p matrix}
 \item{mu0}{the prior mean of \code{mu} or \code{beta}.}
 
 \item{mult}{An optional multiplier for the prior precision; useful in some cases}
+
+\item{params.only}{Should just a list of the updated parameters be returned?}
 
 \item{Q, tau}{the precision of the (multivariate) normal distribution from which \code{y} comes}
 

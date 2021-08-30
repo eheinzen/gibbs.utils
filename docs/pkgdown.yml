@@ -2,6 +2,7 @@ pandoc: 2.11.4
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
+  conditional: conditional.html
   conjugacy: conjugacy.html
-last_built: 2021-08-30T14:27Z
+last_built: 2021-08-30T19:20Z
 

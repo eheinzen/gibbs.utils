@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
       </span>
     </div>
 
@@ -94,6 +94,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/conditional.html">Conditional distributions</a>
+    </li>
     <li>
       <a href="../articles/conjugacy.html">Conjugate distributions</a>
     </li>
@@ -127,7 +130,7 @@
     <p>Sample from the posterior (conditional on all other parameters) in the conjugate setting.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>conj_norm_mu</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>tau</span>, mu0 <span class='op'>=</span> <span class='fl'>0</span>, tau0 <span class='op'>=</span> <span class='fl'>0.001</span>, mult <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>conj_norm_mu</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>tau</span>, mu0 <span class='op'>=</span> <span class='fl'>0</span>, tau0 <span class='op'>=</span> <span class='fl'>0.001</span>, mult <span class='op'>=</span> <span class='fl'>1</span>, params.only <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
 <span class='fu'>conj_mvnorm_mu</span><span class='op'>(</span>
   <span class='va'>y</span>,
@@ -135,22 +138,57 @@
   mu0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep_len</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='va'>p</span><span class='op'>)</span>,
   Q0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>0.001</span>, <span class='va'>p</span><span class='op'>)</span>,
   mult <span class='op'>=</span> <span class='fl'>1</span>,
-  use.chol <span class='op'>=</span> <span class='cn'>FALSE</span>
+  use.chol <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
 
-<span class='fu'>conj_matnorm_mu</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>V</span>, U <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>mu0</span>, <span class='va'>Q0</span>, use.chol <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>conj_matnorm_mu</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>V</span>, U <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>mu0</span>, <span class='va'>Q0</span>, use.chol <span class='op'>=</span> <span class='cn'>FALSE</span>, params.only <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>conj_lm_beta</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>X</span>, XtX <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/crossprod.html'>crossprod</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>, <span class='va'>tau</span>, <span class='va'>mu0</span>, <span class='va'>Q0</span>, use.chol <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>conj_lm_beta</span><span class='op'>(</span>
+  <span class='va'>y</span>,
+  <span class='va'>X</span>,
+  XtX <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/crossprod.html'>crossprod</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>,
+  <span class='va'>tau</span>,
+  <span class='va'>mu0</span>,
+  <span class='va'>Q0</span>,
+  use.chol <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
 
-<span class='fu'>conj_matlm_beta</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>X</span>, <span class='va'>V</span>, U <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>mu0</span>, <span class='va'>Q0</span>, use.chol <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>conj_matlm_beta</span><span class='op'>(</span>
+  <span class='va'>y</span>,
+  <span class='va'>X</span>,
+  <span class='va'>V</span>,
+  U <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>mu0</span>,
+  <span class='va'>Q0</span>,
+  use.chol <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
 
-<span class='fu'>conj_norm_tau</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>mu</span>, a0 <span class='op'>=</span> <span class='fl'>0.001</span>, b0 <span class='op'>=</span> <span class='fl'>0.001</span><span class='op'>)</span>
+<span class='fu'>conj_norm_tau</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>mu</span>, a0 <span class='op'>=</span> <span class='fl'>0.001</span>, b0 <span class='op'>=</span> <span class='fl'>0.001</span>, params.only <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>conj_mvnorm_Q</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>V0</span>, <span class='va'>v0</span>, V0_inv <span class='op'>=</span> <span class='fu'><a href='chol_inv.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>V0</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>conj_mvnorm_Q</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>V0</span>, <span class='va'>v0</span>, V0_inv <span class='op'>=</span> <span class='fu'><a href='chol_inv.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>V0</span><span class='op'>)</span>, params.only <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>conj_matnorm_V</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>mu</span>, U <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>V0</span>, <span class='va'>v0</span>, V0_inv <span class='op'>=</span> <span class='fu'><a href='chol_inv.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>V0</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>conj_matnorm_V</span><span class='op'>(</span>
+  <span class='va'>y</span>,
+  <span class='va'>mu</span>,
+  U <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>V0</span>,
+  <span class='va'>v0</span>,
+  V0_inv <span class='op'>=</span> <span class='fu'><a href='chol_inv.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>V0</span><span class='op'>)</span>,
+  params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
 
-<span class='fu'>conj_lm_tau</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>X</span>, <span class='va'>beta</span>, Xbeta <span class='op'>=</span> <span class='va'>X</span> <span class='op'>%*%</span> <span class='va'>beta</span>, a0 <span class='op'>=</span> <span class='fl'>0.001</span>, b0 <span class='op'>=</span> <span class='fl'>0.001</span><span class='op'>)</span>
+<span class='fu'>conj_lm_tau</span><span class='op'>(</span>
+  <span class='va'>y</span>,
+  <span class='va'>X</span>,
+  <span class='va'>beta</span>,
+  Xbeta <span class='op'>=</span> <span class='va'>X</span> <span class='op'>%*%</span> <span class='va'>beta</span>,
+  a0 <span class='op'>=</span> <span class='fl'>0.001</span>,
+  b0 <span class='op'>=</span> <span class='fl'>0.001</span>,
+  params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
 
 <span class='fu'>conj_matlm_sigma</span><span class='op'>(</span>
   <span class='va'>y</span>,
@@ -160,7 +198,8 @@
   U <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>V0</span>,
   <span class='va'>v0</span>,
-  V0_inv <span class='op'>=</span> <span class='fu'><a href='chol_inv.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>V0</span><span class='op'>)</span>
+  V0_inv <span class='op'>=</span> <span class='fu'><a href='chol_inv.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>V0</span><span class='op'>)</span>,
+  params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -178,6 +217,10 @@ this is an n-by-p matrix</p></td>
     <tr>
       <th>mult</th>
       <td><p>An optional multiplier for the prior precision; useful in some cases</p></td>
+    </tr>
+    <tr>
+      <th>params.only</th>
+      <td><p>Should just a list of the updated parameters be returned?</p></td>
     </tr>
     <tr>
       <th>Q, tau</th>

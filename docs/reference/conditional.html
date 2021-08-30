@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Other Utilities — chol_inv • gibbs.utils</title>
+<title>Draw Conditional Samples — cond_mvnorm • gibbs.utils</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Other Utilities — chol_inv" />
-<meta property="og:description" content="Other Utilities" />
+<meta property="og:title" content="Draw Conditional Samples — cond_mvnorm" />
+<meta property="og:description" content="Sample from a conditional distribution." />
 
 
 
@@ -121,50 +121,42 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Other Utilities</h1>
+    <h1>Draw Conditional Samples</h1>
     
-    <div class="hidden name"><code>utilities.Rd</code></div>
+    <div class="hidden name"><code>conditional.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Other Utilities</p>
+    <p>Sample from a conditional distribution.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>chol_inv</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
-
-<span class='fu'>chol_mvrnorm</span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>1</span>, <span class='va'>mu</span>, <span class='va'>Sigma</span>, <span class='va'>Precision</span><span class='op'>)</span>
-
-<span class='fu'>logit</span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span>
-
-<span class='fu'>expit</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>cond_mvnorm</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, <span class='va'>which</span>, params.only <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>A matrix for <code>chol_inv</code> or a numeric vector for <code>expit</code></p></td>
+      <th>y</th>
+      <td><p>A vector of values drawn from the multivariate normal distribution. Element <code>which</code> is ignored.</p></td>
     </tr>
     <tr>
-      <th>n</th>
-      <td><p>Number of samples to draw</p></td>
+      <th>mu</th>
+      <td><p>the mean of the normal distribution from which <code>y</code> comes</p></td>
     </tr>
     <tr>
-      <th>mu, Sigma, Precision</th>
-      <td><p>parameters for a multivariate normal distribution. One of <code>Sigma</code> and
-<code>Precision</code> must be supplied.</p></td>
+      <th>Q</th>
+      <td><p>the precision of the multivariate normal distribution from which <code>y</code> comes</p></td>
     </tr>
     <tr>
-      <th>p</th>
-      <td><p>A numeric vector</p></td>
+      <th>which</th>
+      <td><p>Which index to get the conditional distribution of</p></td>
+    </tr>
+    <tr>
+      <th>params.only</th>
+      <td><p>Should just a list of the updated parameters be returned?</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Unlike <code>MASS::<a href='https://rdrr.io/pkg/MASS/man/mvrnorm.html'>mvrnorm</a>()</code>, <code>chol_mvrnorm()</code> uses the Cholesky decomposition
-  to draw random samples. This is usually faster; the largest gains are seen when <code>n</code> is small
-  (when <code>n</code> is large, the matrix multiplication becomes the limiting factor).</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

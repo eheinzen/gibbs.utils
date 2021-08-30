@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Other Utilities — chol_inv • gibbs.utils</title>
+<title>Impute Conjugate Values — impute_conj_mvnorm_mu • gibbs.utils</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Other Utilities — chol_inv" />
-<meta property="og:description" content="Other Utilities" />
+<meta property="og:title" content="Impute Conjugate Values — impute_conj_mvnorm_mu" />
+<meta property="og:description" content="Impute Conjugate Values" />
 
 
 
@@ -121,50 +121,49 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Other Utilities</h1>
+    <h1>Impute Conjugate Values</h1>
     
-    <div class="hidden name"><code>utilities.Rd</code></div>
+    <div class="hidden name"><code>impute.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Other Utilities</p>
+    <p>Impute Conjugate Values</p>
     </div>
 
-    <pre class="usage"><span class='fu'>chol_inv</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
-
-<span class='fu'>chol_mvrnorm</span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>1</span>, <span class='va'>mu</span>, <span class='va'>Sigma</span>, <span class='va'>Precision</span><span class='op'>)</span>
-
-<span class='fu'>logit</span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span>
-
-<span class='fu'>expit</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>impute_conj_mvnorm_mu</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>impute</span>, <span class='va'>Q</span>, <span class='va'>mu0</span>, <span class='va'>tau0</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>A matrix for <code>chol_inv</code> or a numeric vector for <code>expit</code></p></td>
+      <th>y</th>
+      <td><p>A matrix of values drawn from the multivariate normal distribution
+whose mean we are to impute.</p></td>
     </tr>
     <tr>
-      <th>n</th>
-      <td><p>Number of samples to draw</p></td>
+      <th>mu</th>
+      <td><p>the means we wish to impute. Should be the same size as <code>y</code>.
+No NA's are allowed; indices to impute are passed to <code>impute</code>. Instead,
+usually values are initialized and allowed to update within the MCMC framework.</p></td>
     </tr>
     <tr>
-      <th>mu, Sigma, Precision</th>
-      <td><p>parameters for a multivariate normal distribution. One of <code>Sigma</code> and
-<code>Precision</code> must be supplied.</p></td>
+      <th>impute</th>
+      <td><p>A logical matrix the size of <code>y</code>, indicating where to impute.</p></td>
     </tr>
     <tr>
-      <th>p</th>
-      <td><p>A numeric vector</p></td>
+      <th>Q</th>
+      <td><p>the precision of the multivariate normal distribution from which <code>y</code> comes.
+Should be square, with dimension <code><a href='https://rdrr.io/r/base/nrow.html'>ncol(y)</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>mu0, tau0</th>
+      <td><p>The prior means/precisions for <code>mu</code>.
+Can be a matrix the same size as <code>mu</code>, in which case
+only the values corresponding to <code>impute == TRUE</code> are used, or a vector with length
+<code><a href='https://rdrr.io/r/base/sum.html'>sum(impute)</a></code>.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Unlike <code>MASS::<a href='https://rdrr.io/pkg/MASS/man/mvrnorm.html'>mvrnorm</a>()</code>, <code>chol_mvrnorm()</code> uses the Cholesky decomposition
-  to draw random samples. This is usually faster; the largest gains are seen when <code>n</code> is small
-  (when <code>n</code> is large, the matrix multiplication becomes the limiting factor).</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

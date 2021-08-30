@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
       </span>
     </div>
 
@@ -54,6 +54,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/conditional.html">Conditional distributions</a>
+    </li>
+    <li>
       <a href="../articles/conjugacy.html">Conjugate distributions</a>
     </li>
   </ul>
@@ -92,19 +95,19 @@
 <div id="matrix-normal-regression-beta" class="section level2">
 <h2 class="hasAnchor">
 <a href="#matrix-normal-regression-beta" class="anchor"></a>Matrix Normal Regression: beta</h2>
-<p><span class="math inline">\(\DeclareMathOperator{\vect}{vec}\)</span> <span class="math inline">\(\newcommand\Norm{\mathcal{N}}\)</span></p>
+<p><span class="math inline">\(\DeclareMathOperator{\vect}{vec}\)</span> <span class="math inline">\(\DeclareMathOperator{\Tr}{Tr}\)</span> <span class="math inline">\(\newcommand\Norm{\mathcal{N}}\)</span> <span class="math inline">\(\newcommand\Wish{\mathcal{W}}\)</span></p>
 <p>In this scenario, we look for the posterior for the model</p>
-<p><span class="math display">\[y \sim \mathcal{MN}_{n,p}(X\beta, U, V)\]</span> with <span class="math inline">\(X\beta\)</span> an <span class="math inline">\(n\)</span> by <span class="math inline">\(p\)</span> matrix, U a <span class="math inline">\(n\)</span> by <span class="math inline">\(n\)</span> matrix, and V a <span class="math inline">\(p\)</span> by <span class="math inline">\(p\)</span> matrix.</p>
-<p>We rewrite the model as <span class="math display">\[\vect(y) \sim \Norm_{np}(\vect(X\beta), V \otimes U)\]</span> with <span class="math display">\[\vect(\beta) \sim \Norm_(\mu_0, Q_0)\]</span></p>
+<p><span class="math display">\[Y \sim \mathcal{MN}_{n,p}(X\beta, U, V)\]</span> with <span class="math inline">\(X\beta\)</span> an <span class="math inline">\(n\)</span> by <span class="math inline">\(p\)</span> matrix, U a <span class="math inline">\(n\)</span> by <span class="math inline">\(n\)</span> precision matrix, and V a <span class="math inline">\(p\)</span> by <span class="math inline">\(p\)</span> precision matrix.</p>
+<p>We rewrite the model as <span class="math display">\[\vect(Y) \sim \Norm_{np}(\vect(X\beta), V \otimes U)\]</span> with <span class="math display">\[\vect(\beta) \sim \Norm_(\mu_0, Q_0)\]</span></p>
 <p>Let’s consider the likelihood</p>
 <p><span class="math display">\[
-L(\beta\ \big|\ U, V, y, X, \mu_0, Q_0) \propto \exp\left\{-\frac{1}{2}(\vect(y) - \vect(X\beta))^\intercal (V \otimes U) (\vect(y) - \vect(X\beta)) +
+L(\beta\ \big|\ U, V, Y, X, \mu_0, Q_0) \propto \exp\left\{-\frac{1}{2}(\vect(Y) - \vect(X\beta))^\intercal (V \otimes U) (\vect(Y) - \vect(X\beta)) +
   -\frac{1}{2}(\vect(\beta) - \mu_0)^\intercal Q_0 (\vect(\beta) - \mu_0)\right\}
 \]</span></p>
 <p>Expanding the inner part (ignoring the <span class="math inline">\(-1/2\)</span>):</p>
 <p><span class="math display">\[
-\vect(y)^\intercal (V \otimes U) \vect(y)\\
-- 2\vect(y)^\intercal(V \otimes U)\vect(X\beta)\\
+\vect(Y)^\intercal (V \otimes U) \vect(Y)\\
+- 2\vect(Y)^\intercal(V \otimes U)\vect(X\beta)\\
 + \vect(X\beta)^\intercal (V \otimes U) \vect(X\beta)\\
 + \vect{\beta}^\intercal Q_0 \vect{\beta}\\
 - 2\mu_o^\intercal Q_0 \beta\\
@@ -116,7 +119,7 @@ L(\beta\ \big|\ U, V, y, X, \mu_0, Q_0) \propto \exp\left\{-\frac{1}{2}(\vect(y)
 <p>Dropping unused terms and regrouping:</p>
 <p><span class="math display">\[
 \vect(\beta)^\intercal ((I_p \otimes X^\intercal) (V \otimes U) (I_p \otimes X) + Q_0)\vect(\beta)\\
-- 2(\vect(y)^\intercal(V \otimes U)(I_p \otimes X) + \mu_o^\intercal Q_0)\vect(\beta)
+- 2(\vect(Y)^\intercal(V \otimes U)(I_p \otimes X) + \mu_o^\intercal Q_0)\vect(\beta)
 \]</span></p>
 <p>The first line gives the posterior precision:</p>
 <p><span class="math display">\[
@@ -131,14 +134,14 @@ L(\beta\ \big|\ U, V, y, X, \mu_0, Q_0) \propto \exp\left\{-\frac{1}{2}(\vect(y)
 <p>The inverse of <span class="math inline">\(\tilde{Q}\)</span> is used to complete the square, and together with the transpose of the second line gives us the posterior mean. We gain additional efficiency with one more trick: for appropriate matrices, <span class="math inline">\((C^\intercal \otimes A) \vect(B) = \vect(ABC)\)</span>. Note that <span class="math inline">\(V\)</span> is symmetric.</p>
 <p><span class="math display">\[
 \begin{align}
-\tilde{\mu} &amp;= \tilde{Q}^{-1}((I_p \otimes X^\intercal) (V \otimes U) \vect{y} + Q_0 \mu_0) \\
-&amp;= \tilde{Q}^{-1}\left[((I_pV) \otimes (X^\intercal U))\vect{y} + Q_0 \mu_0 \right] \\
-&amp;= \tilde{Q}^{-1}\left[(V \otimes (X^\intercal U))\vect{y} + Q_0 \mu_0 \right] \\
-&amp;= \tilde{Q}^{-1}\left[\vect{(X^\intercal UyV)} + Q_0 \mu_0 \right]
+\tilde{\mu} &amp;= \tilde{Q}^{-1}((I_p \otimes X^\intercal) (V \otimes U) \vect{Y} + Q_0 \mu_0) \\
+&amp;= \tilde{Q}^{-1}\left[((I_pV) \otimes (X^\intercal U))\vect{Y} + Q_0 \mu_0 \right] \\
+&amp;= \tilde{Q}^{-1}\left[(V \otimes (X^\intercal U))\vect{Y} + Q_0 \mu_0 \right] \\
+&amp;= \tilde{Q}^{-1}\left[\vect{(X^\intercal UYV)} + Q_0 \mu_0 \right]
 \end{align}
 \]</span></p>
-<p>Finally, if <span class="math inline">\(U\)</span> is the identity matrix, we get a further efficiency by precomputing <span class="math inline">\(X^\intercal y\)</span></p>
-<p><span class="math display">\[\tilde{\mu} = \tilde{Q}^{-1}\left[\vect{(X^\intercal yV)} + Q_0 \mu_0 \right]\]</span></p>
+<p>Finally, if <span class="math inline">\(U\)</span> is the identity matrix, we get a further efficiency by precomputing <span class="math inline">\(X^\intercal Y\)</span></p>
+<p><span class="math display">\[\tilde{\mu} = \tilde{Q}^{-1}\left[\vect{(X^\intercal YV)} + Q_0 \mu_0 \right]\]</span></p>
 </div>
 <div id="normal-regression-beta" class="section level2">
 <h2 class="hasAnchor">
@@ -154,9 +157,9 @@ L(\beta\ \big|\ U, V, y, X, \mu_0, Q_0) \propto \exp\left\{-\frac{1}{2}(\vect(y)
 <h2 class="hasAnchor">
 <a href="#matrix-normal-beta" class="anchor"></a>Matrix Normal: beta</h2>
 <p>In this scenario, we look for the posterior for the model</p>
-<p><span class="math display">\[y \sim \mathcal{MN}_{n,p}(\beta, U, V)\]</span> <span class="math display">\[\vect(\beta) \sim \Norm(\mu_0, Q_0)\]</span></p>
-<p>If there is only one realization, this is a specific case of the matrix normal regression, with <span class="math inline">\(X \equiv I_n\)</span>. We immediately get the posterior precision and mean: <span class="math display">\[\tilde{Q} = V \otimes U + Q_0\]</span> <span class="math display">\[\tilde{\mu} = \tilde{Q}^{-1}\left[\vect{(UyV)} + Q_0 \mu_0 \right]\]</span></p>
-<p>Again, if <span class="math inline">\(U\)</span> is the identity, we collapse even further to <span class="math display">\[\tilde{\mu} = \tilde{Q}^{-1}\left[\vect{(yV)} + Q_0 \mu_0 \right]\]</span></p>
+<p><span class="math display">\[Y \sim \mathcal{MN}_{n,p}(\beta, U, V)\]</span> <span class="math display">\[\vect(\beta) \sim \Norm(\mu_0, Q_0)\]</span></p>
+<p>If there is only one realization, this is a specific case of the matrix normal regression, with <span class="math inline">\(X \equiv I_n\)</span>. We immediately get the posterior precision and mean: <span class="math display">\[\tilde{Q} = V \otimes U + Q_0\]</span> <span class="math display">\[\tilde{\mu} = \tilde{Q}^{-1}\left[\vect{(UYV)} + Q_0 \mu_0 \right]\]</span></p>
+<p>Again, if <span class="math inline">\(U\)</span> is the identity, we collapse even further to <span class="math display">\[\tilde{\mu} = \tilde{Q}^{-1}\left[\vect{(YV)} + Q_0 \mu_0 \right]\]</span></p>
 </div>
 <div id="multivariate-normal-mu" class="section level2">
 <h2 class="hasAnchor">
@@ -172,6 +175,26 @@ L(\beta\ \big|\ U, V, y, X, \mu_0, Q_0) \propto \exp\left\{-\frac{1}{2}(\vect(y)
 <p>In this scenario, we look for the posterior for the model</p>
 <p><span class="math display">\[y \sim \Norm(\mu, \tau)\]</span> <span class="math display">\[\mu \sim \Norm(\mu_0, \tau_0)\]</span></p>
 <p>This is a specific case of the multivariate normal, with <span class="math inline">\(Q \equiv \tau\)</span>. We immediately get the posterior precision and mean: <span class="math display">\[\tilde{\tau} = n\tau + \tau_0\]</span> <span class="math display">\[\tilde{\mu} = \tilde{\tau}^{-1}(\tau \sum_{i=1}^{n}y_i + \tau_0 \mu_0)\]</span></p>
+</div>
+</div>
+<div id="precisions" class="section level1">
+<h1 class="hasAnchor">
+<a href="#precisions" class="anchor"></a>Precisions</h1>
+<div id="matrix-normal" class="section level2">
+<h2 class="hasAnchor">
+<a href="#matrix-normal" class="anchor"></a>Matrix Normal</h2>
+<p>In this scenario, we look for the posterior for the situation</p>
+<p><span class="math display">\[Y \sim \mathcal{MN}_{n,p}(\beta, U, V)\]</span> <span class="math display">\[V \sim \Wish(V_0, v_0)\]</span></p>
+<p>We use the relevant parts of the convenient form of the matrix normal involving the trace, and multiply by the relevant parts of the Wishart density:</p>
+<p><span class="math display">\[
+\vert V \vert^{n/2}
+\exp{(-\frac{1}{2}\Tr{[V(X - M)^\intercal U (X - M)]})} \cdot
+\vert V \vert^{(v_0 - p - 1)/2}
+\exp{(-\frac{1}{2}\Tr{[VV_0^{-1}]})}
+\]</span></p>
+<p>It’s clear that the trace term becomes</p>
+<p><span class="math display">\[\Tr{[V(V_0^{-1} + (X - M)^\intercal U (X - M))]}\]</span> and the determinant term becomes <span class="math display">\[\vert V \vert ^ {(n + v_0 - p - 1)/2}\]</span></p>
+<p>So that we get <span class="math display">\[V \sim \Wish{((V_0^{-1} + (X - M)^\intercal U (X - M))^{-1}, n + v_0)}\]</span></p>
 </div>
 </div>
   </div>
