@@ -1,0 +1,78 @@
+---
+title: "Conditional distributions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Conditional distributions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+A brief look at conditional distributions:
+
+$\newcommand\Norm{\mathcal{N}}$
+
+
+# One element of multivariate normal
+
+Suppose
+$$x \sim \Norm(\mu, Q)$$
+
+We're looking for $x_i \vert x_{-i} \sim \Norm(?, ?)$
+
+Then we have (in the log-density):
+
+$$(x - \mu)^\intercal Q (x - \mu)$$
+
+We extract the relevant components involving $x_i$
+
+$$
+(x_i - \mu_i)^\intercal Q_{ii} (x_i - \mu_i) +
+2\sum_{i \ne j}(x_i - \mu_i)Q_{ij}(x_j - \mu_j)
+$$
+
+$$
+Q_{ii}x_i^2 - 2Q_{ii}x_i\mu_i +
+2\sum_{i \ne j}Q_{ij}x_i(x_j - \mu_j)
+$$
+
+So that
+
+$$
+x \sim \Norm(\mu_i - \sum_{i \ne j}\frac{Q_{ij}}{Q_{ii}}(x_j - \mu_j), Q_{11})
+$$
+
+## In the conjugate setting
+
+We can expand this to the conjugate setting, where we wish to sample one element of $\mu$:
+
+$$y ~ N(\mu, Q)$$
+$$\mu ~ N(\mu_0, \tau_0)$$
+
+This can be particularly useful when, e.g., some of your $\mu$'s are observed, while others are not, and you wish to impute.
+
+We have (in the log-density):
+
+$$(y - \mu)^\intercal Q (y - \mu) + \tau_0(\mu_i - \mu_0)^2$$
+
+We extract the relevant components involving $\mu_i$
+
+$$
+(y_i - \mu_i)^\intercal Q_{ii} (y_i - \mu_i) +
+2\sum_{i \ne j}(y_i - \mu_i)Q_{ij}(y_j - \mu_j) +
+\tau_0\mu_i^2 - 2\tau_0\mu_i\mu_0
+$$
+
+$$
+Q_{ii}\mu_i^2 - 2Q_{ii}y_i\mu_i +
+2\sum_{i \ne j}Q_{ij}\mu_i(\mu_j - y_j) +
+\tau_0\mu_i^2 - 2\tau_0\mu_i\mu_0
+$$
+
+The precision is then $Q_{ii} + \tau_0$, and completing the square gives
+
+$$
+\mu_i \sim \Norm\left(\frac{1}{Q_{ii} + \tau_0} \left(\tau_0\mu_0 + Q_{ii}y_i - \sum_{i \ne j}Q_{ij}(\mu_j - y_j)\right), Q_{ii} + \tau_0\right)
+$$
+
+This is exactly the "usual" conjugate form for a normal distribution with unknown $\mu$ combined with the conditional distribution
+of $\mu_i$ (from above, but with $x$ and $\mu$ exchanged for each other).

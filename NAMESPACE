@@ -3,6 +3,7 @@
 S3method(print,gibbs_utils_params)
 export(chol_inv)
 export(chol_mvrnorm)
+export(cond_mvnorm)
 export(conj_lm_beta)
 export(conj_lm_tau)
 export(conj_matlm_beta)
