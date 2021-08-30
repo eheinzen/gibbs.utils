@@ -1,3 +1,7 @@
+# v0.4.1
+
+- Added a pkgdown site (and README.md).
+
 # v0.4.0
 
 - Include an option to use (the new function) `chol_mvrnorm()` to draw multivariate normal samples instead of `MASS::mvrnorm()` 
