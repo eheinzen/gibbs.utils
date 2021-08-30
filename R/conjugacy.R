@@ -25,7 +25,7 @@ conj_norm_mu <- function(y, tau, mu0 = 0, tau0 = 0.001, mult = 1, params.only = 
   newtau <- mult*tau0 + n*tau
   mean <- (tau0*mu0 + tau*sum(y)) / newtau
   if(params.only) return(gu_params(mu = mean, tau = newtau, sd = 1 / sqrt(newtau)))
-  stats::rnorm(
+  rnorm(
     1,
     mean = mean,
     sd = 1 / sqrt(newtau)
@@ -103,7 +103,7 @@ conj_norm_tau <- function(y, mu, a0 = 0.001, b0 = 0.001, params.only = FALSE) {
   a <- a0 + 0.5*length(y)
   b <- b0 + 0.5*sum((y - mu)^2)
   if(params.only) return(gu_params(a = a, b = b))
-  stats::rgamma(1, a, b)
+  rgamma(1, a, b)
 }
 
 #' @rdname conjugacy
@@ -123,7 +123,7 @@ conj_mvnorm_Q <- function(y, mu, V0, v0, V0_inv = chol_inv(V0), params.only = FA
   }))
   V2 <- chol_inv(V0_inv + tmp)
   if(params.only) return(gu_params(V = V2, v = n + v0))
-  stats::rWishart(
+  rWishart(
     1,
     Sigma = V2,
     df = n + v0
@@ -141,7 +141,7 @@ conj_matnorm_V <- function(y, mu, U = NULL, V0, v0, V0_inv = chol_inv(V0), param
 
   V2 <- chol_inv(V0_inv + ymu2 %*% ymu)
   if(params.only) return(gu_params(V = V2, v = n + v0))
-  stats::rWishart(
+  rWishart(
     1,
     Sigma = V2,
     df = n + v0
