@@ -2,6 +2,8 @@
 
 - Added a pkgdown site (and README.md).
 
+- Added the `params.only=` argument to conjugacy functions.
+
 # v0.4.0
 
 - Include an option to use (the new function) `chol_mvrnorm()` to draw multivariate normal samples instead of `MASS::mvrnorm()` 

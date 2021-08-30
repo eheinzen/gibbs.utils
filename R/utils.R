@@ -51,3 +51,30 @@ expit <- function(x) {
   1 / (1 + exp(-x))
 }
 
+
+
+gu_params <- function(...) {
+  out <- list(...)
+  class(out) <- "gibbs_utils_params"
+  out
+}
+
+#' @export
+print.gibbs_utils_params <- function(x, ...) {
+  cat("A 'gibbs_utils_params' object, with:\n")
+  for(nm in names(x)) {
+    if(is.matrix(x[[nm]])) {
+      d <- dim(x[[nm]])
+      cat(nm, ": a ", d[1], "x", d[2], " matrix\n", sep = "")
+    } else {
+      l <- length(x[[nm]])
+      if(l == 1) {
+        cat(nm, ": ", x[[nm]], "\n", sep = "")
+      } else {
+        cat(nm, ": a length-", l, " vector\n")
+      }
+    }
+  }
+  invisible(x)
+}
+
