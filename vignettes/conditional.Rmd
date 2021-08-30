@@ -45,8 +45,8 @@ $$
 
 We can expand this to the conjugate setting, where we wish to sample one element of $\mu$:
 
-$$y ~ N(\mu, Q)$$
-$$\mu ~ N(\mu_0, \tau_0)$$
+$$y \sim N(\mu, Q)$$
+$$\mu \sim N(\mu_0, \tau_0)$$
 
 This can be particularly useful when, e.g., some of your $\mu$'s are observed, while others are not, and you wish to impute.
 
