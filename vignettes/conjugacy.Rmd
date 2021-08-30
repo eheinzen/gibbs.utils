@@ -15,31 +15,34 @@ Below we derive the posterior distributions for various scenarios, given their c
 
 
 $\DeclareMathOperator{\vect}{vec}$
+$\DeclareMathOperator{\Tr}{Tr}$
 $\newcommand\Norm{\mathcal{N}}$
+$\newcommand\Wish{\mathcal{W}}$
 
 In this scenario, we look for the posterior for the model
 
-$$y \sim \mathcal{MN}_{n,p}(X\beta, U, V)$$
-with $X\beta$ an $n$ by $p$ matrix, U a $n$ by $n$ matrix, and V a $p$ by $p$ matrix.
+$$Y \sim \mathcal{MN}_{n,p}(X\beta, U, V)$$
+with $X\beta$ an $n$ by $p$ matrix, U a $n$ by $n$ precision matrix,
+and V a $p$ by $p$ precision matrix.
 
 
 We rewrite the model as
-$$\vect(y) \sim \Norm_{np}(\vect(X\beta), V \otimes U)$$
+$$\vect(Y) \sim \Norm_{np}(\vect(X\beta), V \otimes U)$$
 with
 $$\vect(\beta) \sim \Norm_(\mu_0, Q_0)$$
 
 Let's consider the likelihood
 
 $$
-L(\beta\ \big|\ U, V, y, X, \mu_0, Q_0) \propto \exp\left\{-\frac{1}{2}(\vect(y) - \vect(X\beta))^\intercal (V \otimes U) (\vect(y) - \vect(X\beta)) +
+L(\beta\ \big|\ U, V, Y, X, \mu_0, Q_0) \propto \exp\left\{-\frac{1}{2}(\vect(Y) - \vect(X\beta))^\intercal (V \otimes U) (\vect(Y) - \vect(X\beta)) +
   -\frac{1}{2}(\vect(\beta) - \mu_0)^\intercal Q_0 (\vect(\beta) - \mu_0)\right\}
 $$
 
 Expanding the inner part (ignoring the $-1/2$):
 
 $$
-\vect(y)^\intercal (V \otimes U) \vect(y)\\
-- 2\vect(y)^\intercal(V \otimes U)\vect(X\beta)\\
+\vect(Y)^\intercal (V \otimes U) \vect(Y)\\
+- 2\vect(Y)^\intercal(V \otimes U)\vect(X\beta)\\
 + \vect(X\beta)^\intercal (V \otimes U) \vect(X\beta)\\
 + \vect{\beta}^\intercal Q_0 \vect{\beta}\\
 - 2\mu_o^\intercal Q_0 \beta\\
@@ -55,7 +58,7 @@ Dropping unused terms and regrouping:
 
 $$
 \vect(\beta)^\intercal ((I_p \otimes X^\intercal) (V \otimes U) (I_p \otimes X) + Q_0)\vect(\beta)\\
-- 2(\vect(y)^\intercal(V \otimes U)(I_p \otimes X) + \mu_o^\intercal Q_0)\vect(\beta)
+- 2(\vect(Y)^\intercal(V \otimes U)(I_p \otimes X) + \mu_o^\intercal Q_0)\vect(\beta)
 $$
 
 The first line gives the posterior precision:
@@ -76,16 +79,16 @@ We gain additional efficiency with one more trick: for appropriate matrices, $(C
 
 $$
 \begin{align}
-\tilde{\mu} &= \tilde{Q}^{-1}((I_p \otimes X^\intercal) (V \otimes U) \vect{y} + Q_0 \mu_0) \\
-&= \tilde{Q}^{-1}\left[((I_pV) \otimes (X^\intercal U))\vect{y} + Q_0 \mu_0 \right] \\
-&= \tilde{Q}^{-1}\left[(V \otimes (X^\intercal U))\vect{y} + Q_0 \mu_0 \right] \\
-&= \tilde{Q}^{-1}\left[\vect{(X^\intercal UyV)} + Q_0 \mu_0 \right]
+\tilde{\mu} &= \tilde{Q}^{-1}((I_p \otimes X^\intercal) (V \otimes U) \vect{Y} + Q_0 \mu_0) \\
+&= \tilde{Q}^{-1}\left[((I_pV) \otimes (X^\intercal U))\vect{Y} + Q_0 \mu_0 \right] \\
+&= \tilde{Q}^{-1}\left[(V \otimes (X^\intercal U))\vect{Y} + Q_0 \mu_0 \right] \\
+&= \tilde{Q}^{-1}\left[\vect{(X^\intercal UYV)} + Q_0 \mu_0 \right]
 \end{align}
 $$
 
-Finally, if $U$ is the identity matrix, we get a further efficiency by precomputing $X^\intercal y$
+Finally, if $U$ is the identity matrix, we get a further efficiency by precomputing $X^\intercal Y$
 
-$$\tilde{\mu} = \tilde{Q}^{-1}\left[\vect{(X^\intercal yV)} + Q_0 \mu_0 \right]$$
+$$\tilde{\mu} = \tilde{Q}^{-1}\left[\vect{(X^\intercal YV)} + Q_0 \mu_0 \right]$$
 
 
 
@@ -117,16 +120,16 @@ $$\tilde{\mu} = \tilde{Q}^{-1}(\tau X^\intercal y + Q_0 \mu_0)$$
 
 In this scenario, we look for the posterior for the model
 
-$$y \sim \mathcal{MN}_{n,p}(\beta, U, V)$$
+$$Y \sim \mathcal{MN}_{n,p}(\beta, U, V)$$
 $$\vect(\beta) \sim \Norm(\mu_0, Q_0)$$
 
 If there is only one realization, this is a specific case of the matrix normal regression, with $X \equiv I_n$.
 We immediately get the posterior precision and mean:
 $$\tilde{Q} = V \otimes U + Q_0$$
-$$\tilde{\mu} = \tilde{Q}^{-1}\left[\vect{(UyV)} + Q_0 \mu_0 \right]$$
+$$\tilde{\mu} = \tilde{Q}^{-1}\left[\vect{(UYV)} + Q_0 \mu_0 \right]$$
 
 Again, if $U$ is the identity, we collapse even further to
-$$\tilde{\mu} = \tilde{Q}^{-1}\left[\vect{(yV)} + Q_0 \mu_0 \right]$$
+$$\tilde{\mu} = \tilde{Q}^{-1}\left[\vect{(YV)} + Q_0 \mu_0 \right]$$
 
 
 ## Multivariate Normal: mu
@@ -153,4 +156,36 @@ This is a specific case of the multivariate normal, with $Q \equiv \tau$.
 We immediately get the posterior precision and mean:
 $$\tilde{\tau} = n\tau + \tau_0$$
 $$\tilde{\mu} = \tilde{\tau}^{-1}(\tau \sum_{i=1}^{n}y_i + \tau_0 \mu_0)$$
+
+
+# Precisions
+
+## Matrix Normal
+
+In this scenario, we look for the posterior for the situation
+
+$$Y \sim \mathcal{MN}_{n,p}(\beta, U, V)$$
+$$V \sim \Wish(V_0, v_0)$$
+
+We use the relevant parts of the convenient form of the matrix normal involving the trace, and multiply by the relevant parts of the Wishart density:
+
+$$
+\vert V \vert^{n/2}
+\exp{(-\frac{1}{2}\Tr{[V(X - M)^\intercal U (X - M)]})} \cdot
+\vert V \vert^{(v_0 - p - 1)/2}
+\exp{(-\frac{1}{2}\Tr{[VV_0^{-1}]})}
+$$
+
+It's clear that the trace term becomes
+
+$$\Tr{[V(V_0^{-1} + (X - M)^\intercal U (X - M))]}$$
+and the determinant term becomes
+$$\vert V \vert ^ {(n + v_0 - p - 1)/2}$$
+
+So that we get
+$$V \sim \Wish{((V_0^{-1} + (X - M)^\intercal U (X - M))^{-1}, n + v_0)}$$
+
+
+
+
 
