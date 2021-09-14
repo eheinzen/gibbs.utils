@@ -3,10 +3,10 @@
 using namespace Rcpp;
 
 double binom_LL(double p, double k, double n, double mean, double precision) {
-  return -k*log(1.0 + exp(-p)) - (n-k)*log(1.0 + exp(p)) - 0.5*precision*(p - mean)*(p - mean);
+  return k*p - n*log(1.0 + exp(p)) - 0.5*precision*(p - mean)*(p - mean);
 }
 double binom_LL_mv(NumericVector p, NumericVector k, NumericVector n, NumericVector mean, NumericMatrix Q, int i) {
-  double mm = -k[i]*log(1.0 + exp(-p[i])) - (n[i]-k[i])*log(1.0 + exp(p[i])) ;
+  double mm = k[i]*p[i] - n[i]*log(1.0 + exp(p[i])) ;
   for(int j = 0; j < p.size(); j++) {
     mm -= 0.5*(1.0 + (i != j))*(p[i] - mean[i])*Q(i, j)*(p[j] - mean[j]);
   }

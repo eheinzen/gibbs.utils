@@ -1,10 +1,14 @@
+# v0.4.2
+
+- Sped up binomial log-likelihood (by a non-trivial amount) by avoiding an exponentiation.
+
 # v0.4.1
 
 - Added a pkgdown site (and README.md).
 
 - Added the `params.only=` argument to conjugacy functions.
 
-- Added `conj_mvnorm()`.
+- Added `impute_conj_mvnorm()`.
 
 # v0.4.0
 
