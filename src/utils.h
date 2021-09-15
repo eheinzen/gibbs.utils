@@ -6,6 +6,10 @@
 double binom_LL(double p, double k, double n, double mean, double precision);
 double binom_LL_mv(Rcpp::NumericVector p, double k, double n,
                    Rcpp::NumericVector mean, Rcpp::NumericMatrix Q, int i);
+
+double multinom_LL_mv(Rcpp::NumericVector p_j, Rcpp::LogicalVector z_j, double k, double n, Rcpp::NumericVector p_i,
+                      Rcpp::NumericVector mean, Rcpp::NumericMatrix Q, int i, int j);
+
 double pois_LL(double L, double k, double mean, double precision);
 double pois_LL_mv(Rcpp::NumericVector L, double k, Rcpp::NumericVector mean,
                   Rcpp::NumericMatrix Q, int i);

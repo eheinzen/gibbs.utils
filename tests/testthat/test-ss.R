@@ -99,3 +99,25 @@ test_that("multivariate slice sampling works for binomial (matrix)", {
   expect_equal(one, two)
   expect_true(is.matrix(one))
 })
+
+
+
+# multinom -------------------------------------------------------------------
+
+test_that("multivariate slice sampling works for binomial (matrix)", {
+  tmp <- cbind(0, matrix(c(0, 0, 0.7, 0.7), nrow = 2))
+  p <- array(rep(tmp, each = 400), dim = c(400, 2, 3))
+  mean <- round(p)
+  set.seed(99)
+  n <- rpois(400*2, 1000)
+  k <- t(sapply(n, function(x) rmultinom(1, size = x, prob = c(0.25, 0.25, 0.5))))
+  dim(k) <- c(400, 2, 3)
+  stopifnot(rowSums(k, dims = 2) == n)
+
+  z <- matrix(1, nrow = 2, ncol = 3)
+  Q <- array(0, c(2, 2, 3))
+  for(j in 1:3) Q[, , j] <- matrix(c(2, 1, 1, 2), 2)
+  m <- apply(ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q), 3, mean)
+  expect_true(all(abs(m - c(0, 0, log(2))) < 0.01))
+
+})

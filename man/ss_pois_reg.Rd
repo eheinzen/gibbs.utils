@@ -36,5 +36,5 @@ This function slice samples \code{L} conditional on \code{k}, \code{mean}, and \
   The internals are defined in C++.
 }
 \seealso{
-\code{\link{ss_binom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
+\code{\link{ss_binom_reg}}, \code{\link{ss_multinom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
 }

@@ -16,7 +16,7 @@
 #'   \code{L} is assumed to be multivariately distributed, and a different function is used.
 #'
 #'   The internals are defined in C++.
-#' @seealso \code{\link{ss_binom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
+#' @seealso \code{\link{ss_binom_reg}}, \code{\link{ss_multinom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
 #' @export
 ss_pois_reg <- function(L, k, mean, precision, ..., w = 1, nexpand = 10, ncontract = 100) {
   if(length(L) != length(k)) stop("'L' and 'k' must have the same length")
@@ -57,7 +57,7 @@ ss_pois_reg <- function(L, k, mean, precision, ..., w = 1, nexpand = 10, ncontra
 #'   \code{p} is assumed to be multivariately distributed, and different internals are used.
 #'
 #'   The internals are defined in C++.
-#' @seealso \code{\link{ss_pois_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling},
+#' @seealso \code{\link{ss_pois_reg}}, \code{\link{ss_multinom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling},
 #' \url{https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm}
 #' @name binom_reg
 #' @export
@@ -83,4 +83,63 @@ ss_binom_reg <- function(p, k, n, mean, precision, ..., w = 1, nexpand = 10, nco
   out <- FUN(p, k, n, mean, precision, w = w, nexpand = nexpand, ncontract = ncontract)
   dim(out) <- d # could be NULL
   out
+}
+
+
+
+#' Slice sample a multinomial regression rate
+#'
+#' @param p the previous iteration of the logit-probability, in the form \code{r x i x j},
+#'   where \code{r} is the number of realizations, \code{i} is the number of (correlated)
+#'   betas (that is, the dimension of \code{precision}), and \code{j} is the number of
+#'   classes to split between. It is expected that \code{p[, , 1] == 0}
+#' @param z a matrix of zeros and ones. The zeros determine so-called "structural zeros": outcomes
+#'   which are not possible. This is assumed not to change over the first dimension (\code{r}) of \code{p}.
+#' @param k the realized value from the binomial distribution; the same size as \code{p}.
+#' @param mean the prior mean for \code{p}. Must be either a scalar or the same size as \code{p}. Note that
+#'   \code{mean[, , 1]} is ignored.
+#' @param precision an array of dimension \code{i x i x j}. The \code{j}-dimension is assumed to be independent.
+#' @inheritParams ss_pois_reg
+#' @details
+#'   \code{ss_binom_reg} slice samples and \code{mh_binom_reg} Metropolis-samples
+#'   \code{p} conditional on \code{k}, \code{n}, \code{mean}, and \code{precision},
+#'   where \code{k_{ri\*} ~ multinom(n, expit(p_{ri\*}))} and \code{p_{r\*j} ~ N(mean_{r\*j}, precision_{j})}.
+#'
+#'   \code{precision} must be a matrix at this time, by which
+#'   \code{p} is assumed to be multivariately distributed (over the second dimension).
+#'
+#'   The internals are defined in C++.
+#' @seealso \code{\link{ss_pois_reg}}, \code{\link{ss_binom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
+#' @name multinom_reg
+#' @export
+ss_multinom_reg <- function(p, z, k, mean, precision, ..., w = 1, nexpand = 10, ncontract = 100) {
+  d <- dim(p)
+  if(length(d) != 3 || !identical(d, dim(k))) stop("'p' and 'k' must have the same (3D) dimensions")
+  if(any(p[, , 1] != 0)) stop("p[, , 1] != 0")
+
+  if(length(mean) == 1) mean <- array(mean, dim = d)
+  if(!identical(dim(mean), d)) stop("'mean' must either be a scalar or have the same dim() as p")
+
+  dp <- dim(precision)
+  if(length(dp) != 3 || !identical(dp, c(d[2], d[2], d[3]))) stop("'precision' must be a 3D-array with dim = i x i x j")
+
+  if(!is.matrix(z) || !identical(dim(z), d[2:3])) stop("'z' must be a matrix with dim = i x j")
+  z <- TRUE & z
+
+  for(j in seq_len(d[3])[-1]) {
+    p[, , j] <- slice_sample_multinom_mv(
+      p_j = unclass(asplit(p, 1)),
+      z = z,
+      k = k[, , j],
+      n = rowSums(k, dims = 2),
+      p_i = p[, , j],
+      mean = mean[, , j],
+      Q = precision[, , j],
+      j = j - 1L,
+      w = w,
+      nexpand = nexpand,
+      ncontract = ncontract
+    )
+  }
+  p
 }

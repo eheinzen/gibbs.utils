@@ -29,6 +29,14 @@ slice_sample_binom_mv <- function(p, k, n, mean, Q, w, nexpand, ncontract) {
     .Call('_gibbs_utils_slice_sample_binom_mv', PACKAGE = 'gibbs.utils', p, k, n, mean, Q, w, nexpand, ncontract)
 }
 
+one_multinom_slice_mv <- function(p_j, z_j, k, n, p_i, mean, Q, i, j, w, nexpand, ncontract) {
+    .Call('_gibbs_utils_one_multinom_slice_mv', PACKAGE = 'gibbs.utils', p_j, z_j, k, n, p_i, mean, Q, i, j, w, nexpand, ncontract)
+}
+
+slice_sample_multinom_mv <- function(p_j, z, k, n, p_i, mean, Q, j, w, nexpand, ncontract) {
+    .Call('_gibbs_utils_slice_sample_multinom_mv', PACKAGE = 'gibbs.utils', p_j, z, k, n, p_i, mean, Q, j, w, nexpand, ncontract)
+}
+
 one_pois_slice <- function(L, k, mean, precision, w, nexpand, ncontract) {
     .Call('_gibbs_utils_one_pois_slice', PACKAGE = 'gibbs.utils', L, k, mean, precision, w, nexpand, ncontract)
 }

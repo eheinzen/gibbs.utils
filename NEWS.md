@@ -2,6 +2,8 @@
 
 - Sped up sampling (by maybe 15%?) by avoiding repeated subsetting of k and n.
 
+- Added `ss_multinom_reg()`.
+
 # v0.4.2
 
 - Sped up binomial log-likelihood (by a non-trivial amount) by avoiding an exponentiation.

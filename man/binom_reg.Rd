@@ -55,6 +55,6 @@ Slice sample a binomial regression rate
   The internals are defined in C++.
 }
 \seealso{
-\code{\link{ss_pois_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling},
+\code{\link{ss_pois_reg}}, \code{\link{ss_multinom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling},
 \url{https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm}
 }
