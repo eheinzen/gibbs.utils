@@ -46,7 +46,7 @@ NumericVector slice_sample_pois(NumericVector L, NumericVector k, NumericVector 
 
 
 // [[Rcpp::export]]
-double one_pois_slice_mv(NumericVector L, NumericVector k, NumericVector mean, NumericMatrix Q, int i, double w, int nexpand, int ncontract) {
+double one_pois_slice_mv(NumericVector L, double k, NumericVector mean, NumericMatrix Q, int i, double w, int nexpand, int ncontract) {
   double y0 = pois_LL_mv(L, k, mean, Q, i) - R::rexp(1.0);
   double left = L[i] - w;
   double right = L[i] + w;
@@ -79,7 +79,7 @@ NumericMatrix slice_sample_pois_mv(NumericMatrix L, NumericMatrix k, NumericMatr
     NumericVector kk = k(r, _);
     NumericVector mm = mean(r, _);
     for(int i=0; i < L.ncol(); i++) {
-      out(r, i) = one_pois_slice_mv(out(r, _), kk, mm, Q, i, w, nexpand, ncontract);
+      out(r, i) = one_pois_slice_mv(out(r, _), kk[i], mm, Q, i, w, nexpand, ncontract);
     }
   }
   return out;

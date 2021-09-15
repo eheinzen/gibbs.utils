@@ -95,14 +95,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // one_binom_slice_mv
-double one_binom_slice_mv(NumericVector p, NumericVector k, NumericVector n, NumericVector mean, NumericMatrix Q, int i, double w, int nexpand, int ncontract);
+double one_binom_slice_mv(NumericVector p, double k, double n, NumericVector mean, NumericMatrix Q, int i, double w, int nexpand, int ncontract);
 RcppExport SEXP _gibbs_utils_one_binom_slice_mv(SEXP pSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP iSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type p(pSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type n(nSEXP);
+    Rcpp::traits::input_parameter< double >::type k(kSEXP);
+    Rcpp::traits::input_parameter< double >::type n(nSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
     Rcpp::traits::input_parameter< int >::type i(iSEXP);
@@ -166,13 +166,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // one_pois_slice_mv
-double one_pois_slice_mv(NumericVector L, NumericVector k, NumericVector mean, NumericMatrix Q, int i, double w, int nexpand, int ncontract);
+double one_pois_slice_mv(NumericVector L, double k, NumericVector mean, NumericMatrix Q, int i, double w, int nexpand, int ncontract);
 RcppExport SEXP _gibbs_utils_one_pois_slice_mv(SEXP LSEXP, SEXP kSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP iSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
+    Rcpp::traits::input_parameter< double >::type k(kSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
     Rcpp::traits::input_parameter< int >::type i(iSEXP);

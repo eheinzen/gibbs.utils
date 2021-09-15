@@ -44,7 +44,7 @@ NumericVector slice_sample_binom(NumericVector p, NumericVector k, NumericVector
 
 
 // [[Rcpp::export]]
-double one_binom_slice_mv(NumericVector p, NumericVector k, NumericVector n, NumericVector mean, NumericMatrix Q, int i, double w, int nexpand, int ncontract) {
+double one_binom_slice_mv(NumericVector p, double k, double n, NumericVector mean, NumericMatrix Q, int i, double w, int nexpand, int ncontract) {
   double y0 = binom_LL_mv(p, k, n, mean, Q, i) - R::rexp(1.0);
   double left = p[i] - w;
   double right = p[i] + w;
@@ -78,7 +78,7 @@ NumericMatrix slice_sample_binom_mv(NumericMatrix p, NumericMatrix k, NumericMat
     NumericVector nn = n(r, _);
     NumericVector mm = mean(r, _);
     for(int i=0; i < p.ncol(); i++) {
-      out(r, i) = one_binom_slice_mv(out(r, _), kk, nn, mm, Q, i, w, nexpand, ncontract);
+      out(r, i) = one_binom_slice_mv(out(r, _), kk[i], nn[i], mm, Q, i, w, nexpand, ncontract);
     }
   }
   return out;
