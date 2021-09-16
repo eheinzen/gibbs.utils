@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • gibbs.utils</title>
+<title>Slice sample a multinomial regression rate — multinom_reg • gibbs.utils</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Slice sample a multinomial regression rate — multinom_reg" />
+<meta property="og:description" content="Slice sample a multinomial regression rate" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -118,84 +119,89 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Slice sample a multinomial regression rate</h1>
+    
+    <div class="hidden name"><code>multinom_reg.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Slice sample a multinomial regression rate</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>ss_multinom_reg</span><span class='op'>(</span>
+  <span class='va'>p</span>,
+  <span class='va'>z</span>,
+  <span class='va'>k</span>,
+  <span class='va'>mean</span>,
+  <span class='va'>precision</span>,
+  <span class='va'>...</span>,
+  w <span class='op'>=</span> <span class='fl'>1</span>,
+  nexpand <span class='op'>=</span> <span class='fl'>10</span>,
+  ncontract <span class='op'>=</span> <span class='fl'>100</span>
+<span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="binom_reg.html">mh_binom_reg()</a></code> <code><a href="binom_reg.html">ss_binom_reg()</a></code> </p>
-        </td>
-        <td><p>Slice sample a binomial regression rate</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="conditional.html">cond_mvnorm()</a></code> </p>
-        </td>
-        <td><p>Draw Conditional Samples</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="conjugacy.html">conj_norm_mu()</a></code> <code><a href="conjugacy.html">conj_mvnorm_mu()</a></code> <code><a href="conjugacy.html">conj_matnorm_mu()</a></code> <code><a href="conjugacy.html">conj_lm_beta()</a></code> <code><a href="conjugacy.html">conj_matlm_beta()</a></code> <code><a href="conjugacy.html">conj_norm_tau()</a></code> <code><a href="conjugacy.html">conj_mvnorm_Q()</a></code> <code><a href="conjugacy.html">conj_matnorm_V()</a></code> <code><a href="conjugacy.html">conj_lm_tau()</a></code> <code><a href="conjugacy.html">conj_matlm_sigma()</a></code> </p>
-        </td>
-        <td><p>Draw Conjugate Samples</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="distributions.html">dmvnorm()</a></code> <code><a href="distributions.html">dmatnorm()</a></code> <code><a href="distributions.html">dlogitnorm()</a></code> </p>
-        </td>
-        <td><p>Statistical Distributions</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="impute.html">impute_conj_mvnorm_mu()</a></code> </p>
-        </td>
-        <td><p>Impute Conjugate Values</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="multinom_reg.html">ss_multinom_reg()</a></code> </p>
-        </td>
-        <td><p>Slice sample a multinomial regression rate</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ss_pois_reg.html">ss_pois_reg()</a></code> </p>
-        </td>
-        <td><p>Slice sample a Poisson regression rate</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="utilities.html">chol_inv()</a></code> <code><a href="utilities.html">chol_mvrnorm()</a></code> <code><a href="utilities.html">logit()</a></code> <code><a href="utilities.html">expit()</a></code> </p>
-        </td>
-        <td><p>Other Utilities</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>p</th>
+      <td><p>the previous iteration of the logit-probability, as an array of dimension <code>r x i x j</code>,
+where <code>r</code> is the number of realizations, <code>i</code> is the number of (correlated)
+betas (that is, the dimension of <code>precision</code>), and <code>j</code> is the number of
+classes to split between. It is expected that <code>p[, , 1] == 0</code></p></td>
+    </tr>
+    <tr>
+      <th>z</th>
+      <td><p>a matrix of zeros and ones. The zeros determine so-called "structural zeros": outcomes
+which are not possible. This is assumed not to change over the first dimension (<code>r</code>) of <code>p</code>.
+This is of dimension <code>i x j</code>.</p></td>
+    </tr>
+    <tr>
+      <th>k</th>
+      <td><p>the realized value from the binomial distribution; the same size as <code>p</code> (<code>r x i x j</code>).</p></td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td><p>the prior mean for <code>p</code>. Must be either a scalar or an array of size <code>r x i x (j-1)</code></p></td>
+    </tr>
+    <tr>
+      <th>precision</th>
+      <td><p>an array of dimension <code>i x i x (j-1)</code>.
+The <code>j</code>-dimension is assumed to be independent.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Other arguments (not used)</p></td>
+    </tr>
+    <tr>
+      <th>w</th>
+      <td><p>The width of each expansion (to the right and left each)</p></td>
+    </tr>
+    <tr>
+      <th>nexpand</th>
+      <td><p>The maximum number of expansions (to the right and left each)</p></td>
+    </tr>
+    <tr>
+      <th>ncontract</th>
+      <td><p>The maximum number of contractions. If this is exceeded, the original value is returned</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p><code>ss_binom_reg</code> slice samples and <code>mh_binom_reg</code> Metropolis-samples
+  <code>p</code> conditional on <code>k</code>, <code>n</code>, <code>mean</code>, and <code>precision</code>,
+  where <code>k_{ri\*} ~ multinom(n, expit(p_{ri\*}))</code> and <code>p_{r\*j} ~ N(mean_{r\*j}, precision_{j})</code>.</p>
+<p><code>precision</code> must be a matrix at this time, by which
+  <code>p</code> is assumed to be multivariately distributed (over the second dimension).</p>
+<p>The internals are defined in C++.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='ss_pois_reg.html'>ss_pois_reg</a></code>, <code><a href='mh_binom_reg.html'>ss_binom_reg</a></code>, <a href='https://en.wikipedia.org/wiki/Slice_sampling'>https://en.wikipedia.org/wiki/Slice_sampling</a></p></div>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

@@ -18,20 +18,21 @@ ss_multinom_reg(
 )
 }
 \arguments{
-\item{p}{the previous iteration of the logit-probability, in the form \code{r x i x j},
+\item{p}{the previous iteration of the logit-probability, as an array of dimension \code{r x i x j},
 where \code{r} is the number of realizations, \code{i} is the number of (correlated)
 betas (that is, the dimension of \code{precision}), and \code{j} is the number of
 classes to split between. It is expected that \code{p[, , 1] == 0}}
 
 \item{z}{a matrix of zeros and ones. The zeros determine so-called "structural zeros": outcomes
-which are not possible. This is assumed not to change over the first dimension (\code{r}) of \code{p}.}
+which are not possible. This is assumed not to change over the first dimension (\code{r}) of \code{p}.
+This is of dimension \code{i x j}.}
 
-\item{k}{the realized value from the binomial distribution; the same size as \code{p}.}
+\item{k}{the realized value from the binomial distribution; the same size as \code{p} (\code{r x i x j}).}
 
-\item{mean}{the prior mean for \code{p}. Must be either a scalar or the same size as \code{p}. Note that
-\code{mean[, , 1]} is ignored.}
+\item{mean}{the prior mean for \code{p}. Must be either a scalar or an array of size \code{r x i x (j-1)}}
 
-\item{precision}{an array of dimension \code{i x i x j}. The \code{j}-dimension is assumed to be independent.}
+\item{precision}{an array of dimension \code{i x i x (j-1)}.
+The \code{j}-dimension is assumed to be independent.}
 
 \item{...}{Other arguments (not used)}
 
