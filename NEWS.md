@@ -1,3 +1,9 @@
+# v0.4.4
+
+- Sped up multinomial log-likelihood by avoiding exponentiation altogether for structural zeros.
+
+- Changed the acceptable dimensions of `mean=` and `precision=` in `ss_multinom_reg()`
+
 # v0.4.3
 
 - Sped up sampling (by maybe 15%?) by avoiding repeated subsetting of k and n.

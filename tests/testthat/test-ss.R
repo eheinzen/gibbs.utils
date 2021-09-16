@@ -117,6 +117,10 @@ test_that("multivariate slice sampling works for multinomial", {
   z <- matrix(1, nrow = 2, ncol = 3)
   Q <- array(0, c(2, 2, 3))
   for(j in 1:3) Q[, , j] <- matrix(c(2, 1, 1, 2), 2)
+  expect_error(ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q), "mean")
+  mean <- mean[, , -1]
+  expect_error(ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q), "precision")
+  Q <- Q[, , -1]
   m <- apply(ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q), 3, mean)
   expect_true(all(abs(m - c(0, 0, log(2))) < 0.01))
 
