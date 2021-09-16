@@ -125,6 +125,7 @@ ss_multinom_reg <- function(p, z, k, mean, precision, ..., w = 1, nexpand = 10, 
 
   if(!is.matrix(z) || !identical(dim(z), d[2:3])) stop("'z' must be a matrix with dim = i x j")
   z <- TRUE & z
+  if(any(!z & colSums(k))) stop("z == 0 but k > 0")
 
   for(j in seq_len(d[3])[-1]) {
     p[, , j] <- slice_sample_multinom_mv(
