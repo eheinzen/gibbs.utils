@@ -11,6 +11,7 @@ ss_multinom_reg(
   k,
   mean,
   precision,
+  ref = c("first", "last"),
   ...,
   w = 1,
   nexpand = 10,
@@ -21,7 +22,7 @@ ss_multinom_reg(
 \item{p}{the previous iteration of the logit-probability, as an array of dimension \code{r x i x j},
 where \code{r} is the number of realizations, \code{i} is the number of (correlated)
 betas (that is, the dimension of \code{precision}), and \code{j} is the number of
-classes to split between. It is expected that \code{p[, , 1] == 0}}
+classes to split between. It is expected that \code{p[, , ref] == 0}}
 
 \item{z}{a matrix of zeros and ones. The zeros determine so-called "structural zeros": outcomes
 which are not possible. This is assumed not to change over the first dimension (\code{r}) of \code{p}.
@@ -33,6 +34,11 @@ This is of dimension \code{i x j}.}
 
 \item{precision}{an array of dimension \code{i x i x (j-1)}.
 The \code{j}-dimension is assumed to be independent.}
+
+\item{ref}{One of \code{"first"} or \code{"last"}, denoting which column of \code{p} is the reference.
+If \code{"first"}, then \code{mean} and \code{precision} map to the second through j-th elements of \code{p}.
+If \code{"last"}, then \code{mean} and \code{precision} map to the first through (j-1)-th
+elements of \code{p}.}
 
 \item{...}{Other arguments (not used)}
 

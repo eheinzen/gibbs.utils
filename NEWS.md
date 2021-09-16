@@ -1,3 +1,7 @@
+# v0.4.5
+
+- Added `ref=` argument to `ss_multinom_reg()`.
+
 # v0.4.4
 
 - Sped up multinomial log-likelihood by avoiding exponentiation altogether for structural zeros.

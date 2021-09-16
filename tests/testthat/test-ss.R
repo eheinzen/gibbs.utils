@@ -132,3 +132,22 @@ test_that("multivariate slice sampling works for multinomial", {
   expect_true(all(m[, 1] == 0))
   expect_true(all(abs(m[4:6] - c(0, log(2), log(2))) < 0.01))
 })
+
+
+
+test_that("multivariate slice sampling works when ref == 'last'", {
+  tmp <- cbind(matrix(-0.7, nrow = 2, ncol = 2), 0)
+  p <- array(rep(tmp, each = 400), dim = c(400, 2, 3))
+  mean <- round(p[, , -1])
+  set.seed(99)
+  n <- rpois(400*2, 1200)
+  k <- t(sapply(n, function(x) rmultinom(1, size = x, prob = c(0.25, 0.25, 0.5))))
+  dim(k) <- c(400, 2, 3)
+  stopifnot(rowSums(k, dims = 2) == n)
+
+  z <- matrix(1, nrow = 2, ncol = 3)
+  Q <- array(0, c(2, 2, 2))
+  for(j in 1:2) Q[, , j] <- matrix(c(2, 1, 1, 2), 2)
+  m <- apply(ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q, ref = "last"), 3, mean)
+  expect_true(all(abs(m - c(-log(2), -log(2), 0)) < 0.01))
+})

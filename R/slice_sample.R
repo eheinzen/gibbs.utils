@@ -92,7 +92,7 @@ ss_binom_reg <- function(p, k, n, mean, precision, ..., w = 1, nexpand = 10, nco
 #' @param p the previous iteration of the logit-probability, as an array of dimension \code{r x i x j},
 #'   where \code{r} is the number of realizations, \code{i} is the number of (correlated)
 #'   betas (that is, the dimension of \code{precision}), and \code{j} is the number of
-#'   classes to split between. It is expected that \code{p[, , 1] == 0}
+#'   classes to split between. It is expected that \code{p[, , ref] == 0}
 #' @param z a matrix of zeros and ones. The zeros determine so-called "structural zeros": outcomes
 #'   which are not possible. This is assumed not to change over the first dimension (\code{r}) of \code{p}.
 #'   This is of dimension \code{i x j}.
@@ -100,6 +100,10 @@ ss_binom_reg <- function(p, k, n, mean, precision, ..., w = 1, nexpand = 10, nco
 #' @param mean the prior mean for \code{p}. Must be either a scalar or an array of size \code{r x i x (j-1)}
 #' @param precision an array of dimension \code{i x i x (j-1)}.
 #'   The \code{j}-dimension is assumed to be independent.
+#' @param ref One of \code{"first"} or \code{"last"}, denoting which column of \code{p} is the reference.
+#'   If \code{"first"}, then \code{mean} and \code{precision} map to the second through j-th elements of \code{p}.
+#'   If \code{"last"}, then \code{mean} and \code{precision} map to the first through (j-1)-th
+#'   elements of \code{p}.
 #' @inheritParams ss_pois_reg
 #' @details
 #'   \code{ss_binom_reg} slice samples and \code{mh_binom_reg} Metropolis-samples
@@ -113,11 +117,14 @@ ss_binom_reg <- function(p, k, n, mean, precision, ..., w = 1, nexpand = 10, nco
 #' @seealso \code{\link{ss_pois_reg}}, \code{\link{ss_binom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
 #' @name multinom_reg
 #' @export
-ss_multinom_reg <- function(p, z, k, mean, precision, ..., w = 1, nexpand = 10, ncontract = 100) {
+ss_multinom_reg <- function(p, z, k, mean, precision, ref = c("first", "last"), ..., w = 1, nexpand = 10, ncontract = 100) {
   d <- dim(p)
   d2 <- replace(d, 3, d[3]-1L)
   if(length(d) != 3 || !identical(d, dim(k))) stop("'p' and 'k' must have the same (3D) dimensions")
-  if(any(p[, , 1] != 0)) stop("p[, , 1] != 0")
+
+  ref <- match.arg(ref)
+  ref <- if(ref == "first") 1 else d[3]
+  if(any(p[, , ref] != 0)) stop("p[, , ref] != 0")
 
   if(length(mean) == 1) mean <- array(mean, dim = d2)
   if(!identical(dim(mean), d2)) {
@@ -133,15 +140,15 @@ ss_multinom_reg <- function(p, z, k, mean, precision, ..., w = 1, nexpand = 10, 
   z <- TRUE & z
   if(any(!z & colSums(k))) stop("z == 0 but k > 0")
   n <- rowSums(k, dims = 2)
-  for(j in seq_len(d[3])[-1]) {
+  for(j in seq_len(d[3])[-ref]) {
     p[, , j] <- slice_sample_multinom_mv(
       p_j = unclass(asplit(p, 1)),
       z = z,
       k = k[, , j],
       n = n,
       p_i = p[, , j],
-      mean = mean[, , j-1],
-      Q = precision[, , j-1],
+      mean = mean[, , j - (ref == 1)],
+      Q = precision[, , j - (ref == 1)],
       j = j - 1L,
       w = w,
       nexpand = nexpand,
