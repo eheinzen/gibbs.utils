@@ -15,13 +15,18 @@ double binom_LL_mv(NumericVector p, double k, double n, NumericVector mean, Nume
 
 
 double multinom_LL_mv(NumericVector p_j, LogicalVector z_j, double k, double n, NumericVector p_i, NumericVector mean, NumericMatrix Q, int i, int j) {
-  double nn = 0;
-  for(int jj = 0; jj < p_j.size(); jj++) {
-    if(z_j[jj]) {
-      nn += exp(p_j[jj]);
+  double mm = 0;
+  if(z_j[j]) {
+    // we still get the right log-likelihood if we include this when z_j[j] is false,
+    // but the exp() costs time
+    double nn = 0;
+    for(int jj = 0; jj < p_j.size(); jj++) {
+      if(z_j[jj]) {
+        nn += exp(p_j[jj]);
+      }
     }
+    mm = k*p_j[j] - n*log(nn);
   }
-  double mm = k*p_j[j] - n*log(nn);
   for(int ii = 0; ii < p_i.size(); ii++) {
     mm -= 0.5*(1.0 + (i != ii))*(p_i[i] - mean[i])*Q(i, ii)*(p_i[ii] - mean[ii]);
   }

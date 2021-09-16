@@ -89,16 +89,17 @@ ss_binom_reg <- function(p, k, n, mean, precision, ..., w = 1, nexpand = 10, nco
 
 #' Slice sample a multinomial regression rate
 #'
-#' @param p the previous iteration of the logit-probability, in the form \code{r x i x j},
+#' @param p the previous iteration of the logit-probability, as an array of dimension \code{r x i x j},
 #'   where \code{r} is the number of realizations, \code{i} is the number of (correlated)
 #'   betas (that is, the dimension of \code{precision}), and \code{j} is the number of
 #'   classes to split between. It is expected that \code{p[, , 1] == 0}
 #' @param z a matrix of zeros and ones. The zeros determine so-called "structural zeros": outcomes
 #'   which are not possible. This is assumed not to change over the first dimension (\code{r}) of \code{p}.
-#' @param k the realized value from the binomial distribution; the same size as \code{p}.
-#' @param mean the prior mean for \code{p}. Must be either a scalar or the same size as \code{p}. Note that
-#'   \code{mean[, , 1]} is ignored.
-#' @param precision an array of dimension \code{i x i x j}. The \code{j}-dimension is assumed to be independent.
+#'   This is of dimension \code{i x j}.
+#' @param k the realized value from the binomial distribution; the same size as \code{p} (\code{r x i x j}).
+#' @param mean the prior mean for \code{p}. Must be either a scalar or an array of size \code{r x i x (j-1)}
+#' @param precision an array of dimension \code{i x i x (j-1)}.
+#'   The \code{j}-dimension is assumed to be independent.
 #' @inheritParams ss_pois_reg
 #' @details
 #'   \code{ss_binom_reg} slice samples and \code{mh_binom_reg} Metropolis-samples
@@ -114,28 +115,33 @@ ss_binom_reg <- function(p, k, n, mean, precision, ..., w = 1, nexpand = 10, nco
 #' @export
 ss_multinom_reg <- function(p, z, k, mean, precision, ..., w = 1, nexpand = 10, ncontract = 100) {
   d <- dim(p)
+  d2 <- replace(d, 3, d[3]-1L)
   if(length(d) != 3 || !identical(d, dim(k))) stop("'p' and 'k' must have the same (3D) dimensions")
   if(any(p[, , 1] != 0)) stop("p[, , 1] != 0")
 
-  if(length(mean) == 1) mean <- array(mean, dim = d)
-  if(!identical(dim(mean), d)) stop("'mean' must either be a scalar or have the same dim() as p")
+  if(length(mean) == 1) mean <- array(mean, dim = d2)
+  if(!identical(dim(mean), d2)) {
+    stop("'mean' must either be a scalar or have dim = r x i x (j-1): ", d2[1], " x ", d2[2], " x ", d2[3])
+  }
 
   dp <- dim(precision)
-  if(length(dp) != 3 || !identical(dp, c(d[2], d[2], d[3]))) stop("'precision' must be a 3D-array with dim = i x i x j")
+  if(!identical(dp, d2[c(2, 2, 3)])) {
+    stop("'precision' must be have dim = i x i x (j-1): ", d2[2], " x ", d2[2], " x ", d2[3])
+  }
 
-  if(!is.matrix(z) || !identical(dim(z), d[2:3])) stop("'z' must be a matrix with dim = i x j")
+  if(!identical(dim(z), d[2:3])) stop("'z' must be a matrix with dim = i x j")
   z <- TRUE & z
   if(any(!z & colSums(k))) stop("z == 0 but k > 0")
-
+  n <- rowSums(k, dims = 2)
   for(j in seq_len(d[3])[-1]) {
     p[, , j] <- slice_sample_multinom_mv(
       p_j = unclass(asplit(p, 1)),
       z = z,
       k = k[, , j],
-      n = rowSums(k, dims = 2),
+      n = n,
       p_i = p[, , j],
-      mean = mean[, , j],
-      Q = precision[, , j],
+      mean = mean[, , j-1],
+      Q = precision[, , j-1],
       j = j - 1L,
       w = w,
       nexpand = nexpand,
@@ -144,3 +150,4 @@ ss_multinom_reg <- function(p, z, k, mean, precision, ..., w = 1, nexpand = 10, 
   }
   p
 }
+
