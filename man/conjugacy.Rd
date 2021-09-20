@@ -6,6 +6,7 @@
 \alias{conj_matnorm_mu}
 \alias{conj_lm_beta}
 \alias{conj_matlm_beta}
+\alias{conj_diagmatlm_beta}
 \alias{conj_norm_tau}
 \alias{conj_mvnorm_Q}
 \alias{conj_matnorm_V}
@@ -39,6 +40,17 @@ conj_lm_beta(
 )
 
 conj_matlm_beta(
+  y,
+  X,
+  V,
+  U = NULL,
+  mu0,
+  Q0,
+  use.chol = FALSE,
+  params.only = FALSE
+)
+
+conj_diagmatlm_beta(
   y,
   X,
   V,

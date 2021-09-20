@@ -29,8 +29,9 @@ and V a $p$ by $p$ precision matrix.
 We rewrite the model as
 
 \begin{equation}
+\label{eq:matnormsetup}
 \begin{split}
-\vect(Y) &\sim \norm_{np}(\vect(X\beta), V \otimes U) \\
+\vect(Y) &\sim \norm(\vect(X\beta), V \otimes U) \\
 \vect(\beta) &\sim \norm(\mu_0, Q_0)
 \end{split}
 \end{equation}
@@ -50,7 +51,7 @@ Expanding the inner part (ignoring the $-1/2$):
 &- 2\vect(Y)^\intercal(V \otimes U)\vect(X\beta) \\
 &+ \vect(X\beta)^\intercal (V \otimes U) \vect(X\beta) \\
 &+ \vect{\beta}^\intercal Q_0 \vect{\beta} \\
-&- 2\mu_o^\intercal Q_0 \beta \\
+&- 2\mu_0^\intercal Q_0 \beta \\
 &+ \mu_0^\intercal Q_0 \mu_0
 \end{split}
 \end{equation}
@@ -63,9 +64,10 @@ Note that $\vect(X\beta) = (I_p \otimes X)\vect(\beta)$. Then
 Dropping unused terms and regrouping:
 
 \begin{equation}
+\label{eq:matnormexpanded}
 \begin{split}
 &\vect(\beta)^\intercal ((I_p \otimes X^\intercal) (V \otimes U) (I_p \otimes X) + Q_0)\vect(\beta) \\
-&- 2(\vect(Y)^\intercal(V \otimes U)(I_p \otimes X) + \mu_o^\intercal Q_0)\vect(\beta)
+&- 2(\vect(Y)^\intercal(V \otimes U)(I_p \otimes X) + \mu_0^\intercal Q_0)\vect(\beta)
 \end{split}
 \end{equation}
 
@@ -86,6 +88,7 @@ The inverse of $\tilde{Q}$ is used to complete the square, and together with the
 We gain additional efficiency with one more trick: for appropriate matrices, $(C^\intercal \otimes A) \vect(B) = \vect(ABC)$. Note that $V$ is symmetric.
 
 \begin{equation}
+\label{eq:matnormmu}
 \begin{split}
 \tilde{\mu} &= \tilde{Q}^{-1}((I_p \otimes X^\intercal) (V \otimes U) \vect{Y} + Q_0 \mu_0) \\
 &= \tilde{Q}^{-1}\left[((I_pV) \otimes (X^\intercal U))\vect{Y} + Q_0 \mu_0 \right] \\
@@ -100,7 +103,57 @@ Finally, if $U$ is the identity matrix, we get a further efficiency by precomput
 \tilde{\mu} = \tilde{Q}^{-1}\left[\vect{(X^\intercal YV)} + Q_0 \mu_0 \right]
 \end{equation}
 
+## Matrix Normal Regression: diagonal beta
 
+Occasionally, there are times when $X$ varies by element of $\beta$. Here we consider when
+$\beta$ is $p$ by $1$, so that each column of $X$ gets multiplied by one (and only one) $\beta$.
+
+\begin{equation}
+Y \sim \mathcal{MN}_{n,p}(X\diag{\beta}, U, V)
+\end{equation}
+
+We rewrite the model as in \eqref{eq:matnormsetup}, but with a slightly different prior.
+
+\begin{equation}
+\begin{split}
+\vect(Y) &\sim \norm(\vect(X\diag{\beta}), V \otimes U) \\
+\beta &\sim \norm(\mu_0, Q_0)
+\end{split}
+\end{equation}
+
+We jump to the equivalent of \eqref{eq:matnormexpanded}:
+
+\begin{equation}
+\begin{split}
+&\vect(\diag{\beta})^\intercal ((I_p \otimes X^\intercal) (V \otimes U) (I_p \otimes X))\vect(\diag{\beta}) + \beta^\intercal Q_0 \beta \\
+&- 2(\vect(Y)^\intercal(V \otimes U)(I_p \otimes X) + )\vect(\diag{\beta}) - 2\mu_0^\intercal Q_0\beta
+\end{split}
+\end{equation}
+
+Now, we note that
+\begin{equation}
+\begin{split}
+\vect{\diag{\beta}} &= \vect{\sum e_i e_i^\intercal \beta e_i^\intercal} \\
+&= \sum \vect{e_i e_i^\intercal \beta e_i^\intercal} \\
+&= \sum (e_i \otimes (e_i e_i^\intercal))\beta = E\beta
+\end{split}
+\end{equation}
+
+Then we get
+\begin{equation}
+\begin{split}
+\tilde{Q} &= E^\intercal(I_p \otimes X^\intercal) (V \otimes U) (I_p \otimes X)E + Q_0\\
+&=E^\intercal(I_p \otimes X^\intercal) ((VI_p) \otimes (UX))E + Q_0\\
+&= E^\intercal((I_pVI_p) \otimes (X^\intercal U X))E + Q_0\\
+&= E^\intercal (V \otimes (X^\intercal U X))E + Q_0
+\end{split}
+\end{equation}
+
+Then we get the mean as in \eqref{eq:matnormmu}
+
+\begin{equation}
+\tilde{\mu} = \tilde{Q}^{-1}\left[E^\intercal\vect{(X^\intercal UYV)} + Q_0 \mu_0 \right]
+\end{equation}
 
 ## Normal Regression: beta
 

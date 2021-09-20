@@ -85,6 +85,23 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0, Q0, use.chol = FALSE, params
   FUN(1, mu = mu, Sigma = newQ.inv)
 }
 
+#' @rdname conjugacy
+#' @export
+conj_diagmatlm_beta <- function(y, X, V, U = NULL, mu0, Q0, use.chol = FALSE, params.only = FALSE) {
+  if(!is.matrix(y)) stop("'y' must be a matrix")
+  if(is.matrix(mu0)) mu0 <- as.numeric(mu0)
+
+  p <- ncol(y)
+  E <- replace(matrix(0, p^2, p), vapply(1:p, function(i) (i-1)*p^2 + (i-1)*p + i, NA_real_), 1)
+  XtU <- if(is.null(U)) t(X) else crossprod(X, U)
+  newQ <- crossprod(E, V %x% (XtU %*% X)) %*% E + Q0
+  newQ.inv <- chol_inv(newQ)
+  mu <- newQ.inv %*% (Q0 %*% mu0 + crossprod(E, as.numeric(XtU %*% y %*% V)))
+  if(params.only) return(gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv))
+  FUN <- if(use.chol) chol_mvrnorm else MASS::mvrnorm
+  FUN(1, mu = mu, Sigma = newQ.inv)
+}
+
 
 
 
