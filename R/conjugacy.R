@@ -15,7 +15,7 @@
 #' @param V,U the precision matrices for the matrix-normal distribution
 #' @param X the data matrix on \code{beta}
 #' @param beta the coefficients on \code{X}
-#' @param XtX,V0_inv,Xbeta pre-computed "shortcut" arguments for efficiency reasons
+#' @param XtX,V0_inv,Xbeta,newQ.inv,A pre-computed "shortcut" arguments for efficiency reasons
 #' @param use.chol Logical, determining whether to use \code{MASS::\link{mvrnorm}()} (\code{FALSE}, the default) or \code{\link{chol_mvrnorm}}.
 #' @param params.only Should just a list of the updated parameters be returned?
 #' @rdname conjugacy
@@ -24,7 +24,7 @@ conj_norm_mu <- function(y, tau, mu0 = 0, tau0 = 0.001, mult = 1, params.only = 
   n <- length(y)
   newtau <- mult*tau0 + n*tau
   mean <- (tau0*mu0 + tau*sum(y)) / newtau
-  if(params.only) return(gu_params(mu = mean, tau = newtau, sd = 1 / sqrt(newtau)))
+  if(params.only) return(gu_params(mu = mean, sd = 1 / sqrt(newtau)))
   rnorm(
     1,
     mean = mean,
@@ -34,40 +34,34 @@ conj_norm_mu <- function(y, tau, mu0 = 0, tau0 = 0.001, mult = 1, params.only = 
 
 #' @rdname conjugacy
 #' @export
-conj_mvnorm_mu <- function(y, Q, mu0 = rep_len(0, p), Q0 = diag(0.001, p), mult = 1, use.chol = FALSE, params.only = FALSE) {
+conj_mvnorm_mu <- function(y, Q, mu0 = rep_len(0, p), Q0 = diag(0.001, p), newQ.inv = chol_inv(mult*Q0 + n*Q),
+                           A = t(chol(newQ.inv)), mult = 1, use.chol = FALSE, params.only = FALSE) {
   if(!is.matrix(y)) y <- matrix(y, nrow = 1)
   p <- ncol(y)
   n <- nrow(y)
-  newQ <- mult*Q0 + n*Q
-  newQ.inv <- chol_inv(newQ)
   mu <- newQ.inv %*% (Q0 %*% mu0 + Q %*% colSums(y))
-  if(params.only) return(gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv))
-  FUN <- if(use.chol) chol_mvrnorm else MASS::mvrnorm
-  FUN(1, mu = mu, Sigma = newQ.inv)
+  if(params.only) return(gu_params(mu = mu, Q.inv = newQ.inv))
+  if(use.chol) chol_mvrnorm(1, mu = mu, A = A) else MASS::mvrnorm(1, mu = mu, Sigma = newQ.inv)
 }
 
 #' @rdname conjugacy
 #' @export
-conj_matnorm_mu <- function(y, V, U = NULL, mu0, Q0, use.chol = FALSE, params.only = FALSE) {
+conj_matnorm_mu <- function(y, V, U = NULL, mu0, Q0, newQ.inv = chol_inv(V %x% U + Q0),
+                            A = t(chol(newQ.inv)), use.chol = FALSE, params.only = FALSE) {
   if(!is.matrix(y)) stop("'y' must be a matrix")
   if(is.null(U)) U <- diag(nrow(Q0) / nrow(V))
-  newQ <- V %x% U + Q0
-  newQ.inv <- chol_inv(newQ)
   mu <- newQ.inv %*% (Q0 %*% mu0 + as.numeric(U %*% y %*% V))
-  if(params.only) return(gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv))
-  FUN <- if(use.chol) chol_mvrnorm else MASS::mvrnorm
-  FUN(1, mu = mu, Sigma = newQ.inv)
+  if(params.only) return(gu_params(mu = mu, Q.inv = newQ.inv))
+  if(use.chol) chol_mvrnorm(1, mu = mu, A = A) else MASS::mvrnorm(1, mu = mu, Sigma = newQ.inv)
 }
 
 #' @rdname conjugacy
 #' @export
-conj_lm_beta <- function(y, X, XtX = crossprod(X), tau, mu0, Q0, use.chol = FALSE, params.only = FALSE) {
-  newQ <- tau * XtX + Q0
-  newQ.inv <- chol_inv(newQ)
+conj_lm_beta <- function(y, X, XtX = crossprod(X), tau, mu0, Q0, newQ.inv = chol_inv(tau * XtX + Q0),
+                         A = t(chol(newQ.inv)), use.chol = FALSE, params.only = FALSE) {
   mu <- newQ.inv %*% (Q0 %*% mu0 + tau*t(X) %*% y)
-  if(params.only) return(gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv))
-  FUN <- if(use.chol) chol_mvrnorm else MASS::mvrnorm
-  FUN(1, mu = mu, Sigma = newQ.inv)
+  if(params.only) return(gu_params(mu = mu, Q.inv = newQ.inv))
+  if(use.chol) chol_mvrnorm(1, mu = mu, A = A) else MASS::mvrnorm(1, mu = mu, Sigma = newQ.inv)
 }
 
 #' @rdname conjugacy

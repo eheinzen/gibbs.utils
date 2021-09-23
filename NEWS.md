@@ -1,3 +1,7 @@
+# v0.4.7
+
+- Added some arguments for speed and efficiency, and therefore removed some parameters if `params.only = TRUE`.
+
 # v0.4.6
 
 - Updated vignettes.

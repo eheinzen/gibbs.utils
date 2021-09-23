@@ -4,8 +4,7 @@
 NULL
 
 check_one_or_all <- function(x, len) {
-  nm <- deparse(substitute(x))
-  if(length(x) == 1) rep_len(x, len) else if(length(x) == len) x else stop(nm, " must be of length 1 or ", len)
+  if(length(x) == 1) rep_len(x, len) else if(length(x) == len) x else stop("'x' must be of length 1 or ", len)
 }
 
 #' Other Utilities
@@ -15,6 +14,7 @@ check_one_or_all <- function(x, len) {
 #' @param n Number of samples to draw
 #' @param mu,Sigma,Precision parameters for a multivariate normal distribution. One of \code{Sigma} and
 #'   \code{Precision} must be supplied.
+#' @param A the "square root" by which we multiply the independent normals. Used only for speed.
 #' @details
 #'   Unlike \code{MASS::\link[MASS]{mvrnorm}()}, \code{chol_mvrnorm()} uses the Cholesky decomposition
 #'   to draw random samples. This is usually faster; the largest gains are seen when \code{n} is small
@@ -27,16 +27,11 @@ chol_inv <- function(x) {
 
 #' @rdname utilities
 #' @export
-chol_mvrnorm <- function(n = 1, mu, Sigma, Precision) {
-  if(missing(Sigma)) {
-    p <- nrow(Precision)
-    A <- backsolve(chol(Precision), diag(1, p))
-  } else {
-    p <- nrow(Sigma)
-    A <- t(chol(Sigma))
-  }
+chol_mvrnorm <- function(n = 1, mu, Sigma, Precision,
+                         A = if(missing(Sigma)) backsolve(chol(Precision), diag(1, p)) else t(chol(Sigma))) {
+  p <- nrow(A)
   mu <- check_one_or_all(mu, p)
-  t(mu + A %*% matrix(stats::rnorm(p*n), nrow = p))
+  t(mu + A %*% matrix(rnorm(p*n), nrow = p))
 }
 
 #' @rdname utilities

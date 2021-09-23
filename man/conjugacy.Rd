@@ -21,12 +21,24 @@ conj_mvnorm_mu(
   Q,
   mu0 = rep_len(0, p),
   Q0 = diag(0.001, p),
+  newQ.inv = chol_inv(mult * Q0 + n * Q),
+  A = t(chol(newQ.inv)),
   mult = 1,
   use.chol = FALSE,
   params.only = FALSE
 )
 
-conj_matnorm_mu(y, V, U = NULL, mu0, Q0, use.chol = FALSE, params.only = FALSE)
+conj_matnorm_mu(
+  y,
+  V,
+  U = NULL,
+  mu0,
+  Q0,
+  newQ.inv = chol_inv(V \%x\% U + Q0),
+  A = t(chol(newQ.inv)),
+  use.chol = FALSE,
+  params.only = FALSE
+)
 
 conj_lm_beta(
   y,
@@ -35,6 +47,8 @@ conj_lm_beta(
   tau,
   mu0,
   Q0,
+  newQ.inv = chol_inv(tau * XtX + Q0),
+  A = t(chol(newQ.inv)),
   use.chol = FALSE,
   params.only = FALSE
 )
@@ -117,7 +131,7 @@ this is an n-by-p matrix}
 
 \item{X}{the data matrix on \code{beta}}
 
-\item{XtX, V0_inv, Xbeta}{pre-computed "shortcut" arguments for efficiency reasons}
+\item{XtX, V0_inv, Xbeta, newQ.inv, A}{pre-computed "shortcut" arguments for efficiency reasons}
 
 \item{mu}{the mean of the normal distribution from which \code{y} comes}
 

@@ -9,7 +9,13 @@
 \usage{
 chol_inv(x)
 
-chol_mvrnorm(n = 1, mu, Sigma, Precision)
+chol_mvrnorm(
+  n = 1,
+  mu,
+  Sigma,
+  Precision,
+  A = if (missing(Sigma)) backsolve(chol(Precision), diag(1, p)) else t(chol(Sigma))
+)
 
 logit(p)
 
@@ -22,6 +28,8 @@ expit(x)
 
 \item{mu, Sigma, Precision}{parameters for a multivariate normal distribution. One of \code{Sigma} and
 \code{Precision} must be supplied.}
+
+\item{A}{the "square root" by which we multiply the independent normals. Used only for speed.}
 
 \item{p}{A numeric vector}
 }

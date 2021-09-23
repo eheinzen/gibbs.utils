@@ -48,7 +48,7 @@ test_that("multivariate MH sampling works for binomial (matrix)", {
   one <- mh_binom_reg(p, k, n, mean = 2, precision = prec, proposal_sd = 1)
   set.seed(20210729)
   expect_error(mh_binom_reg(p, k, n, mean = rep_len(2, 3), precision = prec, proposal_sd = 1)
-               , "mean must be of length")
+               , "'x' must be of length")
   two <- mh_binom_reg(p, k, n, mean = matrix(2, nrow = 3, ncol = 3), precision = prec, proposal_sd = 1)
   expect_equal(one, two)
   expect_true(is.matrix(one))
