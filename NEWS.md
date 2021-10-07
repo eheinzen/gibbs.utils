@@ -1,3 +1,7 @@
+# v0.4.8
+
+- A bug fix for slice sampling multinomial.
+
 # v0.4.7
 
 - Added some arguments for speed and efficiency, and therefore removed some parameters if `params.only = TRUE`.

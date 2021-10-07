@@ -13,7 +13,7 @@ double one_multinom_slice_mv(NumericVector p_j, LogicalVector z_j, double k, dou
     left -= w;
   }
   jj = 0;
-  while(multinom_LL_mv(replace_it(p_j, j, right), z_j, k, n, replace_it(p_i, i, left), mean, Q, i, j) > y0 && jj++ < nexpand) {
+  while(multinom_LL_mv(replace_it(p_j, j, right), z_j, k, n, replace_it(p_i, i, right), mean, Q, i, j) > y0 && jj++ < nexpand) {
     right += w;
   }
   double newx = R::runif(left, right);
