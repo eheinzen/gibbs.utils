@@ -106,13 +106,6 @@ ss_binom_reg <- function(p, k, n, mean, precision, ..., w = 1, nexpand = 10, nco
 #'   elements of \code{p}.
 #' @inheritParams ss_pois_reg
 #' @details
-#'   \code{ss_binom_reg} slice samples and \code{mh_binom_reg} Metropolis-samples
-#'   \code{p} conditional on \code{k}, \code{n}, \code{mean}, and \code{precision},
-#'   where \code{k_{ri\*} ~ multinom(n, expit(p_{ri\*}))} and \code{p_{r\*j} ~ N(mean_{r\*j}, precision_{j})}.
-#'
-#'   \code{precision} must be a matrix at this time, by which
-#'   \code{p} is assumed to be multivariately distributed (over the second dimension).
-#'
 #'   The internals are defined in C++.
 #' @seealso \code{\link{ss_pois_reg}}, \code{\link{ss_binom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
 #' @name multinom_reg
@@ -140,15 +133,20 @@ ss_multinom_reg <- function(p, z, k, mean, precision, ref = c("first", "last"), 
   z <- TRUE & z
   if(any(!z & colSums(k))) stop("z == 0 but k > 0")
   n <- rowSums(k, dims = 2)
+  subset_third <- function(x, i) {
+    out <- x[, , i]
+    dim(out) <- dim(x)[1:2]
+    out
+  }
   for(j in seq_len(d[3])[-ref]) {
     p[, , j] <- slice_sample_multinom_mv(
       p_j = unclass(asplit(p, 1)),
       z = z,
-      k = k[, , j],
+      k = subset_third(k, j),
       n = n,
-      p_i = p[, , j],
-      mean = mean[, , j - (ref == 1)],
-      Q = precision[, , j - (ref == 1)],
+      p_i = subset_third(p, j),
+      mean = subset_third(mean, j - (ref == 1)),
+      Q = subset_third(precision, j - (ref == 1)),
       j = j - 1L,
       w = w,
       nexpand = nexpand,

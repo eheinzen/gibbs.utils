@@ -151,3 +151,17 @@ test_that("multivariate slice sampling works when ref == 'last'", {
   m <- apply(ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q, ref = "last"), 3, mean)
   expect_true(all(abs(m - c(-log(2), -log(2), 0)) < 0.01))
 })
+
+
+test_that("multivariate slice sampling works when dimensions are 1", {
+  k <- array(c(100, 1000, 10000), dim = c(1, 1, 3))
+  p <- array(log(k / k[1]), dim = c(1, 1, 3))
+  mean <- array(round(p[, , -1], 2), dim = c(1, 1, 2))
+  set.seed(99)
+  z <- matrix(1, nrow = 1, ncol = 3)
+  Q <- array(1000, c(1, 1, 2))
+
+  m <- ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q, ref = "first")
+  expect_true(all(abs(m - p) < 0.01))
+})
+

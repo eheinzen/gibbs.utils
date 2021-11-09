@@ -52,14 +52,7 @@ elements of \code{p}.}
 Slice sample a multinomial regression rate
 }
 \details{
-\code{ss_binom_reg} slice samples and \code{mh_binom_reg} Metropolis-samples
-  \code{p} conditional on \code{k}, \code{n}, \code{mean}, and \code{precision},
-  where \code{k_{ri\*} ~ multinom(n, expit(p_{ri\*}))} and \code{p_{r\*j} ~ N(mean_{r\*j}, precision_{j})}.
-
-  \code{precision} must be a matrix at this time, by which
-  \code{p} is assumed to be multivariately distributed (over the second dimension).
-
-  The internals are defined in C++.
+The internals are defined in C++.
 }
 \seealso{
 \code{\link{ss_pois_reg}}, \code{\link{ss_binom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
