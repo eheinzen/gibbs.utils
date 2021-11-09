@@ -12,6 +12,7 @@
 \alias{conj_matnorm_V}
 \alias{conj_lm_tau}
 \alias{conj_matlm_sigma}
+\alias{conj_binom_p}
 \title{Draw Conjugate Samples}
 \usage{
 conj_norm_mu(y, tau, mu0 = 0, tau0 = 0.001, mult = 1, params.only = FALSE)
@@ -110,6 +111,8 @@ conj_matlm_sigma(
   V0_inv = chol_inv(V0),
   params.only = FALSE
 )
+
+conj_binom_p(k, n, a0 = 1, b0 = 1, params.only = FALSE)
 }
 \arguments{
 \item{y}{realizations from the distribution whose parameter is being drawn. For multivariate conjugacy,
@@ -135,11 +138,16 @@ this is an n-by-p matrix}
 
 \item{mu}{the mean of the normal distribution from which \code{y} comes}
 
-\item{a0, b0}{the parameters (shape and rate) of the gamma distribution prior on \code{tau}.}
+\item{a0, b0}{the parameters (shape and rate) of the gamma distribution prior on \code{tau},
+or the parameters (shape1 and shape2) of the beta distribution prior on \code{p}.}
 
 \item{V0, v0}{the parameters (matrix and degrees of freedom) of the Wishart prior on \code{Q} or \code{V}}
 
 \item{beta}{the coefficients on \code{X}}
+
+\item{k}{The number of successes}
+
+\item{n}{The number of trials}
 }
 \description{
 Sample from the posterior (conditional on all other parameters) in the conjugate setting.

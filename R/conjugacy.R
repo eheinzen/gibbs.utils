@@ -10,7 +10,10 @@
 #' @param Q0,tau0 the prior precision of \code{mu}.
 #' @param mult An optional multiplier for the prior precision; useful in some cases
 #' @param mu the mean of the normal distribution from which \code{y} comes
-#' @param a0,b0 the parameters (shape and rate) of the gamma distribution prior on \code{tau}.
+#' @param a0,b0 the parameters (shape and rate) of the gamma distribution prior on \code{tau},
+#'   or the parameters (shape1 and shape2) of the beta distribution prior on \code{p}.
+#' @param k The number of successes
+#' @param n The number of trials
 #' @param V0,v0 the parameters (matrix and degrees of freedom) of the Wishart prior on \code{Q} or \code{V}
 #' @param V,U the precision matrices for the matrix-normal distribution
 #' @param X the data matrix on \code{beta}
@@ -102,11 +105,7 @@ conj_diagmatlm_beta <- function(y, X, V, U = NULL, mu0, Q0, use.chol = FALSE, pa
 
 
 
-
-
-
-
-
+# precisions --------------------------------------------------------------
 
 #' @rdname conjugacy
 #' @export
@@ -173,6 +172,17 @@ conj_matlm_sigma <- function(y, X, beta, Xbeta = X %*% beta, U = NULL, V0, v0, V
 
 
 
+
+
+# non-normal --------------------------------------------------------------
+#' @rdname conjugacy
+#' @export
+conj_binom_p <- function(k, n, a0 = 1, b0 = 1, params.only = FALSE) {
+  a <- sum(k) + a0
+  b <- sum(n) - sum(k) + b0
+  if(params.only) return(gu_params(a = a, b = b))
+  stats::rbeta(1, a, b)
+}
 
 
 
