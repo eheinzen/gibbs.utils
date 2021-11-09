@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
       </span>
     </div>
 
@@ -199,12 +199,7 @@ elements of <code>p</code>.</p></td>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>ss_binom_reg</code> slice samples and <code>mh_binom_reg</code> Metropolis-samples
-  <code>p</code> conditional on <code>k</code>, <code>n</code>, <code>mean</code>, and <code>precision</code>,
-  where <code>k_{ri\*} ~ multinom(n, expit(p_{ri\*}))</code> and <code>p_{r\*j} ~ N(mean_{r\*j}, precision_{j})</code>.</p>
-<p><code>precision</code> must be a matrix at this time, by which
-  <code>p</code> is assumed to be multivariately distributed (over the second dimension).</p>
-<p>The internals are defined in C++.</p>
+    <p>The internals are defined in C++.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='ss_pois_reg.html'>ss_pois_reg</a></code>, <code><a href='mh_binom_reg.html'>ss_binom_reg</a></code>, <a href='https://en.wikipedia.org/wiki/Slice_sampling'>https://en.wikipedia.org/wiki/Slice_sampling</a></p></div>

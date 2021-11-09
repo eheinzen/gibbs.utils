@@ -1,3 +1,9 @@
+# v0.5.0
+
+- Added `conj_binom_p()` for the beta conjugacy for a binomial probability.
+
+- Fixed a bug in `ss_multinom_reg()` when dimensions were length 1.
+
 # v0.4.8
 
 - A bug fix for slice sampling multinomial.

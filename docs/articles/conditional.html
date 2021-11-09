@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
       </span>
     </div>
 
@@ -75,7 +75,7 @@
 
       
 
-      </header><script src="conditional_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><script src="conditional_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Conditional distributions</h1>
@@ -89,50 +89,56 @@
     
     
 <p>A brief look at conditional distributions:</p>
-<p><span class="math inline">\(\newcommand\Norm{\mathcal{N}}\)</span></p>
 <div id="one-element-of-multivariate-normal" class="section level1">
 <h1 class="hasAnchor">
 <a href="#one-element-of-multivariate-normal" class="anchor"></a>One element of multivariate normal</h1>
-<p>Suppose <span class="math display">\[x \sim \Norm(\mu, Q)\]</span></p>
-<p>We’re looking for <span class="math inline">\(x_i \vert x_{-i} \sim \Norm(?, ?)\)</span></p>
+<p>Suppose <span class="math display">\[x \sim \norm(\mu, Q)\]</span></p>
+<p>We’re looking for <span class="math inline">\(x_i \vert x_{-i} \sim \norm(?, ?)\)</span></p>
 <p>Then we have (in the log-density):</p>
 <p><span class="math display">\[(x - \mu)^\intercal Q (x - \mu)\]</span></p>
 <p>We extract the relevant components involving <span class="math inline">\(x_i\)</span></p>
-<p><span class="math display">\[
+<p><span class="math display">\[\begin{equation}
 (x_i - \mu_i)^\intercal Q_{ii} (x_i - \mu_i) +
 2\sum_{i \ne j}(x_i - \mu_i)Q_{ij}(x_j - \mu_j)
-\]</span></p>
-<p><span class="math display">\[
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
 Q_{ii}x_i^2 - 2Q_{ii}x_i\mu_i +
 2\sum_{i \ne j}Q_{ij}x_i(x_j - \mu_j)
-\]</span></p>
+\end{equation}\]</span></p>
 <p>So that</p>
-<p><span class="math display">\[
-x \sim \Norm(\mu_i - \sum_{i \ne j}\frac{Q_{ij}}{Q_{ii}}(x_j - \mu_j), Q_{11})
-\]</span></p>
+<p><span class="math display">\[\begin{equation}
+x \sim \norm(\mu_i - \sum_{i \ne j}\frac{Q_{ij}}{Q_{ii}}(x_j - \mu_j), Q_{11})
+\end{equation}\]</span></p>
 <div id="in-the-conjugate-setting" class="section level2">
 <h2 class="hasAnchor">
 <a href="#in-the-conjugate-setting" class="anchor"></a>In the conjugate setting</h2>
 <p>We can expand this to the conjugate setting, where we wish to sample one element of <span class="math inline">\(\mu\)</span>:</p>
-<p><span class="math display">\[y \sim N(\mu, Q)\]</span> <span class="math display">\[\mu \sim N(\mu_0, \tau_0)\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+y &amp;\sim \norm(\mu, Q) \\
+\mu &amp;\sim \norm(\mu_0, \tau_0)
+\end{split}
+\end{equation}\]</span></p>
 <p>This can be particularly useful when, e.g., some of your <span class="math inline">\(\mu\)</span>’s are observed, while others are not, and you wish to impute.</p>
 <p>We have (in the log-density):</p>
-<p><span class="math display">\[(y - \mu)^\intercal Q (y - \mu) + \tau_0(\mu_i - \mu_0)^2\]</span></p>
+<p><span class="math display">\[\begin{equation}
+(y - \mu)^\intercal Q (y - \mu) + \tau_0(\mu_i - \mu_0)^2
+\end{equation}\]</span></p>
 <p>We extract the relevant components involving <span class="math inline">\(\mu_i\)</span></p>
-<p><span class="math display">\[
+<p><span class="math display">\[\begin{equation}
 (y_i - \mu_i)^\intercal Q_{ii} (y_i - \mu_i) +
 2\sum_{i \ne j}(y_i - \mu_i)Q_{ij}(y_j - \mu_j) +
 \tau_0\mu_i^2 - 2\tau_0\mu_i\mu_0
-\]</span></p>
-<p><span class="math display">\[
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
 Q_{ii}\mu_i^2 - 2Q_{ii}y_i\mu_i +
 2\sum_{i \ne j}Q_{ij}\mu_i(\mu_j - y_j) +
 \tau_0\mu_i^2 - 2\tau_0\mu_i\mu_0
-\]</span></p>
+\end{equation}\]</span></p>
 <p>The precision is then <span class="math inline">\(Q_{ii} + \tau_0\)</span>, and completing the square gives</p>
-<p><span class="math display">\[
-\mu_i \sim \Norm\left(\frac{1}{Q_{ii} + \tau_0} \left(\tau_0\mu_0 + Q_{ii}y_i - \sum_{i \ne j}Q_{ij}(\mu_j - y_j)\right), Q_{ii} + \tau_0\right)
-\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\mu_i \sim \norm\left(\frac{1}{Q_{ii} + \tau_0} \left(\tau_0\mu_0 + Q_{ii}y_i - \sum_{i \ne j}Q_{ij}(\mu_j - y_j)\right), Q_{ii} + \tau_0\right)
+\end{equation}\]</span></p>
 <p>This is exactly the “usual” conjugate form for a normal distribution with unknown <span class="math inline">\(\mu\)</span> combined with the conditional distribution of <span class="math inline">\(\mu_i\)</span> (from above, but with <span class="math inline">\(x\)</span> and <span class="math inline">\(\mu\)</span> exchanged for each other).</p>
 </div>
 </div>

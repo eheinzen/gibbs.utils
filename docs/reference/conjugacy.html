@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
       </span>
     </div>
 
@@ -137,12 +137,24 @@
   <span class='va'>Q</span>,
   mu0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep_len</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='va'>p</span><span class='op'>)</span>,
   Q0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>0.001</span>, <span class='va'>p</span><span class='op'>)</span>,
+  newQ.inv <span class='op'>=</span> <span class='fu'><a href='chol_inv.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>mult</span> <span class='op'>*</span> <span class='va'>Q0</span> <span class='op'>+</span> <span class='va'>n</span> <span class='op'>*</span> <span class='va'>Q</span><span class='op'>)</span>,
+  A <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/chol.html'>chol</a></span><span class='op'>(</span><span class='va'>newQ.inv</span><span class='op'>)</span><span class='op'>)</span>,
   mult <span class='op'>=</span> <span class='fl'>1</span>,
   use.chol <span class='op'>=</span> <span class='cn'>FALSE</span>,
   params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
 
-<span class='fu'>conj_matnorm_mu</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>V</span>, U <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>mu0</span>, <span class='va'>Q0</span>, use.chol <span class='op'>=</span> <span class='cn'>FALSE</span>, params.only <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>conj_matnorm_mu</span><span class='op'>(</span>
+  <span class='va'>y</span>,
+  <span class='va'>V</span>,
+  U <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>mu0</span>,
+  <span class='va'>Q0</span>,
+  newQ.inv <span class='op'>=</span> <span class='fu'><a href='chol_inv.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>V</span> <span class='op'>%x%</span> <span class='va'>U</span> <span class='op'>+</span> <span class='va'>Q0</span><span class='op'>)</span>,
+  A <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/chol.html'>chol</a></span><span class='op'>(</span><span class='va'>newQ.inv</span><span class='op'>)</span><span class='op'>)</span>,
+  use.chol <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
 
 <span class='fu'>conj_lm_beta</span><span class='op'>(</span>
   <span class='va'>y</span>,
@@ -151,11 +163,24 @@
   <span class='va'>tau</span>,
   <span class='va'>mu0</span>,
   <span class='va'>Q0</span>,
+  newQ.inv <span class='op'>=</span> <span class='fu'><a href='chol_inv.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>tau</span> <span class='op'>*</span> <span class='va'>XtX</span> <span class='op'>+</span> <span class='va'>Q0</span><span class='op'>)</span>,
+  A <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/chol.html'>chol</a></span><span class='op'>(</span><span class='va'>newQ.inv</span><span class='op'>)</span><span class='op'>)</span>,
   use.chol <span class='op'>=</span> <span class='cn'>FALSE</span>,
   params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
 
 <span class='fu'>conj_matlm_beta</span><span class='op'>(</span>
+  <span class='va'>y</span>,
+  <span class='va'>X</span>,
+  <span class='va'>V</span>,
+  U <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>mu0</span>,
+  <span class='va'>Q0</span>,
+  use.chol <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
+
+<span class='fu'>conj_diagmatlm_beta</span><span class='op'>(</span>
   <span class='va'>y</span>,
   <span class='va'>X</span>,
   <span class='va'>V</span>,
@@ -200,7 +225,9 @@
   <span class='va'>v0</span>,
   V0_inv <span class='op'>=</span> <span class='fu'><a href='chol_inv.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>V0</span><span class='op'>)</span>,
   params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+<span class='op'>)</span>
+
+<span class='fu'>conj_binom_p</span><span class='op'>(</span><span class='va'>k</span>, <span class='va'>n</span>, a0 <span class='op'>=</span> <span class='fl'>1</span>, b0 <span class='op'>=</span> <span class='fl'>1</span>, params.only <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -243,7 +270,7 @@ this is an n-by-p matrix</p></td>
       <td><p>the data matrix on <code>beta</code></p></td>
     </tr>
     <tr>
-      <th>XtX, V0_inv, Xbeta</th>
+      <th>XtX, V0_inv, Xbeta, newQ.inv, A</th>
       <td><p>pre-computed "shortcut" arguments for efficiency reasons</p></td>
     </tr>
     <tr>
@@ -252,7 +279,8 @@ this is an n-by-p matrix</p></td>
     </tr>
     <tr>
       <th>a0, b0</th>
-      <td><p>the parameters (shape and rate) of the gamma distribution prior on <code>tau</code>.</p></td>
+      <td><p>the parameters (shape and rate) of the gamma distribution prior on <code>tau</code>,
+or the parameters (shape1 and shape2) of the beta distribution prior on <code>p</code>.</p></td>
     </tr>
     <tr>
       <th>V0, v0</th>
@@ -261,6 +289,14 @@ this is an n-by-p matrix</p></td>
     <tr>
       <th>beta</th>
       <td><p>the coefficients on <code>X</code></p></td>
+    </tr>
+    <tr>
+      <th>k</th>
+      <td><p>The number of successes</p></td>
+    </tr>
+    <tr>
+      <th>n</th>
+      <td><p>The number of trials</p></td>
     </tr>
     </table>
 
