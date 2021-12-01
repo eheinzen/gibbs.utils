@@ -1,3 +1,7 @@
+# v0.5.1
+
+- Small performance improvements for `conj_mvnorm()`.
+
 # v0.5.0
 
 - Added `conj_binom_p()` for the beta conjugacy for a binomial probability.
