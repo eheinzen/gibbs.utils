@@ -123,14 +123,10 @@ conj_mvnorm_Q <- function(y, mu, V0, v0, V0_inv = chol_inv(V0), params.only = FA
   p <- ncol(y)
   n <- nrow(y)
   if(!is.matrix(mu) && length(mu) == p) {
-    mu <- matrix(rep(mu, each = n), nrow = n, ncol = p)
+    mu <- matrix(mu, nrow = n, ncol = p, byrow = TRUE)
   }
   stopifnot(identical(dim(y), dim(mu)))
-  xmu <- y - mu
-  tmp <- Reduce(`+`, lapply(1:n, function(i) {
-    txmu <- xmu[i, , drop = FALSE]
-    t(txmu) %*% txmu
-  }))
+  tmp <- crossprod(y - mu)
   V2 <- chol_inv(V0_inv + tmp)
   if(params.only) return(gu_params(V = V2, v = n + v0))
   rWishart(
