@@ -14,7 +14,8 @@ chol_mvrnorm(
   mu,
   Sigma,
   Precision,
-  A = if (missing(Sigma)) backsolve(chol(Precision), diag(1, p)) else t(chol(Sigma))
+  A = if (missing(Sigma)) backsolve(chol(Precision), diag(1, nrow(Precision))) else
+    t(chol(Sigma))
 )
 
 logit(p)

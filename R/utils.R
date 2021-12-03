@@ -28,7 +28,7 @@ chol_inv <- function(x) {
 #' @rdname utilities
 #' @export
 chol_mvrnorm <- function(n = 1, mu, Sigma, Precision,
-                         A = if(missing(Sigma)) backsolve(chol(Precision), diag(1, p)) else t(chol(Sigma))) {
+                         A = if(missing(Sigma)) backsolve(chol(Precision), diag(1, nrow(Precision))) else t(chol(Sigma))) {
   p <- nrow(A)
   mu <- check_one_or_all(mu, p)
   t(mu + A %*% matrix(rnorm(p*n), nrow = p))
