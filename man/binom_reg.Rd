@@ -48,6 +48,8 @@ Slice sample a binomial regression rate
 \code{ss_binom_reg} slice samples and \code{mh_binom_reg} Metropolis-samples
   \code{p} conditional on \code{k}, \code{n}, \code{mean}, and \code{precision},
   where \code{k ~ Binom(n, expit(p))} and \code{p ~ N(mean, precision)}.
+  In the case that \code{n} is zero (or a row of \code{n} is zero in the multivariate case),
+  slice sampling is ignored in favor of the conjugate normal draw.
 
   Both vectorized over \code{p}, \code{k}, \code{n}, and \code{mean}. If \code{precision} is a matrix,
   \code{p} is assumed to be multivariately distributed, and different internals are used.

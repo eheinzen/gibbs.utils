@@ -100,7 +100,27 @@ test_that("multivariate slice sampling works for binomial (matrix)", {
   expect_true(is.matrix(one))
 })
 
+test_that("binomial slice sampling works for n=0", {
+  m <- p <- rep_len(0, 10)
+  k <- c(rep_len(0, 5), 1:5)
+  n <- c(rep_len(0, 5), 2*(1:5))
+  tau <- 10
+  set.seed(20211203)
+  norm <- rnorm(5, 0, sd = 1/sqrt(tau))
+  set.seed(20211203)
+  ss <- ss_binom_reg(p, k, n, m, tau)
+  expect_equal(ss[1:5], norm)
 
+  m <- p <- matrix(1, 4, 3)
+  k <- matrix(c(rep_len(0, 6), 1:6), byrow = TRUE, nrow = 4)
+  n <- 2*k
+  tau <- diag(10, 3)
+  set.seed(20211203)
+  norm <- chol_mvrnorm(2, 1, Precision = tau)
+  set.seed(20211203)
+  ss <- ss_binom_reg(p, k, n, m, tau)
+  expect_equal(ss[1:2, ], norm)
+})
 
 # multinom -------------------------------------------------------------------
 

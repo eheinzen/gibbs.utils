@@ -17,16 +17,16 @@ one_binom_slice <- function(p, k, n, mean, precision, w, nexpand, ncontract) {
     .Call('_gibbs_utils_one_binom_slice', PACKAGE = 'gibbs.utils', p, k, n, mean, precision, w, nexpand, ncontract)
 }
 
-slice_sample_binom <- function(p, k, n, mean, precision, w, nexpand, ncontract) {
-    .Call('_gibbs_utils_slice_sample_binom', PACKAGE = 'gibbs.utils', p, k, n, mean, precision, w, nexpand, ncontract)
+slice_sample_binom <- function(p, k, n, mean, precision, use_norm, norm, w, nexpand, ncontract) {
+    .Call('_gibbs_utils_slice_sample_binom', PACKAGE = 'gibbs.utils', p, k, n, mean, precision, use_norm, norm, w, nexpand, ncontract)
 }
 
 one_binom_slice_mv <- function(p, k, n, mean, Q, i, w, nexpand, ncontract) {
     .Call('_gibbs_utils_one_binom_slice_mv', PACKAGE = 'gibbs.utils', p, k, n, mean, Q, i, w, nexpand, ncontract)
 }
 
-slice_sample_binom_mv <- function(p, k, n, mean, Q, w, nexpand, ncontract) {
-    .Call('_gibbs_utils_slice_sample_binom_mv', PACKAGE = 'gibbs.utils', p, k, n, mean, Q, w, nexpand, ncontract)
+slice_sample_binom_mv <- function(p, k, n, mean, Q, use_norm, norm, w, nexpand, ncontract) {
+    .Call('_gibbs_utils_slice_sample_binom_mv', PACKAGE = 'gibbs.utils', p, k, n, mean, Q, use_norm, norm, w, nexpand, ncontract)
 }
 
 one_multinom_slice_mv <- function(p_j, z_j, k, n, p_i, mean, Q, i, j, w, nexpand, ncontract) {

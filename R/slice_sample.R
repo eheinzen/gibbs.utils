@@ -52,6 +52,8 @@ ss_pois_reg <- function(L, k, mean, precision, ..., w = 1, nexpand = 10, ncontra
 #'   \code{ss_binom_reg} slice samples and \code{mh_binom_reg} Metropolis-samples
 #'   \code{p} conditional on \code{k}, \code{n}, \code{mean}, and \code{precision},
 #'   where \code{k ~ Binom(n, expit(p))} and \code{p ~ N(mean, precision)}.
+#'   In the case that \code{n} is zero (or a row of \code{n} is zero in the multivariate case),
+#'   slice sampling is ignored in favor of the conjugate normal draw.
 #'
 #'   Both vectorized over \code{p}, \code{k}, \code{n}, and \code{mean}. If \code{precision} is a matrix,
 #'   \code{p} is assumed to be multivariately distributed, and different internals are used.
@@ -77,11 +79,20 @@ ss_binom_reg <- function(p, k, n, mean, precision, ..., w = 1, nexpand = 10, nco
       n <- matrix(n, nrow = 1)
     }
     dim(mean) <- dim(p)
+    use_norm <- rowSums(n) == 0
+    norm <- if(any(use_norm)) {
+      mean[use_norm, , drop = FALSE] + chol_mvrnorm(sum(use_norm), mu = 0, Precision = precision)
+    } else matrix()
+
   } else {
     precision <- check_one_or_all(precision, length(p))
     FUN <- slice_sample_binom
+    use_norm <- n == 0
+    norm <- if(any(use_norm)) {
+      mean[use_norm] + stats::rnorm(sum(use_norm), mean = 0, sd = 1 / sqrt(precision[use_norm]))
+    } else numeric()
   }
-  out <- FUN(p, k, n, mean, precision, w = w, nexpand = nexpand, ncontract = ncontract)
+  out <- FUN(p, k, n, mean, precision, use_norm = use_norm, norm = norm, w = w, nexpand = nexpand, ncontract = ncontract)
   dim(out) <- d # could be NULL
   out
 }

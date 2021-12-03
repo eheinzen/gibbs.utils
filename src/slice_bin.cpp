@@ -34,9 +34,14 @@ double one_binom_slice(double p, double k, double n, double mean, double precisi
 
 // [[Rcpp::export]]
 NumericVector slice_sample_binom(NumericVector p, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision,
-                                 double w, int nexpand, int ncontract) {
+                                 LogicalVector use_norm, NumericVector norm, double w, int nexpand, int ncontract) {
   NumericVector out(p.size());
+    int nrm = 0;
   for(int i=0; i < p.size(); i++) {
+    if(use_norm[i]) {
+      out[i]= norm[nrm++];
+      continue;
+    }
     out[i] = one_binom_slice(p[i], k[i], n[i], mean[i], precision[i], w, nexpand, ncontract);
   }
   return out;
@@ -71,9 +76,15 @@ double one_binom_slice_mv(NumericVector p, double k, double n, NumericVector mea
 }
 
 // [[Rcpp::export]]
-NumericMatrix slice_sample_binom_mv(NumericMatrix p, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q, double w, int nexpand, int ncontract) {
+NumericMatrix slice_sample_binom_mv(NumericMatrix p, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q,
+                                    LogicalVector use_norm, NumericMatrix norm, double w, int nexpand, int ncontract) {
   NumericMatrix out = clone(p);
+  int nrm = 0;
   for(int r=0; r < p.nrow(); r++) {
+    if(use_norm[r]) {
+      out(r, _) = norm(nrm++, _);
+      continue;
+    }
     NumericVector kk = k(r, _);
     NumericVector nn = n(r, _);
     NumericVector mm = mean(r, _);
