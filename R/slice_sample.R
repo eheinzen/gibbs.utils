@@ -63,6 +63,7 @@ ss_pois_reg <- function(L, k, mean, precision, ..., w = 1, nexpand = 10, ncontra
 #' @export
 ss_binom_reg <- function(p, k, n, mean, precision, ..., w = 1, nexpand = 10, ncontract = 100) {
   if(length(p) != length(k) || length(p) != length(n)) stop("'p' and 'k' and 'n' must all have the same length")
+  stopifnot(k <= n)
   mean <- check_one_or_all(mean, length(p))
   d <- dim(p)
 

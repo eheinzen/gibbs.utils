@@ -88,7 +88,7 @@ test_that("multivariate slice sampling works for binomial", {
 test_that("multivariate slice sampling works for binomial (matrix)", {
   k <- c(3, 9, 27)
   p <- matrix(rep(1:3, each = 3), nrow = 3)
-  n <- matrix(10, nrow = 3, ncol = 3)
+  n <- matrix(100, nrow = 3, ncol = 3)
   expect_error(ss_binom_reg(p, k, n, mean = 2, precision = prec), "'p' and 'k' and 'n' must all have")
   k <- matrix(rep(c(3, 9, 27), each = 3), nrow = 3)
   set.seed(20210729)
