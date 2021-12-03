@@ -1,3 +1,11 @@
+# v0.6.0
+
+- `ss_binom_reg()` now performs conjugate normal updates when `n == 0` (or `rowSums(n) == 0` in the multivariate case).
+
+- `ss_binom_reg()` now enforces `k <= n`
+
+- Fixed a bug in `chol_mvrnorm()`.
+
 # v0.5.1
 
 - Small performance improvements for `conj_mvnorm()`.
