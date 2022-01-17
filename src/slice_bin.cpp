@@ -36,7 +36,7 @@ double one_binom_slice(double p, double k, double n, double mean, double precisi
 NumericVector slice_sample_binom(NumericVector p, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision,
                                  LogicalVector use_norm, NumericVector norm, double w, int nexpand, int ncontract) {
   NumericVector out(p.size());
-    int nrm = 0;
+  int nrm = 0;
   for(int i=0; i < p.size(); i++) {
     if(use_norm[i]) {
       out[i]= norm[nrm++];
@@ -47,33 +47,6 @@ NumericVector slice_sample_binom(NumericVector p, NumericVector k, NumericVector
   return out;
 }
 
-
-// [[Rcpp::export]]
-double one_binom_slice_mv(NumericVector p, double k, double n, NumericVector mean, NumericMatrix Q, int i, double w, int nexpand, int ncontract) {
-  double y0 = binom_LL_mv(p, k, n, mean, Q, i) - R::rexp(1.0);
-  double left = p[i] - w;
-  double right = p[i] + w;
-  int j = 0;
-  while(binom_LL_mv(replace_it(p, i, left), k, n, mean, Q, i) > y0 && j++ < nexpand) {
-    left -= w;
-  }
-  j = 0;
-  while(binom_LL_mv(replace_it(p, i, right), k, n, mean, Q, i) > y0 && j++ < nexpand) {
-    right += w;
-  }
-  double newx = R::runif(left, right);
-  j = 0;
-  while(binom_LL_mv(replace_it(p, i, newx), k, n, mean, Q, i) < y0 && j++ < ncontract) {
-    if(newx < p[i]) {
-      left = newx;
-    } else {
-      right = newx;
-    }
-    newx = R::runif(left, right);
-  }
-  if(j == ncontract) return p[i];
-  return newx;
-}
 
 // [[Rcpp::export]]
 NumericMatrix slice_sample_binom_mv(NumericMatrix p, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q,
@@ -89,9 +62,10 @@ NumericMatrix slice_sample_binom_mv(NumericMatrix p, NumericMatrix k, NumericMat
     NumericVector nn = n(r, _);
     NumericVector mm = mean(r, _);
     for(int i=0; i < p.ncol(); i++) {
-      out(r, i) = one_binom_slice_mv(out(r, _), kk[i], nn[i], mm, Q, i, w, nexpand, ncontract);
+      // safe not to replace out(r, i) because it's not used in this calculation
+      double mmm = cond_mv_mean(out(r, _), mm, Q, i);
+      out(r, i) = one_binom_slice(out(r, i), kk[i], nn[i], mmm, Q(i, i), w, nexpand, ncontract);
     }
   }
   return out;
 }
-

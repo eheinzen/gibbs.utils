@@ -96,25 +96,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// one_binom_slice_mv
-double one_binom_slice_mv(NumericVector p, double k, double n, NumericVector mean, NumericMatrix Q, int i, double w, int nexpand, int ncontract);
-RcppExport SEXP _gibbs_utils_one_binom_slice_mv(SEXP pSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP iSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type p(pSEXP);
-    Rcpp::traits::input_parameter< double >::type k(kSEXP);
-    Rcpp::traits::input_parameter< double >::type n(nSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
-    Rcpp::traits::input_parameter< int >::type i(iSEXP);
-    Rcpp::traits::input_parameter< double >::type w(wSEXP);
-    Rcpp::traits::input_parameter< int >::type nexpand(nexpandSEXP);
-    Rcpp::traits::input_parameter< int >::type ncontract(ncontractSEXP);
-    rcpp_result_gen = Rcpp::wrap(one_binom_slice_mv(p, k, n, mean, Q, i, w, nexpand, ncontract));
-    return rcpp_result_gen;
-END_RCPP
-}
 // slice_sample_binom_mv
 NumericMatrix slice_sample_binom_mv(NumericMatrix p, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm, double w, int nexpand, int ncontract);
 RcppExport SEXP _gibbs_utils_slice_sample_binom_mv(SEXP pSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP use_normSEXP, SEXP normSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
@@ -254,7 +235,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gibbs_utils_mh_binom_mv", (DL_FUNC) &_gibbs_utils_mh_binom_mv, 6},
     {"_gibbs_utils_one_binom_slice", (DL_FUNC) &_gibbs_utils_one_binom_slice, 8},
     {"_gibbs_utils_slice_sample_binom", (DL_FUNC) &_gibbs_utils_slice_sample_binom, 10},
-    {"_gibbs_utils_one_binom_slice_mv", (DL_FUNC) &_gibbs_utils_one_binom_slice_mv, 9},
     {"_gibbs_utils_slice_sample_binom_mv", (DL_FUNC) &_gibbs_utils_slice_sample_binom_mv, 10},
     {"_gibbs_utils_one_multinom_slice_mv", (DL_FUNC) &_gibbs_utils_one_multinom_slice_mv, 12},
     {"_gibbs_utils_slice_sample_multinom_mv", (DL_FUNC) &_gibbs_utils_slice_sample_multinom_mv, 11},

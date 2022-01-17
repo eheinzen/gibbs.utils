@@ -21,10 +21,6 @@ slice_sample_binom <- function(p, k, n, mean, precision, use_norm, norm, w, nexp
     .Call('_gibbs_utils_slice_sample_binom', PACKAGE = 'gibbs.utils', p, k, n, mean, precision, use_norm, norm, w, nexpand, ncontract)
 }
 
-one_binom_slice_mv <- function(p, k, n, mean, Q, i, w, nexpand, ncontract) {
-    .Call('_gibbs_utils_one_binom_slice_mv', PACKAGE = 'gibbs.utils', p, k, n, mean, Q, i, w, nexpand, ncontract)
-}
-
 slice_sample_binom_mv <- function(p, k, n, mean, Q, use_norm, norm, w, nexpand, ncontract) {
     .Call('_gibbs_utils_slice_sample_binom_mv', PACKAGE = 'gibbs.utils', p, k, n, mean, Q, use_norm, norm, w, nexpand, ncontract)
 }

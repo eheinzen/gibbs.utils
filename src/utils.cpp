@@ -5,15 +5,6 @@ using namespace Rcpp;
 double binom_LL(double p, double k, double n, double mean, double precision) {
   return k*p - n*log(1.0 + exp(p)) - 0.5*precision*(p - mean)*(p - mean);
 }
-double binom_LL_mv(NumericVector p, double k, double n, NumericVector mean, NumericMatrix Q, int i) {
-  double mm = k*p[i] - n*log(1.0 + exp(p[i])) ;
-  for(int j = 0; j < p.size(); j++) {
-    mm -= 0.5*(1.0 + (i != j))*(p[i] - mean[i])*Q(i, j)*(p[j] - mean[j]);
-  }
-  return mm;
-}
-
-
 double multinom_LL_mv(NumericVector p_j, LogicalVector z_j, double k, double n, NumericVector p_i, NumericVector mean, NumericMatrix Q, int i, int j) {
   double mm = 0;
   if(z_j[j]) {
@@ -50,4 +41,14 @@ NumericVector replace_it(NumericVector x, int i, double value) {
   NumericVector out = clone(x);
   out[i] = value;
   return out;
+}
+
+double cond_mv_mean(NumericVector x, NumericVector mean, NumericMatrix Q, int i) {
+  double mm = mean[i];
+  for(int j = 0; j < x.size(); j++) {
+    if(i != j) {
+      mm -= Q(i, j)*(x[j] - mean[j]) / Q(i, i);
+    }
+  }
+  return mm;
 }

@@ -20,6 +20,7 @@ NumericVector mh_binom(NumericVector p, NumericVector proposal, NumericVector k,
 }
 
 
+
 // [[Rcpp::export]]
 NumericVector mh_binom_mv(NumericMatrix p, NumericMatrix proposal, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q) {
   NumericMatrix out = clone(p);
@@ -29,8 +30,11 @@ NumericVector mh_binom_mv(NumericMatrix p, NumericMatrix proposal, NumericMatrix
     NumericVector nn = k(r, _);
     NumericVector mm = mean(r, _);
     for(int i = 0; i < p.ncol(); i++) {
-      double ratio = binom_LL_mv(replace_it(out(r, _), i, proposal(r, i)), kk[i], nn[i], mm, Q, i);
-      ratio -= binom_LL_mv(out(r, _), kk[i], nn[i], mm, Q, i);
+
+      // safe not to replace out(r, i) because it's not used in this calculation
+      double mmm = cond_mv_mean(out(r, _), mm, Q, i);
+      double ratio = binom_LL(proposal(r, i), kk[i], nn[i], mmm, Q(i, i));
+      ratio -= binom_LL(out(r, i), kk[i], nn[i], mmm, Q(i, i));
       bool a = log(R::runif(0.0, 1.0)) <= ratio;
       accept(r, i) = a;
       if(a) {
