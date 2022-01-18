@@ -116,9 +116,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// one_multinom_slice_mv
-double one_multinom_slice_mv(NumericVector p_j, LogicalVector z_j, double k, double n, NumericVector p_i, NumericVector mean, NumericMatrix Q, int i, int j, double w, int nexpand, int ncontract);
-RcppExport SEXP _gibbs_utils_one_multinom_slice_mv(SEXP p_jSEXP, SEXP z_jSEXP, SEXP kSEXP, SEXP nSEXP, SEXP p_iSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP iSEXP, SEXP jSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
+// one_multinom_slice
+double one_multinom_slice(NumericVector p_j, LogicalVector z_j, double k, double n, double mean, double precision, int j, double w, int nexpand, int ncontract);
+RcppExport SEXP _gibbs_utils_one_multinom_slice(SEXP p_jSEXP, SEXP z_jSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP precisionSEXP, SEXP jSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -126,15 +126,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< LogicalVector >::type z_j(z_jSEXP);
     Rcpp::traits::input_parameter< double >::type k(kSEXP);
     Rcpp::traits::input_parameter< double >::type n(nSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type p_i(p_iSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
-    Rcpp::traits::input_parameter< int >::type i(iSEXP);
+    Rcpp::traits::input_parameter< double >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< double >::type precision(precisionSEXP);
     Rcpp::traits::input_parameter< int >::type j(jSEXP);
     Rcpp::traits::input_parameter< double >::type w(wSEXP);
     Rcpp::traits::input_parameter< int >::type nexpand(nexpandSEXP);
     Rcpp::traits::input_parameter< int >::type ncontract(ncontractSEXP);
-    rcpp_result_gen = Rcpp::wrap(one_multinom_slice_mv(p_j, z_j, k, n, p_i, mean, Q, i, j, w, nexpand, ncontract));
+    rcpp_result_gen = Rcpp::wrap(one_multinom_slice(p_j, z_j, k, n, mean, precision, j, w, nexpand, ncontract));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -218,7 +216,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gibbs_utils_one_binom_slice", (DL_FUNC) &_gibbs_utils_one_binom_slice, 8},
     {"_gibbs_utils_slice_sample_binom", (DL_FUNC) &_gibbs_utils_slice_sample_binom, 10},
     {"_gibbs_utils_slice_sample_binom_mv", (DL_FUNC) &_gibbs_utils_slice_sample_binom_mv, 10},
-    {"_gibbs_utils_one_multinom_slice_mv", (DL_FUNC) &_gibbs_utils_one_multinom_slice_mv, 12},
+    {"_gibbs_utils_one_multinom_slice", (DL_FUNC) &_gibbs_utils_one_multinom_slice, 10},
     {"_gibbs_utils_slice_sample_multinom_mv", (DL_FUNC) &_gibbs_utils_slice_sample_multinom_mv, 11},
     {"_gibbs_utils_one_pois_slice", (DL_FUNC) &_gibbs_utils_one_pois_slice, 7},
     {"_gibbs_utils_slice_sample_pois", (DL_FUNC) &_gibbs_utils_slice_sample_pois, 7},

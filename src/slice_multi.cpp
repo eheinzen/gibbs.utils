@@ -2,31 +2,31 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-
 // [[Rcpp::export]]
-double one_multinom_slice_mv(NumericVector p_j, LogicalVector z_j, double k, double n, NumericVector p_i, NumericVector mean, NumericMatrix Q, int i, int j, double w, int nexpand, int ncontract) {
-  double y0 = multinom_LL_mv(p_j, z_j, k, n, p_i, mean, Q, i, j) - R::rexp(1.0);
-  double left = p_i[i] - w;
-  double right = p_i[i] + w;
+double one_multinom_slice(NumericVector p_j, LogicalVector z_j, double k, double n, double mean, double precision, int j, double w, int nexpand, int ncontract) {
+  double y0 = multinom_LL(p_j, z_j, k, n, mean, precision, j) - R::rexp(1.0);
+  double pj = p_j[j];
+  double left = pj - w;
+  double right = pj + w;
   int jj = 0;
-  while(multinom_LL_mv(replace_it(p_j, j, left), z_j, k, n, replace_it(p_i, i, left), mean, Q, i, j) > y0 && jj++ < nexpand) {
+  while(multinom_LL(replace_it(p_j, j, left), z_j, k, n, mean, precision, j) > y0 && jj++ < nexpand) {
     left -= w;
   }
   jj = 0;
-  while(multinom_LL_mv(replace_it(p_j, j, right), z_j, k, n, replace_it(p_i, i, right), mean, Q, i, j) > y0 && jj++ < nexpand) {
+  while(multinom_LL(replace_it(p_j, j, right), z_j, k, n, mean, precision, j) > y0 && jj++ < nexpand) {
     right += w;
   }
   double newx = R::runif(left, right);
   jj = 0;
-  while(multinom_LL_mv(replace_it(p_j, j, newx), z_j, k, n, replace_it(p_i, i, newx), mean, Q, i, j) < y0 && jj++ < ncontract) {
-    if(newx < p_i[i]) {
+  while(multinom_LL(replace_it(p_j, j, newx), z_j, k, n, mean, precision, j) < y0 && jj++ < ncontract) {
+    if(newx < pj) {
       left = newx;
     } else {
       right = newx;
     }
     newx = R::runif(left, right);
   }
-  if(jj == ncontract) return p_i[i];
+  if(jj == ncontract) return pj;
   return newx;
 }
 
@@ -43,7 +43,9 @@ NumericMatrix slice_sample_multinom_mv(List p_j, LogicalMatrix z, NumericMatrix 
     NumericVector nn = n(r, _);
     NumericVector mm = mean(r, _);
     for(int i=0; i < p_i.ncol(); i++) {
-      out(r, i) = one_multinom_slice_mv(pp_jj(i, _), z(i, _), kk[i], nn[i], out(r, _), mm, Q, i, j, w, nexpand, ncontract);
+      // safe not to replace out(r, i) because it's not used in this calculation
+      double mmm = cond_mv_mean(out(r, _), mm, Q, i);
+      out(r, i) = one_multinom_slice(pp_jj(i, _), z(i, _), kk[i], nn[i], mmm, Q(i, i), j, w, nexpand, ncontract);
     }
   }
   return out;

@@ -167,4 +167,3 @@ ss_multinom_reg <- function(p, z, k, mean, precision, ref = c("first", "last"), 
   }
   p
 }
-
