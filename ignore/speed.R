@@ -36,3 +36,10 @@ microbenchmark::microbenchmark(
   check = "equal",
   times = 10
 )
+
+microbenchmark::microbenchmark(
+  none = {set.seed(99); ss_pois_reg(p, n, mean = 2, precision = prec)},
+  none2 = {set.seed(99); ss_pois_reg2(p, n, mean = 2, precision = prec)},
+  check = "equal",
+  times = 10
+)

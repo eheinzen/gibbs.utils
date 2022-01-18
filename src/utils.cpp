@@ -29,13 +29,6 @@ double multinom_LL_mv(NumericVector p_j, LogicalVector z_j, double k, double n, 
 double pois_LL(double L, double k, double mean, double precision) {
   return k*L - exp(L) - 0.5*precision*(L - mean)*(L - mean);
 }
-double pois_LL_mv(NumericVector L, double k, NumericVector mean, NumericMatrix Q, int i) {
-  double mm = k*L[i] - exp(L[i]);
-  for(int j = 0; j < L.size(); j++) {
-    mm -= 0.5*(1.0 + (i != j))*(L[i] - mean[i])*Q(i, j)*(L[j] - mean[j]);
-  }
-  return mm;
-}
 
 NumericVector replace_it(NumericVector x, int i, double value) {
   NumericVector out = clone(x);

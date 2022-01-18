@@ -1,9 +1,11 @@
-# v0.6.0.9000
+# v0.6.0.9001
 
-- Sped up the multivariate binomial likelihood evaluation (only completing the square once instead of each time), so that `ss_binom_reg()`
-  is as much as 4.5x faster, and `mh_binom_reg()` is as much as 2x faster. As such, there is no longer a C++ function to evaluate the
-  multivariate log-likelihood (nor the slice sample function to do the same);
-  instead the conditional mean is computed within `cond_mv_mean()`, and the result passed to the univariate likelihood.
+- Sped up the multivariate binomial and Poisson likelihood evaluations (only completing the square once instead of each time), so that
+  `ss_pois_reg()` is as much as 6.5x faster,
+  `ss_binom_reg()` is as much as 4.5x faster,
+  and `mh_binom_reg()` is as much as 2x faster.
+  As such, there are no longer C++ functions to evaluate the multivariate log-likelihoods (nor the slice sample functions to do the same);
+  instead, the conditional means are computed within `cond_mv_mean()`, and the results passed to the univariate likelihoods.
 
 # v0.6.0
 

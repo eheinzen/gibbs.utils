@@ -9,8 +9,6 @@ double multinom_LL_mv(Rcpp::NumericVector p_j, Rcpp::LogicalVector z_j, double k
                       Rcpp::NumericVector mean, Rcpp::NumericMatrix Q, int i, int j);
 
 double pois_LL(double L, double k, double mean, double precision);
-double pois_LL_mv(Rcpp::NumericVector L, double k, Rcpp::NumericVector mean,
-                  Rcpp::NumericMatrix Q, int i);
 
 Rcpp::NumericVector replace_it(Rcpp::NumericVector x, int i, double value);
 double cond_mv_mean(Rcpp::NumericVector x, Rcpp::NumericVector mean, Rcpp::NumericMatrix Q, int i);

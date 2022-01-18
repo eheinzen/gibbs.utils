@@ -41,10 +41,6 @@ slice_sample_pois <- function(L, k, mean, precision, w, nexpand, ncontract) {
     .Call('_gibbs_utils_slice_sample_pois', PACKAGE = 'gibbs.utils', L, k, mean, precision, w, nexpand, ncontract)
 }
 
-one_pois_slice_mv <- function(L, k, mean, Q, i, w, nexpand, ncontract) {
-    .Call('_gibbs_utils_one_pois_slice_mv', PACKAGE = 'gibbs.utils', L, k, mean, Q, i, w, nexpand, ncontract)
-}
-
 slice_sample_pois_mv <- function(L, k, mean, Q, w, nexpand, ncontract) {
     .Call('_gibbs_utils_slice_sample_pois_mv', PACKAGE = 'gibbs.utils', L, k, mean, Q, w, nexpand, ncontract)
 }
