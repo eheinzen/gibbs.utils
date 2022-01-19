@@ -54,3 +54,24 @@ test_that("multivariate MH sampling works for binomial (matrix)", {
   expect_true(is.matrix(one))
 })
 
+
+
+# other -------------------------------------------------------------------
+
+test_that("One-dimensional precision matrices give the same results" {
+  set.seed(20210119)
+  one <- mh_binom_reg(0, 1, 100, mean = -3, precision = 1, proposal = "normal")
+  set.seed(20210119)
+  two <- mh_binom_reg(0, 1, 100, mean = -3, precision = matrix(1), proposal = "normal")
+  expect_equal(one, two)
+
+
+  set.seed(20210119)
+  one <- ss_pois_reg(0, 10, mean = 3, precision = 1, proposal = "quad")
+  set.seed(20210119)
+  two <- ss_pois_reg(0, 10, mean = 3, precision = matrix(1), proposal = "quad")
+  expect_equal(one, two)
+
+})
+
+

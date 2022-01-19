@@ -1,4 +1,4 @@
-# v0.6.0.9002
+# v0.6.0.9003
 
 - Sped up the multivariate binomial, multinomial, and Poisson likelihood evaluations (only completing the square once instead of each time),
   so that
@@ -13,6 +13,10 @@
     
   As such, there are no longer C++ functions to evaluate the multivariate log-likelihoods (nor the slice sample functions to do the same);
   instead, the conditional means are computed within `cond_mv_mean()`, and the results passed to the univariate likelihoods.
+  
+- Overhauled `mh_binom_reg()`. It now takes a `proposal=` argument, to determine how proposals are made. The "normal" method
+  is the default for backwards-compatibility, but the "quadratic taylor" gives better results and is about the same speed. The C++ internals
+  have also been almost completely rewritten.
 
 # v0.6.0
 

@@ -36,6 +36,19 @@ microbenchmark::microbenchmark(
   check = "equal",
   times = 10
 )
+microbenchmark::microbenchmark(
+  mh_norm = {set.seed(99); mh_binom_reg(p, k, n, mean = 2, precision = prec)},
+  mh_unif = {set.seed(99); ss_binom_reg(p, k, n, mean = 2, precision = prec, proposal = "uniform")},
+  mh_qt = {set.seed(99); ss_binom_reg(p, k, n, mean = 2, precision = prec, proposal = "quadratic taylor")},
+  ss = {set.seed(99); ss_binom_reg(p, k, n, mean = 2, precision = prec)},
+  times = 100
+)
+
+
+
+
+
+
 
 microbenchmark::microbenchmark(
   none = {set.seed(99); ss_pois_reg(p, n, mean = 2, precision = prec)},

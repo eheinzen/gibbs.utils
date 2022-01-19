@@ -6,7 +6,16 @@
 \alias{ss_binom_reg}
 \title{Slice sample a binomial regression rate}
 \usage{
-mh_binom_reg(p, k, n, mean, precision, ..., proposal_sd = 1)
+mh_binom_reg(
+  p,
+  k,
+  n,
+  mean,
+  precision,
+  proposal = c("normal", "uniform", "quadratic taylor"),
+  ...,
+  proposal_sd = 1
+)
 
 ss_binom_reg(
   p,
@@ -31,9 +40,15 @@ ss_binom_reg(
 
 \item{precision}{the prior precision}
 
+\item{proposal}{The method to use to propose new values. \code{"normal"} proposes normal deviates from the current
+value. \code{"uniform"} proposes uniform deviates. \code{"quadratic taylor"} proposes using a second-order Taylor
+approximation of the log-density at the current value, which amounts to a normal proposal with mean (usually) not equal
+to the current value.}
+
 \item{...}{Other arguments (not used)}
 
-\item{proposal_sd}{The standard deviation(s) of proposals}
+\item{proposal_sd}{For \code{"normal"} proposals, the standard deviation(s) of proposals. For \code{"uniform"} proposals,
+the half-width of the uniform proposal interval.}
 
 \item{w}{The width of each expansion (to the right and left each)}
 
@@ -57,6 +72,8 @@ Slice sample a binomial regression rate
   The internals are defined in C++.
 }
 \seealso{
+\url{https://arxiv.org/pdf/1308.0657.pdf}
+
 \code{\link{ss_pois_reg}}, \code{\link{ss_multinom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling},
 \url{https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm}
 }
