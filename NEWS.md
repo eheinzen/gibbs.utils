@@ -17,6 +17,8 @@
 - Overhauled `mh_binom_reg()`. It now takes a `proposal=` argument, to determine how proposals are made. The "normal" method
   is the default for backwards-compatibility, but the "quadratic taylor" gives better results and is about the same speed. The C++ internals
   have also been almost completely rewritten.
+  
+- `mh_binom_reg()` now enforces `k <= n`
 
 # v0.6.0
 

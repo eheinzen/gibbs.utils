@@ -12,6 +12,7 @@ mh_binom_reg <- function(p, k, n, mean, precision, proposal = c("normal", "unifo
   proposal <- match.arg(proposal)
 
   if(length(p) != length(k) || length(p) != length(n)) stop("'p' and 'k' and 'n' must all have the same length")
+  stopifnot(k <= n)
   mean <- check_one_or_all(mean, length(p))
   d <- dim(p)
 

@@ -38,12 +38,12 @@ test_that("multivariate MH sampling works for binomial", {
 })
 
 test_that("multivariate MH sampling works for binomial (matrix)", {
-  k <- c(3, 9, 27)
+  k <- c(3, 9, 10)
   p <- matrix(rep(1:3, each = 3), nrow = 3)
   n <- matrix(10, nrow = 3, ncol = 3)
   expect_error(mh_binom_reg(p, k, n, mean = 2, precision = prec, proposal_sd = 1),
                "'p' and 'k' and 'n' must all have")
-  k <- matrix(rep(c(3, 9, 27), each = 3), nrow = 3)
+  k <- matrix(rep(c(3, 9, 10), each = 3), nrow = 3)
   set.seed(20210729)
   one <- mh_binom_reg(p, k, n, mean = 2, precision = prec, proposal_sd = 1)
   set.seed(20210729)
