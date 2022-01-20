@@ -1,4 +1,4 @@
-# v0.6.0.9004
+# v0.7.0
 
 - Sped up the multivariate binomial, multinomial, and Poisson likelihood evaluations (only completing the square once instead of each time),
   so that
