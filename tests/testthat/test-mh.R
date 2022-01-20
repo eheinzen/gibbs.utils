@@ -58,7 +58,7 @@ test_that("multivariate MH sampling works for binomial (matrix)", {
 
 # other -------------------------------------------------------------------
 
-test_that("One-dimensional precision matrices give the same results" {
+test_that("One-dimensional precision matrices give the same results", {
   set.seed(20210119)
   one <- mh_binom_reg(0, 1, 100, mean = -3, precision = 1, proposal = "normal")
   set.seed(20210119)

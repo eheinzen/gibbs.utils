@@ -198,7 +198,7 @@ test_that("multivariate slice sampling works when dimensions are 1", {
 
 # other -------------------------------------------------------------------
 
-test_that("One-dimensional precision matrices give the same results" {
+test_that("One-dimensional precision matrices give the same results", {
   set.seed(20210119)
   one <- ss_binom_reg(0, 1, 100, mean = -3, precision = 1)
   set.seed(20210119)
