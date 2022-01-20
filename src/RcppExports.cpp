@@ -27,8 +27,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // m_binom
-NumericVector m_binom(NumericVector p, NumericVector proposal, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision);
-RcppExport SEXP _gibbs_utils_m_binom(SEXP pSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP precisionSEXP) {
+NumericVector m_binom(NumericVector p, NumericVector proposal, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision, LogicalVector use_norm, NumericVector norm);
+RcppExport SEXP _gibbs_utils_m_binom(SEXP pSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP precisionSEXP, SEXP use_normSEXP, SEXP normSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -38,13 +38,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type n(nSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type precision(precisionSEXP);
-    rcpp_result_gen = Rcpp::wrap(m_binom(p, proposal, k, n, mean, precision));
+    Rcpp::traits::input_parameter< LogicalVector >::type use_norm(use_normSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type norm(normSEXP);
+    rcpp_result_gen = Rcpp::wrap(m_binom(p, proposal, k, n, mean, precision, use_norm, norm));
     return rcpp_result_gen;
 END_RCPP
 }
 // m_binom_mv
-NumericVector m_binom_mv(NumericMatrix p, NumericMatrix proposal, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q);
-RcppExport SEXP _gibbs_utils_m_binom_mv(SEXP pSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP QSEXP) {
+NumericVector m_binom_mv(NumericMatrix p, NumericMatrix proposal, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm);
+RcppExport SEXP _gibbs_utils_m_binom_mv(SEXP pSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP use_normSEXP, SEXP normSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -54,7 +56,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericMatrix >::type n(nSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type mean(meanSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
-    rcpp_result_gen = Rcpp::wrap(m_binom_mv(p, proposal, k, n, mean, Q));
+    Rcpp::traits::input_parameter< LogicalVector >::type use_norm(use_normSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type norm(normSEXP);
+    rcpp_result_gen = Rcpp::wrap(m_binom_mv(p, proposal, k, n, mean, Q, use_norm, norm));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -74,8 +78,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // qt_binom
-NumericVector qt_binom(NumericVector p, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision);
-RcppExport SEXP _gibbs_utils_qt_binom(SEXP pSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP precisionSEXP) {
+NumericVector qt_binom(NumericVector p, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision, LogicalVector use_norm, NumericVector norm);
+RcppExport SEXP _gibbs_utils_qt_binom(SEXP pSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP precisionSEXP, SEXP use_normSEXP, SEXP normSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -84,13 +88,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type n(nSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type precision(precisionSEXP);
-    rcpp_result_gen = Rcpp::wrap(qt_binom(p, k, n, mean, precision));
+    Rcpp::traits::input_parameter< LogicalVector >::type use_norm(use_normSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type norm(normSEXP);
+    rcpp_result_gen = Rcpp::wrap(qt_binom(p, k, n, mean, precision, use_norm, norm));
     return rcpp_result_gen;
 END_RCPP
 }
 // qt_binom_mv
-NumericVector qt_binom_mv(NumericMatrix p, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q);
-RcppExport SEXP _gibbs_utils_qt_binom_mv(SEXP pSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP QSEXP) {
+NumericVector qt_binom_mv(NumericMatrix p, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm);
+RcppExport SEXP _gibbs_utils_qt_binom_mv(SEXP pSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP use_normSEXP, SEXP normSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -99,7 +105,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericMatrix >::type n(nSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type mean(meanSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
-    rcpp_result_gen = Rcpp::wrap(qt_binom_mv(p, k, n, mean, Q));
+    Rcpp::traits::input_parameter< LogicalVector >::type use_norm(use_normSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type norm(normSEXP);
+    rcpp_result_gen = Rcpp::wrap(qt_binom_mv(p, k, n, mean, Q, use_norm, norm));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -256,11 +264,11 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_gibbs_utils_impute_conj_mvnorm_mu_cpp", (DL_FUNC) &_gibbs_utils_impute_conj_mvnorm_mu_cpp, 6},
-    {"_gibbs_utils_m_binom", (DL_FUNC) &_gibbs_utils_m_binom, 6},
-    {"_gibbs_utils_m_binom_mv", (DL_FUNC) &_gibbs_utils_m_binom_mv, 6},
+    {"_gibbs_utils_m_binom", (DL_FUNC) &_gibbs_utils_m_binom, 8},
+    {"_gibbs_utils_m_binom_mv", (DL_FUNC) &_gibbs_utils_m_binom_mv, 8},
     {"_gibbs_utils_qt_binom_approx", (DL_FUNC) &_gibbs_utils_qt_binom_approx, 5},
-    {"_gibbs_utils_qt_binom", (DL_FUNC) &_gibbs_utils_qt_binom, 5},
-    {"_gibbs_utils_qt_binom_mv", (DL_FUNC) &_gibbs_utils_qt_binom_mv, 5},
+    {"_gibbs_utils_qt_binom", (DL_FUNC) &_gibbs_utils_qt_binom, 7},
+    {"_gibbs_utils_qt_binom_mv", (DL_FUNC) &_gibbs_utils_qt_binom_mv, 7},
     {"_gibbs_utils_one_binom_slice", (DL_FUNC) &_gibbs_utils_one_binom_slice, 8},
     {"_gibbs_utils_slice_sample_binom", (DL_FUNC) &_gibbs_utils_slice_sample_binom, 10},
     {"_gibbs_utils_slice_sample_binom_mv", (DL_FUNC) &_gibbs_utils_slice_sample_binom_mv, 10},

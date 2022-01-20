@@ -25,8 +25,19 @@ mh_binom_reg <- function(p, k, n, mean, precision, proposal = c("normal", "unifo
       n <- matrix(n, nrow = 1)
     }
     dim(mean) <- dim(p)
+
+    use_norm <- rowSums(n) == 0
+    norm <- if(any(use_norm)) {
+      mean[use_norm, , drop = FALSE] + chol_mvrnorm(sum(use_norm), mu = 0, Precision = precision)
+    } else matrix()
+
   } else {
     precision <- check_one_or_all(precision, length(p))
+
+    use_norm <- n == 0
+    norm <- if(any(use_norm)) {
+      mean[use_norm] + stats::rnorm(sum(use_norm), mean = 0, sd = 1 / sqrt(precision[use_norm]))
+    } else numeric()
   }
 
   if(proposal %in% c("normal", "uniform")) {
@@ -39,7 +50,7 @@ mh_binom_reg <- function(p, k, n, mean, precision, proposal = c("normal", "unifo
       FUN <- m_binom_mv
       dim(prop) <- dim(p)
     } else FUN <- m_binom
-    out <- FUN(p, prop, k, n, mean, precision)
+    out <- FUN(p, prop, k, n, mean, precision, use_norm = use_norm, norm = norm)
 
   } else if(proposal == "quadratic taylor") {
     if(!missing(proposal_sd)) warning("'proposal_sd' is being ignored for this method.")
@@ -47,7 +58,7 @@ mh_binom_reg <- function(p, k, n, mean, precision, proposal = c("normal", "unifo
     if(is.matrix(precision)) {
       FUN <- qt_binom_mv
     } else FUN <- qt_binom
-    out <- FUN(p, k, n, mean, precision)
+    out <- FUN(p, k, n, mean, precision, use_norm = use_norm, norm = norm)
   }
 
   dim(attr(out, "accept")) <- dim(out) <- d # could be NULL

@@ -4,6 +4,9 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 double one_binom_slice(double p, double k, double n, double mean, double precision, double w, int nexpand, int ncontract) {
+  if(n == 0.0) {
+    return R::rnorm(mean, 1/sqrt(precision));
+  }
   double y0 = binom_LL(p, k, n, mean, precision) - R::rexp(1.0);
   double left = p - w;
   double right = p + w;

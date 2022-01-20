@@ -75,3 +75,47 @@ test_that("One-dimensional precision matrices give the same results", {
 })
 
 
+test_that("n == 0 gives the same results for all methods", {
+  p <- k <- n <- matrix(0, nrow = 5, ncol = 3)
+  prec <- diag(3)
+  set.seed(20210119)
+  one <- mh_binom_reg(p, k, n, mean = -3, precision = prec, proposal = "normal")
+  set.seed(20210119)
+  two <- mh_binom_reg(p, k, n, mean = -3, precision = prec, proposal = "unif")
+  set.seed(20210119)
+  three <- mh_binom_reg(p, k, n, mean = -3, precision = prec, proposal = "quad")
+  set.seed(20210119)
+  four <- ss_binom_reg(p, k, n, mean = -3, precision = prec)
+  expect_equal(one, two)
+  expect_equal(one, three)
+  expect_true(all(attr(one, "accept")))
+  attr(one, "accept") <- NULL
+  expect_equal(one, four)
+})
+
+test_that("Some n == 0 gives the same results for some methods", {
+
+  p <- k <- n <- matrix(0:1, nrow = 1, ncol = 2)
+  prec <- diag(100, 2)
+  set.seed(20210120)
+  three <- mh_binom_reg(p, k, n, mean = 2, precision = prec, proposal = "quad")
+  set.seed(20210120)
+  four <- ss_binom_reg(p, k, n, mean = 2, precision = prec)
+
+  expect_true(attr(three, "accept")[1, 1])
+  expect_equal(three[1, 1], four[1, 1])
+
+
+  p <- k <- n <- matrix(1:0, nrow = 1, ncol = 2)
+  prec <- diag(100, 2)
+  set.seed(20210120)
+  rnorm(1)
+  three <- mh_binom_reg(p, k, n, mean = 2, precision = prec, proposal = "quad")
+  set.seed(20210120)
+  four <- ss_binom_reg(p, k, n, mean = 2, precision = prec)
+
+  expect_true(attr(three, "accept")[1, 2])
+  expect_equal(three[1, 2], four[1, 2])
+})
+
+

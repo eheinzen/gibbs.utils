@@ -1,4 +1,4 @@
-# v0.6.0.9003
+# v0.6.0.9004
 
 - Sped up the multivariate binomial, multinomial, and Poisson likelihood evaluations (only completing the square once instead of each time),
   so that
@@ -17,6 +17,9 @@
 - Overhauled `mh_binom_reg()`. It now takes a `proposal=` argument, to determine how proposals are made. The "normal" method
   is the default for backwards-compatibility, but the "quadratic taylor" gives better results and is about the same speed. The C++ internals
   have also been almost completely rewritten.
+  
+- Updated `mh_binom_reg()` and `ss_binom_reg()` to take normal draws in the multivariate case when only one `n=` is zero instead of
+  only doing it when all the `n=`'s are zero.
   
 - `mh_binom_reg()` now enforces `k <= n`
 
