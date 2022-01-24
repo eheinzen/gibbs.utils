@@ -1,4 +1,4 @@
-# v0.7.0.9001
+# v0.8.0
 
 - `ss_multinom_reg()` now also uses normal draws in the case where `z == 0` or `n == 0`. This is not done multivariately, but rather
   univariately.

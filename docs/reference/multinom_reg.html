@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -174,10 +174,13 @@ The <code>j</code>-dimension is assumed to be independent.</p></td>
     </tr>
     <tr>
       <th>ref</th>
-      <td><p>One of <code>"first"</code> or <code>"last"</code>, denoting which column of <code>p</code> is the reference.
+      <td><p>One of <code>"first"</code> or <code>"last"</code> or a numeric value, denoting which "column" (the third dimension)
+ of <code>p</code> is the reference.
 If <code>"first"</code>, then <code>mean</code> and <code>precision</code> map to the second through j-th elements of <code>p</code>.
 If <code>"last"</code>, then <code>mean</code> and <code>precision</code> map to the first through (j-1)-th
-elements of <code>p</code>.</p></td>
+elements of <code>p</code>.
+If <code>2</code>, then <code>mean</code> and <code>precision</code> map to the first and third through j-th elements of <code>p</code>.
+Etc.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -200,6 +203,7 @@ elements of <code>p</code>.</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The internals are defined in C++.</p>
+<p>In the case that <code>n</code> is zero or <code>z</code> is zero, slice sampling is ignored in favor of a normal draw.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='ss_pois_reg.html'>ss_pois_reg</a></code>, <code><a href='mh_binom_reg.html'>ss_binom_reg</a></code>, <a href='https://en.wikipedia.org/wiki/Slice_sampling'>https://en.wikipedia.org/wiki/Slice_sampling</a></p></div>
