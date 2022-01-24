@@ -1,3 +1,8 @@
+# v0.7.0.9000
+
+- `ss_multinom_reg()` now also uses normal draws in the case where `z == 0` or `n == 0`. This is not done multivariately, but rather
+  univariately.
+
 # v0.7.0
 
 - Sped up the multivariate binomial, multinomial, and Poisson likelihood evaluations (only completing the square once instead of each time),
@@ -22,6 +27,8 @@
   only doing it when all the `n=`'s are zero.
   
 - `mh_binom_reg()` now enforces `k <= n`
+
+- Fixed one critical bug in `mh_binom_reg()` in which the log-likelihood evaluations were using `k=` instead of `n=`.
 
 # v0.6.0
 

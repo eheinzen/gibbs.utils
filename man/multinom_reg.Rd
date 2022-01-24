@@ -53,6 +53,8 @@ Slice sample a multinomial regression rate
 }
 \details{
 The internals are defined in C++.
+
+  In the case that \code{n} is zero or \code{z} is zero, slice sampling is ignored in favor of a normal draw.
 }
 \seealso{
 \code{\link{ss_pois_reg}}, \code{\link{ss_binom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}

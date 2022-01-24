@@ -4,6 +4,9 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 double one_multinom_slice(NumericVector p_j, LogicalVector z_j, double k, double n, double mean, double precision, int j, double w, int nexpand, int ncontract) {
+  if(n == 0.0 || !z_j[j]) {
+    return R::rnorm(mean, 1/sqrt(precision));
+  }
   double y0 = multinom_LL(p_j, z_j, k, n, mean, precision, j) - R::rexp(1.0);
   double pj = p_j[j];
   double left = pj - w;
@@ -50,4 +53,3 @@ NumericMatrix slice_sample_multinom_mv(List p_j, LogicalMatrix z, NumericMatrix 
   }
   return out;
 }
-
