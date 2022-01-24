@@ -35,10 +35,13 @@ This is of dimension \code{i x j}.}
 \item{precision}{an array of dimension \code{i x i x (j-1)}.
 The \code{j}-dimension is assumed to be independent.}
 
-\item{ref}{One of \code{"first"} or \code{"last"}, denoting which column of \code{p} is the reference.
+\item{ref}{One of \code{"first"} or \code{"last"} or a numeric value, denoting which "column" (the third dimension)
+ of \code{p} is the reference.
 If \code{"first"}, then \code{mean} and \code{precision} map to the second through j-th elements of \code{p}.
 If \code{"last"}, then \code{mean} and \code{precision} map to the first through (j-1)-th
-elements of \code{p}.}
+elements of \code{p}.
+If \code{2}, then \code{mean} and \code{precision} map to the first and third through j-th elements of \code{p}.
+Etc.}
 
 \item{...}{Other arguments (not used)}
 

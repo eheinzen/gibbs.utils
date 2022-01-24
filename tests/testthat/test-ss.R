@@ -172,6 +172,32 @@ test_that("multivariate slice sampling works when ref == 'last'", {
   expect_true(all(abs(m - c(-log(2), -log(2), 0)) < 0.01))
 })
 
+test_that("multivariate slice sampling works when ref == {number}", {
+  tmp <- cbind(matrix(-0.7, nrow = 2, ncol = 2), 0)
+  p <- array(rep(tmp, each = 400), dim = c(400, 2, 3))
+  mean <- round(p[, , -1])
+  set.seed(99)
+  n <- rpois(400*2, 1200)
+  k <- t(sapply(n, function(x) rmultinom(1, size = x, prob = c(0.25, 0.25, 0.5))))
+  dim(k) <- c(400, 2, 3)
+  stopifnot(rowSums(k, dims = 2) == n)
+
+  z <- matrix(1, nrow = 2, ncol = 3)
+  Q <- array(0, c(2, 2, 2))
+  for(j in 1:2) Q[, , j] <- matrix(c(2, 1, 1, 2), 2)
+  set.seed(20220124)
+  m_last <- ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q, ref = "last")
+  set.seed(20220124)
+  m_2 <- ss_multinom_reg(p = p[, , c(1, 3, 2)], z = z, k = k[, , c(1, 3, 2)], mean = mean, precision = Q, ref = 2)
+  set.seed(20220124)
+  m_first <- ss_multinom_reg(p = p[, , c(3, 1:2)], z = z, k = k[, , c(3, 1:2)], mean = mean, precision = Q, ref = "first")
+
+  expect_equal(m_2[, , c(2, 1, 3)], m_first)
+  expect_equal(m_last[, , c(3, 1:2)], m_first)
+
+
+})
+
 
 test_that("multivariate slice sampling works when dimensions are 1", {
   k <- array(c(100, 1000, 10000), dim = c(1, 1, 3))

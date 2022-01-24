@@ -114,10 +114,13 @@ ss_binom_reg <- function(p, k, n, mean, precision, ..., w = 1, nexpand = 10, nco
 #' @param mean the prior mean for \code{p}. Must be either a scalar or an array of size \code{r x i x (j-1)}
 #' @param precision an array of dimension \code{i x i x (j-1)}.
 #'   The \code{j}-dimension is assumed to be independent.
-#' @param ref One of \code{"first"} or \code{"last"}, denoting which column of \code{p} is the reference.
+#' @param ref One of \code{"first"} or \code{"last"} or a numeric value, denoting which "column" (the third dimension)
+#'    of \code{p} is the reference.
 #'   If \code{"first"}, then \code{mean} and \code{precision} map to the second through j-th elements of \code{p}.
 #'   If \code{"last"}, then \code{mean} and \code{precision} map to the first through (j-1)-th
 #'   elements of \code{p}.
+#'   If \code{2}, then \code{mean} and \code{precision} map to the first and third through j-th elements of \code{p}.
+#'   Etc.
 #' @inheritParams ss_pois_reg
 #' @details
 #'   The internals are defined in C++.
@@ -131,8 +134,12 @@ ss_multinom_reg <- function(p, z, k, mean, precision, ref = c("first", "last"), 
   d2 <- replace(d, 3, d[3]-1L)
   if(length(d) != 3 || !identical(d, dim(k))) stop("'p' and 'k' must have the same (3D) dimensions")
 
-  ref <- match.arg(ref)
-  ref <- if(ref == "first") 1 else d[3]
+  if(is.character(ref)) {
+    ref <- match.arg(ref)
+    ref <- if(ref == "first") 1 else d[3]
+  } else {
+    if(!(ref %in% seq_len(d[3]))) stop("'ref' must be between 1 and the length of the third dimension of 'p'")
+  }
   if(any(p[, , ref] != 0)) stop("p[, , ref] != 0")
 
   if(length(mean) == 1) mean <- array(mean, dim = d2)
@@ -150,6 +157,7 @@ ss_multinom_reg <- function(p, z, k, mean, precision, ref = c("first", "last"), 
   if(any(!z & colSums(k))) stop("z == 0 but k > 0")
   n <- rowSums(k, dims = 2)
   subset_third <- function(x, i) {
+    # this is in case 'x' has other dims of length 1
     out <- x[, , i]
     dim(out) <- dim(x)[1:2]
     out
@@ -161,8 +169,8 @@ ss_multinom_reg <- function(p, z, k, mean, precision, ref = c("first", "last"), 
       k = subset_third(k, j),
       n = n,
       p_i = subset_third(p, j),
-      mean = subset_third(mean, j - (ref == 1)),
-      Q = subset_third(precision, j - (ref == 1)),
+      mean = subset_third(mean, j - (j > ref)),
+      Q = subset_third(precision, j - (j > ref)),
       j = j - 1L,
       w = w,
       nexpand = nexpand,
