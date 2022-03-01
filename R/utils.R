@@ -29,9 +29,13 @@ chol_inv <- function(x) {
 #' @export
 chol_mvrnorm <- function(n = 1, mu, Sigma, Precision,
                          A = if(missing(Sigma)) backsolve(chol(Precision), diag(1, nrow(Precision))) else t(chol(Sigma))) {
+  ## the Cholesky of the inverse t(chol(Sigma)) is the inverse of the Cholesky backsolve(...), but don't get confused:
+  ## they might differ in their upper- vs. lower-triangularity.
+  ## What's important is that AA' = Sigma
   p <- nrow(A)
   mu <- check_one_or_all(mu, p)
-  t(mu + A %*% matrix(rnorm(p*n), nrow = p))
+  out <- mu + A %*% matrix(rnorm(p*n), nrow = p)
+  if(n == 1) drop(out) else t(out)
 }
 
 #' @rdname utilities

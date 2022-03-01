@@ -4,6 +4,9 @@
 
 - When `params.only=TRUE`, the `mu` vector returned now drops any dimensions in `conj_matnorm_mu()`, `conj_matlm_beta()`, `conj_mvnorm_mu()`,
   `conj_diagmatlm_beta()`, and `conj_lm_beta()`
+  
+- When `n==1`, `chol_mvrnorm()` now drops dimensions, to match what `MASS::mvrnorm()` does.
+
 
 # v0.8.0
 
