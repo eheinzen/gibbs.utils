@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
       </span>
     </div>
 
@@ -152,6 +152,7 @@
   <span class='va'>Q0</span>,
   newQ.inv <span class='op'>=</span> <span class='fu'><a href='chol_inv.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>V</span> <span class='op'>%x%</span> <span class='va'>U</span> <span class='op'>+</span> <span class='va'>Q0</span><span class='op'>)</span>,
   A <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/chol.html'>chol</a></span><span class='op'>(</span><span class='va'>newQ.inv</span><span class='op'>)</span><span class='op'>)</span>,
+  diag <span class='op'>=</span> <span class='cn'>FALSE</span>,
   use.chol <span class='op'>=</span> <span class='cn'>FALSE</span>,
   params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
@@ -176,6 +177,7 @@
   U <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>mu0</span>,
   <span class='va'>Q0</span>,
+  diag <span class='op'>=</span> <span class='cn'>FALSE</span>,
   use.chol <span class='op'>=</span> <span class='cn'>FALSE</span>,
   params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
@@ -264,6 +266,11 @@ this is an n-by-p matrix</p></td>
     <tr>
       <th>V, U</th>
       <td><p>the precision matrices for the matrix-normal distribution</p></td>
+    </tr>
+    <tr>
+      <th>diag</th>
+      <td><p>If <code>TRUE</code>, both <code>V</code> and <code>Q0</code> are assumed (but not confirmed!) to be diagonal,
+which can speed up the Cholesky decomposition up to 100x. Default <code>FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>X</th>
