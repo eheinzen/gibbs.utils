@@ -59,8 +59,8 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0, Q0, newQ.inv = chol_inv(V %x% U
 
   if(diag) {
     if(!missing(newQ.inv) || !missing(A)) warning("Arguments 'newQ.inv' and 'A' are being ignored because diag = TRUE")
-    Q0.mat.lst <- asplit(matrix(diag(Q0), nrow = ncol(X), ncol = nrow(V)), 2)
-    mu0.lst <- asplit(matrix(mu0, nrow = ncol(X), ncol = nrow(V)), 2)
+    Q0.mat.lst <- asplit(matrix(diag(Q0), nrow = ncol(U), ncol = nrow(V)), 2)
+    mu0.lst <- asplit(matrix(mu0, nrow = ncol(U), ncol = nrow(V)), 2)
     y.lst <- asplit(y, 2)
     tmp <- Map(function(v, q, m, yy) {
       newQ <- v * U + diag(q)
