@@ -7,6 +7,7 @@
   
 - When `n==1`, `chol_mvrnorm()` now drops dimensions, to match what `MASS::mvrnorm()` does.
 
+- Improved printing of `"gibbs_utils_params"` objects.
 
 # v0.8.0
 

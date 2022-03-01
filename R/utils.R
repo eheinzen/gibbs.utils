@@ -70,7 +70,7 @@ print.gibbs_utils_params <- function(x, ...) {
       if(l == 1) {
         cat(nm, ": ", x[[nm]], "\n", sep = "")
       } else {
-        cat(nm, ": a length-", l, " vector\n")
+        cat(nm, ": a length-", l, " vector\n", sep = "")
       }
     }
   }
