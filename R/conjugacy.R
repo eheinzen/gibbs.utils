@@ -44,7 +44,7 @@ conj_mvnorm_mu <- function(y, Q, mu0 = rep_len(0, p), Q0 = diag(0.001, p), newQ.
   if(!is.matrix(y)) y <- matrix(y, nrow = 1)
   p <- ncol(y)
   n <- nrow(y)
-  mu <- newQ.inv %*% (Q0 %*% mu0 + Q %*% colSums(y))
+  mu <- drop(newQ.inv %*% (Q0 %*% mu0 + Q %*% colSums(y)))
   if(params.only) return(gu_params(mu = mu, Q.inv = newQ.inv))
   if(use.chol) chol_mvrnorm(1, mu = mu, A = A) else MASS::mvrnorm(1, mu = mu, Sigma = newQ.inv)
 }
@@ -86,7 +86,7 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0, Q0, newQ.inv = chol_inv(V %x% U
 #' @export
 conj_lm_beta <- function(y, X, XtX = crossprod(X), tau, mu0, Q0, newQ.inv = chol_inv(tau * XtX + Q0),
                          A = t(chol(newQ.inv)), use.chol = FALSE, params.only = FALSE) {
-  mu <- newQ.inv %*% (Q0 %*% mu0 + tau*t(X) %*% y)
+  mu <- drop(newQ.inv %*% (Q0 %*% mu0 + tau*t(X) %*% y))
   if(params.only) return(gu_params(mu = mu, Q.inv = newQ.inv))
   if(use.chol) chol_mvrnorm(1, mu = mu, A = A) else MASS::mvrnorm(1, mu = mu, Sigma = newQ.inv)
 }
@@ -138,7 +138,7 @@ conj_diagmatlm_beta <- function(y, X, V, U = NULL, mu0, Q0, use.chol = FALSE, pa
   XtU <- if(is.null(U)) t(X) else crossprod(X, U)
   newQ <- crossprod(E, V %x% (XtU %*% X)) %*% E + Q0
   newQ.inv <- chol_inv(newQ)
-  mu <- newQ.inv %*% (Q0 %*% mu0 + crossprod(E, as.numeric(XtU %*% y %*% V)))
+  mu <- drop(newQ.inv %*% (Q0 %*% mu0 + crossprod(E, as.numeric(XtU %*% y %*% V))))
   if(params.only) return(gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv))
   FUN <- if(use.chol) chol_mvrnorm else MASS::mvrnorm
   FUN(1, mu = mu, Sigma = newQ.inv)

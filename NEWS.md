@@ -2,6 +2,9 @@
 
 - `conj_matnorm_mu()` and `conj_matlm_beta()` gained the `diag=` argument, for 100x speed boost when both `V=` and `Q0=` are diagonal.
 
+- When `params.only=TRUE`, the `mu` vector returned now drops any dimensions in `conj_matnorm_mu()`, `conj_matlm_beta()`, `conj_mvnorm_mu()`,
+  `conj_diagmatlm_beta()`, and `conj_lm_beta()`
+
 # v0.8.0
 
 - `ss_multinom_reg()` now also uses normal draws in the case where `z == 0` or `n == 0`. This is not done multivariately, but rather
