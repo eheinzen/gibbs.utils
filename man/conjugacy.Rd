@@ -37,6 +37,7 @@ conj_matnorm_mu(
   Q0,
   newQ.inv = chol_inv(V \%x\% U + Q0),
   A = t(chol(newQ.inv)),
+  diag = FALSE,
   use.chol = FALSE,
   params.only = FALSE
 )
@@ -61,6 +62,7 @@ conj_matlm_beta(
   U = NULL,
   mu0,
   Q0,
+  diag = FALSE,
   use.chol = FALSE,
   params.only = FALSE
 )
@@ -131,6 +133,9 @@ this is an n-by-p matrix}
 \item{use.chol}{Logical, determining whether to use \code{MASS::\link{mvrnorm}()} (\code{FALSE}, the default) or \code{\link{chol_mvrnorm}}.}
 
 \item{V, U}{the precision matrices for the matrix-normal distribution}
+
+\item{diag}{If \code{TRUE}, both \code{V} and \code{Q0} are assumed (but not confirmed!) to be diagonal,
+which can speed up the Cholesky decomposition up to 100x. Default \code{FALSE}.}
 
 \item{X}{the data matrix on \code{beta}}
 

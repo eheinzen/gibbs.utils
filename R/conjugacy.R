@@ -19,6 +19,8 @@
 #' @param X the data matrix on \code{beta}
 #' @param beta the coefficients on \code{X}
 #' @param XtX,V0_inv,Xbeta,newQ.inv,A pre-computed "shortcut" arguments for efficiency reasons
+#' @param diag If \code{TRUE}, both \code{V} and \code{Q0} are assumed (but not confirmed!) to be diagonal,
+#'   which can speed up the Cholesky decomposition up to 100x. Default \code{FALSE}.
 #' @param use.chol Logical, determining whether to use \code{MASS::\link{mvrnorm}()} (\code{FALSE}, the default) or \code{\link{chol_mvrnorm}}.
 #' @param params.only Should just a list of the updated parameters be returned?
 #' @rdname conjugacy
@@ -50,12 +52,34 @@ conj_mvnorm_mu <- function(y, Q, mu0 = rep_len(0, p), Q0 = diag(0.001, p), newQ.
 #' @rdname conjugacy
 #' @export
 conj_matnorm_mu <- function(y, V, U = NULL, mu0, Q0, newQ.inv = chol_inv(V %x% U + Q0),
-                            A = t(chol(newQ.inv)), use.chol = FALSE, params.only = FALSE) {
+                            A = t(chol(newQ.inv)), diag = FALSE, use.chol = FALSE, params.only = FALSE) {
   if(!is.matrix(y)) stop("'y' must be a matrix")
+  if(is.matrix(mu0)) mu0 <- as.numeric(mu0)
   if(is.null(U)) U <- diag(nrow(Q0) / nrow(V))
-  mu <- newQ.inv %*% (Q0 %*% mu0 + as.numeric(U %*% y %*% V))
-  if(params.only) return(gu_params(mu = mu, Q.inv = newQ.inv))
-  if(use.chol) chol_mvrnorm(1, mu = mu, A = A) else MASS::mvrnorm(1, mu = mu, Sigma = newQ.inv)
+
+  if(diag) {
+    if(!missing(newQ.inv) || !missing(A)) warning("Arguments 'newQ.inv' and 'A' are being ignored because diag = TRUE")
+    Q0.mat.lst <- asplit(matrix(diag(Q0), nrow = ncol(X), ncol = nrow(V)), 2)
+    mu0.lst <- asplit(matrix(mu0, nrow = ncol(X), ncol = nrow(V)), 2)
+    y.lst <- asplit(y, 2)
+    tmp <- Map(function(v, q, m, yy) {
+      newQ <- v * U + diag(q)
+      newQ.inv <- chol_inv(newQ)
+      mu <- drop(newQ.inv %*% (q*m + as.numeric(U %*% yy * v)))
+      if(params.only) return(gu_params(mu = mu, Q.inv = newQ.inv))
+      FUN <- if(use.chol) chol_mvrnorm else MASS::mvrnorm
+      FUN(1, mu = mu, Sigma = newQ.inv)
+    }, v = diag(V), q = Q0.mat.lst, m = mu0.lst, yy = y.lst)
+    if(params.only) {
+      return(gu_params(mu = lapply(tmp, "[[", "mu"), Q = lapply(tmp, "[[", "Q"), Q.inv = lapply(tmp, "[[", "Q.inv")))
+    }
+    do.call(c, tmp)
+
+  } else {
+    mu <- drop(newQ.inv %*% (Q0 %*% mu0 + as.numeric(U %*% y %*% V)))
+    if(params.only) return(gu_params(mu = mu, Q.inv = newQ.inv))
+    if(use.chol) chol_mvrnorm(1, mu = mu, A = A) else MASS::mvrnorm(1, mu = mu, Sigma = newQ.inv)
+  }
 }
 
 #' @rdname conjugacy
@@ -69,17 +93,38 @@ conj_lm_beta <- function(y, X, XtX = crossprod(X), tau, mu0, Q0, newQ.inv = chol
 
 #' @rdname conjugacy
 #' @export
-conj_matlm_beta <- function(y, X, V, U = NULL, mu0, Q0, use.chol = FALSE, params.only = FALSE) {
+conj_matlm_beta <- function(y, X, V, U = NULL, mu0, Q0, diag = FALSE, use.chol = FALSE, params.only = FALSE) {
   if(!is.matrix(y)) stop("'y' must be a matrix")
   if(is.matrix(mu0)) mu0 <- as.numeric(mu0)
 
   XtU <- if(is.null(U)) t(X) else crossprod(X, U)
-  newQ <- V %x% (XtU %*% X) + Q0
-  newQ.inv <- chol_inv(newQ)
-  mu <- newQ.inv %*% (Q0 %*% mu0 + as.numeric(XtU %*% y %*% V))
-  if(params.only) return(gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv))
+  XtUX <- XtU %*% X
   FUN <- if(use.chol) chol_mvrnorm else MASS::mvrnorm
-  FUN(1, mu = mu, Sigma = newQ.inv)
+
+  if(diag) {
+    Q0.mat.lst <- asplit(matrix(diag(Q0), nrow = ncol(X), ncol = nrow(V)), 2)
+    mu0.lst <- asplit(matrix(mu0, nrow = ncol(X), ncol = nrow(V)), 2)
+    y.lst <- asplit(y, 2)
+    tmp <- Map(function(v, q, m, yy) {
+      newQ <- v * XtUX + diag(q)
+      newQ.inv <- chol_inv(newQ)
+      mu <- drop(newQ.inv %*% (q*m + as.numeric(XtU %*% yy * v)))
+      if(params.only) return(gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv))
+      FUN(1, mu = mu, Sigma = newQ.inv)
+    }, v = diag(V), q = Q0.mat.lst, m = mu0.lst, yy = y.lst)
+    if(params.only) {
+      return(gu_params(mu = lapply(tmp, "[[", "mu"), Q = lapply(tmp, "[[", "Q"), Q.inv = lapply(tmp, "[[", "Q.inv")))
+    }
+    do.call(c, tmp)
+
+  } else {
+    newQ <- V %x% XtUX + Q0
+    newQ.inv <- chol_inv(newQ)
+    mu <- drop(newQ.inv %*% (Q0 %*% mu0 + as.numeric(XtU %*% y %*% V)))
+    if(params.only) return(gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv))
+    FUN(1, mu = mu, Sigma = newQ.inv)
+  }
+
 }
 
 #' @rdname conjugacy

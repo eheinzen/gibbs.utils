@@ -40,3 +40,43 @@ test_that("Conjugacy works for 2-D independent cases", {
   expect_equal(mu1, as.vector(mu7$mu))
 })
 
+test_that("diag = TRUE works for conj_matlm_beta", {
+  V <- diag(1:3)
+  X <- cbind(1, rep(c(0, 1), each = 5))
+  y <- matrix(rnorm(3*10), nrow = 10)
+  mu0 <- matrix(0, nrow = 2, ncol = 3)
+  Q0 <- diag(3) %x% diag(c(0.01, 0.1))
+  set.seed(99)
+  out <- conj_matlm_beta(y = y, X = X, V = V, mu0 = mu0, Q0 = Q0, diag = FALSE, use.chol = TRUE)
+  set.seed(99)
+  out2 <- conj_matlm_beta(y = y, X = X, V = V, mu0 = mu0, Q0 = Q0, diag = TRUE, use.chol = TRUE)
+  set.seed(99)
+  out3 <- conj_matlm_beta(y = y, X = X, V = V, mu0 = mu0, Q0 = Q0, diag = FALSE, use.chol = FALSE, params.only = TRUE)
+  set.seed(99)
+  out4 <- conj_matlm_beta(y = y, X = X, V = V, mu0 = mu0, Q0 = Q0, diag = TRUE, use.chol = FALSE, params.only = TRUE)
+
+  expect_equal(out, out2)
+  expect_equal(out3$mu, do.call(c, out4$mu))
+
+  U <- diag(1:10)
+  set.seed(99)
+  out <- conj_matlm_beta(y = y, X = X, V = V, U = U, mu0 = mu0, Q0 = Q0, diag = FALSE, use.chol = TRUE)
+  set.seed(99)
+  out2 <- conj_matlm_beta(y = y, X = X, V = V, U = U, mu0 = mu0, Q0 = Q0, diag = TRUE, use.chol = TRUE)
+  expect_equal(out, out2)
+
+
+  y <- matrix(rnorm(3*2), nrow = 2, ncol = 3)
+  set.seed(99)
+  out <- conj_matnorm_mu(y = y, V = V, mu0 = mu0, Q0 = Q0, diag = FALSE, use.chol = TRUE)
+  set.seed(99)
+  out2 <- conj_matnorm_mu(y = y, V = V, mu0 = mu0, Q0 = Q0, diag = TRUE, use.chol = TRUE)
+  expect_equal(out, out2)
+
+  U <- diag(c(1, 10))
+  set.seed(99)
+  out <- conj_matnorm_mu(y = y, V = V, U = U, mu0 = mu0, Q0 = Q0, diag = FALSE, use.chol = TRUE)
+  set.seed(99)
+  out2 <- conj_matnorm_mu(y = y, V = V, U = U, mu0 = mu0, Q0 = Q0, diag = TRUE, use.chol = TRUE)
+  expect_equal(out, out2)
+})
