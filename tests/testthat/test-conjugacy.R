@@ -9,12 +9,12 @@ test_that("Conjugacy works for 1-D cases", {
   mu6 <- conj_matnorm_mu(y = one, V = one, U = ten, mu0 = 0, Q0 = one, params.only = TRUE)
   mu7 <- conj_diagmatlm_beta(y = one, X = one, V = ten, U = NULL, mu0 = 0, Q0 = one, params.only = TRUE)
 
-  expect_equal(mu1$mu, as.vector(mu2$mu))
-  expect_equal(mu1$mu, as.vector(mu3$mu))
-  expect_equal(mu1$mu, as.vector(mu4$mu))
-  expect_equal(mu1$mu, as.vector(mu5$mu))
-  expect_equal(mu1$mu, as.vector(mu6$mu))
-  expect_equal(mu1$mu, as.vector(mu7$mu))
+  expect_equal(mu1$mu, mu2$mu)
+  expect_equal(mu1$mu, mu3$mu)
+  expect_equal(mu1$mu, mu4$mu)
+  expect_equal(mu1$mu, mu5$mu)
+  expect_equal(mu1$mu, mu6$mu)
+  expect_equal(mu1$mu, mu7$mu)
 })
 
 test_that("Conjugacy works for 2-D independent cases", {
@@ -33,11 +33,11 @@ test_that("Conjugacy works for 2-D independent cases", {
   mu6 <- conj_matnorm_mu(y = t(one), V = X, U = ten, mu0 = zero, Q0 = two, params.only = TRUE)
   mu7 <- conj_diagmatlm_beta(y = one, X = cbind(X, X), V = ten, U = NULL, mu0 = zero, Q0 = two, params.only = TRUE)
 
-  expect_equal(mu1, as.vector(mu2$mu))
-  expect_equal(mu1, as.vector(mu3$mu))
-  expect_equal(mu1, as.vector(mu4$mu))
-  expect_equal(mu1, as.vector(mu6$mu))
-  expect_equal(mu1, as.vector(mu7$mu))
+  expect_equal(mu1, mu2$mu)
+  expect_equal(mu1, mu3$mu)
+  expect_equal(mu1, mu4$mu)
+  expect_equal(mu1, mu6$mu)
+  expect_equal(mu1, mu7$mu)
 })
 
 test_that("diag = TRUE works for conj_matlm_beta", {
