@@ -6,6 +6,7 @@
 
 - Improved printing of `"gibbs_utils_params"` objects.
 
+- Add `gs_diagmatlm_beta()` to Gibbs-sample truncated normal diagonal matrix-normal regression means.
 
 # v0.8.1
 
