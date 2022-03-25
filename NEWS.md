@@ -2,6 +2,8 @@
 
 - Updated the vignettes to improve the custom LaTeX code that wasn't previously handled by HTML output.
 
+- Improved printing of `"gibbs_utils_params"` objects.
+
 # v0.8.1
 
 - `conj_matnorm_mu()` and `conj_matlm_beta()` gained the `diag=` argument, for 100x speed boost when both `V=` and `Q0=` are diagonal.

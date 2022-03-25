@@ -67,7 +67,7 @@ print.gibbs_utils_params <- function(x, ...) {
       cat(nm, ": a ", d[1], "x", d[2], " matrix\n", sep = "")
     } else {
       l <- length(x[[nm]])
-      if(l == 1) {
+      if(l == 1 && !is.list(x[[nm]])) {
         cat(nm, ": ", x[[nm]], "\n", sep = "")
       } else {
         cat(nm, ": a length-", l, " vector\n", sep = "")
