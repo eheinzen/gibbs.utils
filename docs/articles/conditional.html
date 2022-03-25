@@ -92,8 +92,8 @@
 <div id="one-element-of-multivariate-normal" class="section level1">
 <h1 class="hasAnchor">
 <a href="#one-element-of-multivariate-normal" class="anchor"></a>One element of multivariate normal</h1>
-<p>Suppose <span class="math display">\[x \sim \norm(\mu, Q)\]</span></p>
-<p>We’re looking for <span class="math inline">\(x_i \vert x_{-i} \sim \norm(?, ?)\)</span></p>
+<p>Suppose <span class="math display">\[x \sim \mathcal{N}(\mu, Q)\]</span></p>
+<p>We’re looking for <span class="math inline">\(x_i \vert x_{-i} \sim \mathcal{N}(?, ?)\)</span></p>
 <p>Then we have (in the log-density):</p>
 <p><span class="math display">\[(x - \mu)^\intercal Q (x - \mu)\]</span></p>
 <p>We extract the relevant components involving <span class="math inline">\(x_i\)</span></p>
@@ -107,7 +107,7 @@ Q_{ii}x_i^2 - 2Q_{ii}x_i\mu_i +
 \end{equation}\]</span></p>
 <p>So that</p>
 <p><span class="math display">\[\begin{equation}
-x \sim \norm(\mu_i - \sum_{i \ne j}\frac{Q_{ij}}{Q_{ii}}(x_j - \mu_j), Q_{11})
+x \sim \mathcal{N}(\mu_i - \sum_{i \ne j}\frac{Q_{ij}}{Q_{ii}}(x_j - \mu_j), Q_{11})
 \end{equation}\]</span></p>
 <div id="in-the-conjugate-setting" class="section level2">
 <h2 class="hasAnchor">
@@ -115,8 +115,8 @@ x \sim \norm(\mu_i - \sum_{i \ne j}\frac{Q_{ij}}{Q_{ii}}(x_j - \mu_j), Q_{11})
 <p>We can expand this to the conjugate setting, where we wish to sample one element of <span class="math inline">\(\mu\)</span>:</p>
 <p><span class="math display">\[\begin{equation}
 \begin{split}
-y &amp;\sim \norm(\mu, Q) \\
-\mu &amp;\sim \norm(\mu_0, \tau_0)
+y &amp;\sim \mathcal{N}(\mu, Q) \\
+\mu &amp;\sim \mathcal{N}(\mu_0, \tau_0)
 \end{split}
 \end{equation}\]</span></p>
 <p>This can be particularly useful when, e.g., some of your <span class="math inline">\(\mu\)</span>’s are observed, while others are not, and you wish to impute.</p>
@@ -137,7 +137,7 @@ Q_{ii}\mu_i^2 - 2Q_{ii}y_i\mu_i +
 \end{equation}\]</span></p>
 <p>The precision is then <span class="math inline">\(Q_{ii} + \tau_0\)</span>, and completing the square gives</p>
 <p><span class="math display">\[\begin{equation}
-\mu_i \sim \norm\left(\frac{1}{Q_{ii} + \tau_0} \left(\tau_0\mu_0 + Q_{ii}y_i - \sum_{i \ne j}Q_{ij}(\mu_j - y_j)\right), Q_{ii} + \tau_0\right)
+\mu_i \sim \mathcal{N}\left(\frac{1}{Q_{ii} + \tau_0} \left(\tau_0\mu_0 + Q_{ii}y_i - \sum_{i \ne j}Q_{ij}(\mu_j - y_j)\right), Q_{ii} + \tau_0\right)
 \end{equation}\]</span></p>
 <p>This is exactly the “usual” conjugate form for a normal distribution with unknown <span class="math inline">\(\mu\)</span> combined with the conditional distribution of <span class="math inline">\(\mu_i\)</span> (from above, but with <span class="math inline">\(x\)</span> and <span class="math inline">\(\mu\)</span> exchanged for each other).</p>
 </div>

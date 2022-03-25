@@ -1,14 +1,16 @@
 ---
 title: "Conjugate distributions"
 output:
-  rmarkdown::pdf_document:
-    includes:
-      in_header: "extra.tex"
+  rmarkdown::html_document
 vignette: >
   %\VignetteIndexEntry{Conjugate distributions}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+```{r results='asis', echo=FALSE}
+cat(readLines("extra.tex"))
+```
 
 Below we derive the posterior distributions for various scenarios, given their conjugate priors.
 
