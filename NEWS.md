@@ -1,8 +1,11 @@
 # v0.8.2
 
+- `cond_mvnorm()` gains optional truncation parameters
+
 - Updated the vignettes to improve the custom LaTeX code that wasn't previously handled by HTML output.
 
 - Improved printing of `"gibbs_utils_params"` objects.
+
 
 # v0.8.1
 
