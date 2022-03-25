@@ -1,12 +1,14 @@
 # v0.8.2
 
-- `cond_mvnorm()` gains optional truncation parameters
+- Added `truncnorm` as a package dependency.
+
+- Added `gs_diagmatlm_beta()` to Gibbs-sample truncated normal diagonal matrix-normal regression means.
+
+- `cond_mvnorm()` gained optional truncation parameters
 
 - Updated the vignettes to improve the custom LaTeX code that wasn't previously handled by HTML output.
 
 - Improved printing of `"gibbs_utils_params"` objects.
-
-- Add `gs_diagmatlm_beta()` to Gibbs-sample truncated normal diagonal matrix-normal regression means.
 
 # v0.8.1
 
