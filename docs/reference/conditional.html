@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Draw Conditional Samples — cond_mvnorm • gibbs.utils</title>
+<title>Draw Conditional Samples — conditional • gibbs.utils</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Draw Conditional Samples — cond_mvnorm" />
+<meta property="og:title" content="Draw Conditional Samples — conditional" />
 <meta property="og:description" content="Sample from a conditional distribution." />
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.2</span>
       </span>
     </div>
 
@@ -130,7 +130,7 @@
     <p>Sample from a conditional distribution.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cond_mvnorm</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, <span class='va'>which</span>, params.only <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>cond_mvnorm</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, <span class='va'>which</span>, a <span class='op'>=</span> <span class='op'>-</span><span class='cn'>Inf</span>, b <span class='op'>=</span> <span class='cn'>Inf</span>, params.only <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -150,6 +150,10 @@
     <tr>
       <th>which</th>
       <td><p>Which index to get the conditional distribution of</p></td>
+    </tr>
+    <tr>
+      <th>a, b</th>
+      <td><p>optional limits of truncation for a truncated normal distribution.</p></td>
     </tr>
     <tr>
       <th>params.only</th>
