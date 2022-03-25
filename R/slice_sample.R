@@ -64,6 +64,9 @@ ss_pois_reg <- function(L, k, mean, precision, ..., w = 1, nexpand = 10, ncontra
 #' @seealso \code{\link{ss_pois_reg}}, \code{\link{ss_multinom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling},
 #' \url{https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm}
 #' @name binom_reg
+NULL
+
+#' @rdname binom_reg
 #' @export
 ss_binom_reg <- function(p, k, n, mean, precision, ..., w = 1, nexpand = 10, ncontract = 100) {
   if(length(p) != length(k) || length(p) != length(n)) stop("'p' and 'k' and 'n' must all have the same length")

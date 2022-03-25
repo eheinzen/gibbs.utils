@@ -12,6 +12,9 @@
 #'  Can be a matrix the same size as \code{mu}, in which case
 #'  only the values corresponding to \code{impute == TRUE} are used, or a vector with length
 #'  \code{sum(impute)}.
+#' @name impute
+NULL
+
 #' @rdname impute
 #' @export
 impute_conj_mvnorm_mu <- function(y, mu, impute, Q, mu0, tau0) {

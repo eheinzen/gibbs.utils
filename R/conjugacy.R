@@ -23,6 +23,9 @@
 #'   which can speed up the Cholesky decomposition up to 100x. Default \code{FALSE}.
 #' @param use.chol Logical, determining whether to use \code{MASS::\link{mvrnorm}()} (\code{FALSE}, the default) or \code{\link{chol_mvrnorm}}.
 #' @param params.only Should just a list of the updated parameters be returned?
+#' @name conjugacy
+NULL
+
 #' @rdname conjugacy
 #' @export
 conj_norm_mu <- function(y, tau, mu0 = 0, tau0 = 0.001, mult = 1, params.only = FALSE) {

@@ -7,6 +7,9 @@
 #' @param Q the precision matrix
 #' @param V,U the precision matrices for the matrix-normal distribution
 #' @param log Should the log-density be returned?
+#' @name distributions
+NULL
+
 #' @rdname distributions
 #' @export
 dmvnorm <- function(x, mu, Q, log = TRUE) {
