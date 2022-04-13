@@ -1,3 +1,8 @@
+# v0.9.0
+
+- Renamed `conj_matlm_sigma()` to `conj_matlm_V()`. It, along with `conj_matnorm_V()`, now both use `conj_mvnorm_Q()` in the case that `U = NULL`
+  (independence among rows).
+
 # v0.8.2
 
 - Added `truncnorm` as a package dependency.

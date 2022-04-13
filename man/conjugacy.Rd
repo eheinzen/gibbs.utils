@@ -12,7 +12,7 @@
 \alias{conj_mvnorm_Q}
 \alias{conj_matnorm_V}
 \alias{conj_lm_tau}
-\alias{conj_matlm_sigma}
+\alias{conj_matlm_V}
 \alias{conj_binom_p}
 \title{Draw Conjugate Samples}
 \usage{
@@ -103,7 +103,7 @@ conj_lm_tau(
   params.only = FALSE
 )
 
-conj_matlm_sigma(
+conj_matlm_V(
   y,
   X,
   beta,

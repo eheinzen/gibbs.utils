@@ -174,8 +174,7 @@ conj_mvnorm_Q <- function(y, mu, V0, v0, V0_inv = chol_inv(V0), params.only = FA
     mu <- matrix(mu, nrow = n, ncol = p, byrow = TRUE)
   }
   stopifnot(identical(dim(y), dim(mu)))
-  tmp <- crossprod(y - mu)
-  V2 <- chol_inv(V0_inv + tmp)
+  V2 <- chol_inv(V0_inv + crossprod(y - mu))
   if(params.only) return(gu_params(V = V2, v = n + v0))
   rWishart(
     1,
@@ -188,12 +187,13 @@ conj_mvnorm_Q <- function(y, mu, V0, v0, V0_inv = chol_inv(V0), params.only = FA
 #' @export
 conj_matnorm_V <- function(y, mu, U = NULL, V0, v0, V0_inv = chol_inv(V0), params.only = FALSE) {
   if(!is.matrix(y) || !is.matrix(mu)) stop("'y' and 'mu' must be matrices")
+  if(is.null(U)) {
+    return(conj_mvnorm_Q(y = y, mu = mu, v0 = v0, V0_inv = V0_inv, params.only = params.only))
+  }
   n <- nrow(mu)
   stopifnot(identical(dim(y), dim(mu)))
   ymu <- y - mu
-  ymu2 <- if(is.null(U)) t(ymu) else crossprod(ymu, U)
-
-  V2 <- chol_inv(V0_inv + ymu2 %*% ymu)
+  V2 <- chol_inv(V0_inv + crossprod(ymu, U) %*% ymu)
   if(params.only) return(gu_params(V = V2, v = n + v0))
   rWishart(
     1,
@@ -210,7 +210,7 @@ conj_lm_tau <- function(y, X, beta, Xbeta = X %*% beta, a0 = 0.001, b0 = 0.001, 
 
 #' @rdname conjugacy
 #' @export
-conj_matlm_sigma <- function(y, X, beta, Xbeta = X %*% beta, U = NULL, V0, v0, V0_inv = chol_inv(V0), params.only = FALSE) {
+conj_matlm_V <- function(y, X, beta, Xbeta = X %*% beta, U = NULL, V0, v0, V0_inv = chol_inv(V0), params.only = FALSE) {
   conj_matnorm_V(y = y, mu = Xbeta, U = U, v0 = v0, V0_inv = V0_inv, params.only = params.only)
 }
 
