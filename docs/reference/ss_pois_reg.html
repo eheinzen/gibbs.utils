@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -173,6 +173,10 @@
 
     <p>This function slice samples <code>L</code> conditional on <code>k</code>, <code>mean</code>, and <code>precision</code>,
   where <code>k ~ Pois(exp(L))</code> and <code>L ~ N(mean, precision)</code>.</p>
+<p>In the case that <code>k</code> is <code>NA</code> (akin to <code><a href='mh_binom_reg.html'>ss_binom_reg</a></code> in the case <code>n == k == 0</code>),
+  slice sampling is ignored in favor of a normal draw.
+  In the special case when an entire (multivariate) row of <code>k</code> is <code>NA</code>, the entire row
+  is simultaneously drawn (in R); when only some elements are <code>NA</code>, they're drawn univariately (in C++).</p>
 <p>This is vectorized over <code>L</code>, <code>k</code>, and <code>mean</code>. If <code>precision</code> is a matrix,
   <code>L</code> is assumed to be multivariately distributed, and a different function is used.</p>
 <p>The internals are defined in C++.</p>

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -213,7 +213,7 @@ the half-width of the uniform proposal interval.</p></td>
   where <code>k ~ Binom(n, expit(p))</code> and <code>p ~ N(mean, precision)</code>.</p>
 <p>In the case that <code>n</code> is zero, slice sampling is ignored in favor of a normal draw.
   In the special case when an entire (multivariate) row of <code>n</code> is zero, the entire row
-  is simultaneously drawn; when only some elements are zero, they're drawn univariately.</p>
+  is simultaneously drawn (in R); when only some elements are zero, they're drawn univariately (in C++).</p>
 <p>Both vectorized over <code>p</code>, <code>k</code>, <code>n</code>, and <code>mean</code>. If <code>precision</code> is a matrix,
   <code>p</code> is assumed to be multivariately distributed, and different internals are used.</p>
 <p>The internals are defined in C++.</p>
