@@ -13,15 +13,13 @@ bool accept_reject(double ratio) {
 }
 
 // [[Rcpp::export]]
-NumericVector m_binom(NumericVector p, NumericVector proposal, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision,
-                      LogicalVector use_norm, NumericVector norm) {
+NumericVector m_binom(NumericVector p, NumericVector proposal, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision) {
   NumericVector out = clone(p);
   LogicalVector accept(p.size());
 
-  int nrm = 0;
   for(int i=0; i < p.size(); i++) {
-    if(use_norm[i]) {
-      out[i]= norm[nrm++];
+    if(n[i] == 0.0) {
+      out[i] = R::rnorm(mean[i], 1.0/sqrt(precision[i]));
       accept[i] = true;
       continue;
     }
@@ -63,7 +61,7 @@ NumericVector m_binom_mv(NumericMatrix p, NumericMatrix proposal, NumericMatrix 
       double mmm = cond_mv_mean(out(r, _), mm, Q, i);
 
       if(nn[i] == 0.0) {
-        out(r, i) = R::rnorm(mmm, 1/sqrt(Q(i, i)));
+        out(r, i) = R::rnorm(mmm, 1.0/sqrt(Q(i, i)));
         accept(r, i) = true;
         continue;
       }
@@ -116,15 +114,13 @@ NumericVector one_qt_proposal_ratio(double p, double k, double n, double mean, d
 
 
 // [[Rcpp::export]]
-NumericVector qt_binom(NumericVector p, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision,
-                       LogicalVector use_norm, NumericVector norm) {
+NumericVector qt_binom(NumericVector p, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision) {
   NumericVector out = clone(p);
   LogicalVector accept(p.size());
 
-  int nrm = 0;
   for(int i=0; i < p.size(); i++) {
-    if(use_norm[i]) {
-      out[i]= norm[nrm++];
+    if(n[i] == 0.0) {
+      out[i] = R::rnorm(mean[i], 1.0/sqrt(precision[i]));
       accept[i] = true;
       continue;
     }
@@ -164,7 +160,7 @@ NumericVector qt_binom_mv(NumericMatrix p, NumericMatrix k, NumericMatrix n, Num
       double mmm = cond_mv_mean(out(r, _), mm, Q, i);
 
       if(nn[i] == 0.0) {
-        out(r, i) = R::rnorm(mmm, 1/sqrt(Q(i, i)));
+        out(r, i) = R::rnorm(mmm, 1.0/sqrt(Q(i, i)));
         accept(r, i) = true;
         continue;
       }

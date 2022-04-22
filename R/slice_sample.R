@@ -55,7 +55,7 @@ ss_pois_reg <- function(L, k, mean, precision, ..., w = 1, nexpand = 10, ncontra
 #'
 #'   In the case that \code{n} is zero, slice sampling is ignored in favor of a normal draw.
 #'   In the special case when an entire (multivariate) row of \code{n} is zero, the entire row
-#'   is simultaneously drawn; when only some elements are zero, they're drawn univariately.
+#'   is simultaneously drawn (in R); when only some elements are zero, they're drawn univariately (in C++).
 #'
 #'   Both vectorized over \code{p}, \code{k}, \code{n}, and \code{mean}. If \code{precision} is a matrix,
 #'   \code{p} is assumed to be multivariately distributed, and different internals are used.
@@ -75,7 +75,6 @@ ss_binom_reg <- function(p, k, n, mean, precision, ..., w = 1, nexpand = 10, nco
   d <- dim(p)
 
   if(is.matrix(precision)) {
-    FUN <- slice_sample_binom_mv
     tmp <- is.matrix(p) + is.matrix(k) + is.matrix(n)
     if(!(tmp %in% c(0, 3))) stop("All of 'p', 'k', and 'n' must be matrices, or none must be.")
     if(!is.matrix(p)) {
@@ -88,16 +87,11 @@ ss_binom_reg <- function(p, k, n, mean, precision, ..., w = 1, nexpand = 10, nco
     norm <- if(any(use_norm)) {
       mean[use_norm, , drop = FALSE] + chol_mvrnorm(sum(use_norm), mu = 0, Precision = precision)
     } else matrix()
-
+    out <- slice_sample_binom_mv(p, k, n, mean, precision, use_norm = use_norm, norm = norm, w = w, nexpand = nexpand, ncontract = ncontract)
   } else {
     precision <- check_one_or_all(precision, length(p))
-    FUN <- slice_sample_binom
-    use_norm <- n == 0
-    norm <- if(any(use_norm)) {
-      mean[use_norm] + stats::rnorm(sum(use_norm), mean = 0, sd = 1 / sqrt(precision[use_norm]))
-    } else numeric()
+    out <- slice_sample_binom(p, k, n, mean, precision, w = w, nexpand = nexpand, ncontract = ncontract)
   }
-  out <- FUN(p, k, n, mean, precision, use_norm = use_norm, norm = norm, w = w, nexpand = nexpand, ncontract = ncontract)
   dim(out) <- d # could be NULL
   out
 }
