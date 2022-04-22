@@ -66,7 +66,7 @@ Slice sample a binomial regression rate
 
   In the case that \code{n} is zero, slice sampling is ignored in favor of a normal draw.
   In the special case when an entire (multivariate) row of \code{n} is zero, the entire row
-  is simultaneously drawn; when only some elements are zero, they're drawn univariately.
+  is simultaneously drawn (in R); when only some elements are zero, they're drawn univariately (in C++).
 
   Both vectorized over \code{p}, \code{k}, \code{n}, and \code{mean}. If \code{precision} is a matrix,
   \code{p} is assumed to be multivariately distributed, and different internals are used.

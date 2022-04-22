@@ -30,6 +30,11 @@ Slice sample a Poisson regression rate
 This function slice samples \code{L} conditional on \code{k}, \code{mean}, and \code{precision},
   where \code{k ~ Pois(exp(L))} and \code{L ~ N(mean, precision)}.
 
+  In the case that \code{k} is \code{NA} (akin to \code{\link{ss_binom_reg}} in the case \code{n == k == 0}),
+  slice sampling is ignored in favor of a normal draw.
+  In the special case when an entire (multivariate) row of \code{k} is \code{NA}, the entire row
+  is simultaneously drawn (in R); when only some elements are \code{NA}, they're drawn univariately (in C++).
+
   This is vectorized over \code{L}, \code{k}, and \code{mean}. If \code{precision} is a matrix,
   \code{L} is assumed to be multivariately distributed, and a different function is used.
 
