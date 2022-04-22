@@ -46,6 +46,26 @@ test_that("multivariate slice sampling works for Poisson (matrix)", {
 })
 
 
+test_that("Poisson slice sampling works for NAs", {
+  m <- L <- rep_len(0, 10)
+  k <- c(rep_len(NA, 5), 1:5)
+  tau <- 10
+  set.seed(20211203)
+  norm <- rnorm(5, 0, sd = 1/sqrt(tau))
+  set.seed(20211203)
+  ss <- ss_pois_reg(L, k, m, tau)
+  expect_equal(ss[1:5], norm)
+
+  m <- L <- matrix(1, 4, 3)
+  k <- matrix(c(rep_len(NA, 6), 1:6), byrow = TRUE, nrow = 4)
+  tau <- diag(10, 3)
+  set.seed(20211203)
+  norm <- chol_mvrnorm(2, 1, Precision = tau)
+  set.seed(20211203)
+  ss <- ss_pois_reg(L, k, m, tau)
+  expect_equal(ss[1:2, ], norm)
+})
+
 
 
 

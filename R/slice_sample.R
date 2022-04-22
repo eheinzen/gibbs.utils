@@ -12,6 +12,11 @@
 #'   This function slice samples \code{L} conditional on \code{k}, \code{mean}, and \code{precision},
 #'   where \code{k ~ Pois(exp(L))} and \code{L ~ N(mean, precision)}.
 #'
+#'   In the case that \code{k} is \code{NA} (akin to \code{\link{ss_binom_reg}} in the case \code{n == k == 0}),
+#'   slice sampling is ignored in favor of a normal draw.
+#'   In the special case when an entire (multivariate) row of \code{k} is \code{NA}, the entire row
+#'   is simultaneously drawn (in R); when only some elements are \code{NA}, they're drawn univariately (in C++).
+#'
 #'   This is vectorized over \code{L}, \code{k}, and \code{mean}. If \code{precision} is a matrix,
 #'   \code{L} is assumed to be multivariately distributed, and a different function is used.
 #'
@@ -24,7 +29,6 @@ ss_pois_reg <- function(L, k, mean, precision, ..., w = 1, nexpand = 10, ncontra
   d <- dim(L)
 
   if(is.matrix(precision)) {
-    FUN <- slice_sample_pois_mv
     tmp <- is.matrix(L) + is.matrix(k)
     if(!(tmp %in% c(0, 2))) stop("Both of 'L' and 'k' must be matrices, or neither must be.")
     if(!is.matrix(L)) {
@@ -32,11 +36,16 @@ ss_pois_reg <- function(L, k, mean, precision, ..., w = 1, nexpand = 10, ncontra
       k <- matrix(k, nrow = 1)
     }
     dim(mean) <- dim(L)
+    use_norm <- rowSums(!is.na(k)) == 0
+    norm <- if(any(use_norm)) {
+      mean[use_norm, , drop = FALSE] + chol_mvrnorm(sum(use_norm), mu = 0, Precision = precision)
+    } else matrix()
+    out <- slice_sample_pois_mv(L, k, is.na(k), mean, precision, use_norm = use_norm, norm = norm, w = w, nexpand = nexpand, ncontract = ncontract)
   } else {
     precision <- check_one_or_all(precision, length(L))
-    FUN <- slice_sample_pois
+    out <- slice_sample_pois(L, k, is.na(k), mean, precision, w = w, nexpand = nexpand, ncontract = ncontract)
   }
-  out <- FUN(L, k, mean, precision, w = w, nexpand = nexpand, ncontract = ncontract)
+
   dim(out) <- d # could be NULL
   out
 }

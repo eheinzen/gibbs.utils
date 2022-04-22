@@ -222,36 +222,40 @@ BEGIN_RCPP
 END_RCPP
 }
 // slice_sample_pois
-NumericVector slice_sample_pois(NumericVector L, NumericVector k, NumericVector mean, NumericVector precision, double w, int nexpand, int ncontract);
-RcppExport SEXP _gibbs_utils_slice_sample_pois(SEXP LSEXP, SEXP kSEXP, SEXP meanSEXP, SEXP precisionSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
+NumericVector slice_sample_pois(NumericVector L, NumericVector k, LogicalVector k_na, NumericVector mean, NumericVector precision, double w, int nexpand, int ncontract);
+RcppExport SEXP _gibbs_utils_slice_sample_pois(SEXP LSEXP, SEXP kSEXP, SEXP k_naSEXP, SEXP meanSEXP, SEXP precisionSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type k_na(k_naSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type precision(precisionSEXP);
     Rcpp::traits::input_parameter< double >::type w(wSEXP);
     Rcpp::traits::input_parameter< int >::type nexpand(nexpandSEXP);
     Rcpp::traits::input_parameter< int >::type ncontract(ncontractSEXP);
-    rcpp_result_gen = Rcpp::wrap(slice_sample_pois(L, k, mean, precision, w, nexpand, ncontract));
+    rcpp_result_gen = Rcpp::wrap(slice_sample_pois(L, k, k_na, mean, precision, w, nexpand, ncontract));
     return rcpp_result_gen;
 END_RCPP
 }
 // slice_sample_pois_mv
-NumericMatrix slice_sample_pois_mv(NumericMatrix L, NumericMatrix k, NumericMatrix mean, NumericMatrix Q, double w, int nexpand, int ncontract);
-RcppExport SEXP _gibbs_utils_slice_sample_pois_mv(SEXP LSEXP, SEXP kSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
+NumericMatrix slice_sample_pois_mv(NumericMatrix L, NumericMatrix k, LogicalMatrix k_na, NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm, double w, int nexpand, int ncontract);
+RcppExport SEXP _gibbs_utils_slice_sample_pois_mv(SEXP LSEXP, SEXP kSEXP, SEXP k_naSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP use_normSEXP, SEXP normSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type L(LSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type k(kSEXP);
+    Rcpp::traits::input_parameter< LogicalMatrix >::type k_na(k_naSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type mean(meanSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type use_norm(use_normSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type norm(normSEXP);
     Rcpp::traits::input_parameter< double >::type w(wSEXP);
     Rcpp::traits::input_parameter< int >::type nexpand(nexpandSEXP);
     Rcpp::traits::input_parameter< int >::type ncontract(ncontractSEXP);
-    rcpp_result_gen = Rcpp::wrap(slice_sample_pois_mv(L, k, mean, Q, w, nexpand, ncontract));
+    rcpp_result_gen = Rcpp::wrap(slice_sample_pois_mv(L, k, k_na, mean, Q, use_norm, norm, w, nexpand, ncontract));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -269,8 +273,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gibbs_utils_one_multinom_slice", (DL_FUNC) &_gibbs_utils_one_multinom_slice, 10},
     {"_gibbs_utils_slice_sample_multinom_mv", (DL_FUNC) &_gibbs_utils_slice_sample_multinom_mv, 11},
     {"_gibbs_utils_one_pois_slice", (DL_FUNC) &_gibbs_utils_one_pois_slice, 7},
-    {"_gibbs_utils_slice_sample_pois", (DL_FUNC) &_gibbs_utils_slice_sample_pois, 7},
-    {"_gibbs_utils_slice_sample_pois_mv", (DL_FUNC) &_gibbs_utils_slice_sample_pois_mv, 7},
+    {"_gibbs_utils_slice_sample_pois", (DL_FUNC) &_gibbs_utils_slice_sample_pois, 8},
+    {"_gibbs_utils_slice_sample_pois_mv", (DL_FUNC) &_gibbs_utils_slice_sample_pois_mv, 10},
     {NULL, NULL, 0}
 };
 

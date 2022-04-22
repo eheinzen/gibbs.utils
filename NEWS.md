@@ -2,6 +2,8 @@
 
 - Changed the `n == k == 0` sampling to C++ for `ss_binom_reg()` and `mh_binom_reg()`
 
+- `ss_pois_reg()` now accepts `NA` in `k=`, to indicate that no Poisson draw was observed. 
+
 # v0.9.0
 
 - Renamed `conj_matlm_sigma()` to `conj_matlm_V()`. It, along with `conj_matnorm_V()`, now both use `conj_mvnorm_Q()` in the case that `U = NULL`
