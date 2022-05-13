@@ -21,12 +21,9 @@ dmvnorm <- function(x, mu, Q, log = TRUE) {
   p <- ncol(x)
   n <- nrow(x)
 
-  num <- n/2 * as.numeric(determinant(Q, logarithm = TRUE)$modulus)
   xmu <- x - mu
-  for(i in seq_len(n)) {
-    num <- num - 0.5*as.numeric(t(x[i, ] - mu[i, ]) %*% Q %*% (x[i, ] - mu[i, ]))
-  }
-
+  tmp <- xmu %*% tcrossprod(Q, xmu)
+  num <- n/2 * as.numeric(determinant(Q, logarithm = TRUE)$modulus) - 0.5*sum(diag(tmp))
   den <- n*p/2 * log(2*pi)
   if(log) num - den else exp(num - den)
 }

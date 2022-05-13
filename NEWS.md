@@ -1,3 +1,7 @@
+# v0.9.2
+
+- Sped up `dmvnorm()` by using the matrix trace instead of a for-loop.
+
 # v0.9.1
 
 - Changed the `n == k == 0` sampling to C++ for `ss_binom_reg()` and `mh_binom_reg()`
