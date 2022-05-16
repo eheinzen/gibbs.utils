@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.3</span>
       </span>
     </div>
 
@@ -130,7 +130,7 @@
     <p>Statistical Distributions</p>
     </div>
 
-    <pre class="usage"><span class='fu'>dmvnorm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>dmvnorm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span>, use_trace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='fu'>dmatnorm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mu</span>, <span class='va'>V</span>, <span class='va'>U</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
@@ -154,6 +154,10 @@
     <tr>
       <th>log</th>
       <td><p>Should the log-density be returned?</p></td>
+    </tr>
+    <tr>
+      <th>use_trace</th>
+      <td><p>Should the matrix trace be used, or a for-loop?</p></td>
     </tr>
     <tr>
       <th>V, U</th>
