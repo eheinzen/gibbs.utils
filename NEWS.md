@@ -1,3 +1,7 @@
+# v0.9.3
+
+- Added an option to `dmvnorm()` to opt out of the matrix trace.
+
 # v0.9.2
 
 - Sped up `dmvnorm()` by using the matrix trace instead of a for-loop.

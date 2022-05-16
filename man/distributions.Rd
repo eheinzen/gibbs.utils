@@ -7,7 +7,7 @@
 \alias{dlogitnorm}
 \title{Statistical Distributions}
 \usage{
-dmvnorm(x, mu, Q, log = TRUE)
+dmvnorm(x, mu, Q, log = TRUE, use_trace = TRUE)
 
 dmatnorm(x, mu, V, U, log = TRUE)
 
@@ -21,6 +21,8 @@ dlogitnorm(x, mu, sd, log = FALSE)
 \item{Q}{the precision matrix}
 
 \item{log}{Should the log-density be returned?}
+
+\item{use_trace}{Should the matrix trace be used, or a for-loop?}
 
 \item{V, U}{the precision matrices for the matrix-normal distribution}
 
