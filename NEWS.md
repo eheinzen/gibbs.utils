@@ -1,3 +1,7 @@
+# v0.10.1
+
+- Export `mvqt_binom_approx()` and `mvqt_pois_approx()`.
+
 # v0.10.0
 
 - Added `mh_pois_reg()`.

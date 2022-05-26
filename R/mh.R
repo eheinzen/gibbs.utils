@@ -73,8 +73,16 @@ mh_pois_reg <- function(L, k, mean, precision, proposal = c("normal", "uniform",
 }
 
 
+#' Helper functions for approximations
+#'
+#' @param k,n Number of observations
+#' @param around The vector around which to perform an approximation.
+#' @param mean,Q Priors
+#' @name approximations
+NULL
 
-
+#' @rdname approximations
+#' @export
 mvqt_pois_approx <- function(around, k, mean, Q) {
   ep <- exp(around)
 
@@ -84,7 +92,7 @@ mvqt_pois_approx <- function(around, k, mean, Q) {
   # x - H^-1(x) g(x)
   newmean <- around + newQ.inv %*% (replace(k - ep, is.na(k), 0) - Q %*% (around - mean))
 
-  list(newmean, newQ, newQ.inv)
+  gu_params(mu = newmean, Q = newQ, Q.inv = newQ.inv)
 }
 
 
@@ -187,7 +195,8 @@ mh_binom_reg <- function(p, k, n, mean, precision, proposal = c("normal", "unifo
 }
 
 
-
+#' @rdname approximations
+#' @export
 mvqt_binom_approx <- function(around, k, n, mean, Q) {
   ep <- exp(around)
   ep1 <- 1 + ep
@@ -199,7 +208,7 @@ mvqt_binom_approx <- function(around, k, n, mean, Q) {
   # x - H^-1(x) g(x)
   newmean <- around + newQ.inv %*% (k - Q %*% (around - mean) - n*ep/ep1)
 
-  list(newmean, newQ, newQ.inv)
+  gu_params(mu = newmean, Q = newQ, Q.inv = newQ.inv)
 }
 
 
