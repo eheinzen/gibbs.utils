@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.0</span>
       </span>
     </div>
 
@@ -136,7 +136,7 @@
   <span class='va'>n</span>,
   <span class='va'>mean</span>,
   <span class='va'>precision</span>,
-  proposal <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normal"</span>, <span class='st'>"uniform"</span>, <span class='st'>"quadratic taylor"</span><span class='op'>)</span>,
+  proposal <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normal"</span>, <span class='st'>"uniform"</span>, <span class='st'>"quadratic taylor"</span>, <span class='st'>"mv quadratic taylor"</span><span class='op'>)</span>,
   <span class='va'>...</span>,
   proposal_sd <span class='op'>=</span> <span class='fl'>1</span>
 <span class='op'>)</span>
@@ -213,15 +213,15 @@ the half-width of the uniform proposal interval.</p></td>
   where <code>k ~ Binom(n, expit(p))</code> and <code>p ~ N(mean, precision)</code>.</p>
 <p>In the case that <code>n</code> is zero, slice sampling is ignored in favor of a normal draw.
   In the special case when an entire (multivariate) row of <code>n</code> is zero, the entire row
-  is simultaneously drawn (in R); when only some elements are zero, they're drawn univariately (in C++).</p>
+  is simultaneously drawn (in R); when only some elements are zero, they're drawn univariately (in C++).
+  Note that only the latter is used when <code>proposal</code> indicates multivariate MH.</p>
 <p>Both vectorized over <code>p</code>, <code>k</code>, <code>n</code>, and <code>mean</code>. If <code>precision</code> is a matrix,
   <code>p</code> is assumed to be multivariately distributed, and different internals are used.</p>
 <p>The internals are defined in C++.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='https://arxiv.org/pdf/1308.0657.pdf'>https://arxiv.org/pdf/1308.0657.pdf</a></p>
-<p><code><a href='ss_pois_reg.html'>ss_pois_reg</a></code>, <code><a href='multinom_reg.html'>ss_multinom_reg</a></code>, <a href='https://en.wikipedia.org/wiki/Slice_sampling'>https://en.wikipedia.org/wiki/Slice_sampling</a>,
-<a href='https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm'>https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm</a></p></div>
+    <div class='dont-index'><p><code>ss_binom_reg</code>, <code><a href='multinom_reg.html'>ss_multinom_reg</a></code>, <a href='https://en.wikipedia.org/wiki/Slice_sampling'>https://en.wikipedia.org/wiki/Slice_sampling</a>,
+<a href='https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm'>https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm</a>, <a href='https://arxiv.org/pdf/1308.0657.pdf'>https://arxiv.org/pdf/1308.0657.pdf</a></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
