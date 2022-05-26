@@ -65,13 +65,30 @@ test_that("One-dimensional precision matrices give the same results", {
   two <- mh_binom_reg(0, 1, 100, mean = -3, precision = matrix(1), proposal = "normal")
   expect_equal(one, two)
 
+  set.seed(20210119)
+  one <- mh_binom_reg(0, 1, 100, mean = -3, precision = 1, proposal = "quad")
+  set.seed(20210119)
+  two <- mh_binom_reg(0, 1, 100, mean = -3, precision = matrix(1), proposal = "quad")
+  set.seed(20210119)
+  three <- mh_binom_reg(0, 1, 100, mean = -3, precision = matrix(1), proposal = "mv quad")
+  expect_equal(one, two)
+  expect_equal(one, three)
+
 
   set.seed(20210119)
-  one <- ss_pois_reg(0, 10, mean = 3, precision = 1, proposal = "quad")
+  one <- mh_pois_reg(0, 1,  mean = -3, precision = 1, proposal = "normal")
   set.seed(20210119)
-  two <- ss_pois_reg(0, 10, mean = 3, precision = matrix(1), proposal = "quad")
+  two <- mh_pois_reg(0, 1, mean = -3, precision = matrix(1), proposal = "normal")
   expect_equal(one, two)
 
+  set.seed(20210119)
+  one <- mh_pois_reg(0, 1, mean = -3, precision = 1, proposal = "quad")
+  set.seed(20210119)
+  two <- mh_pois_reg(0, 1, mean = -3, precision = matrix(1), proposal = "quad")
+  set.seed(20210119)
+  three <- mh_pois_reg(0, 1, mean = -3, precision = matrix(1), proposal = "mv quad")
+  expect_equal(one, two)
+  expect_equal(one, three)
 })
 
 
@@ -86,10 +103,17 @@ test_that("n == 0 gives the same results for all methods", {
   three <- mh_binom_reg(p, k, n, mean = -3, precision = prec, proposal = "quad")
   set.seed(20210119)
   four <- ss_binom_reg(p, k, n, mean = -3, precision = prec)
+  set.seed(20210119)
+  five <- mh_binom_reg(p, k, n, mean = -3, precision = prec, proposal = "mv")
   expect_equal(one, two)
   expect_equal(one, three)
+
   expect_true(all(attr(one, "accept")))
   attr(one, "accept") <- NULL
+  expect_true(all(attr(five, "accept")))
+  attr(five, "accept") <- NULL
+  expect_equal(one, five)
+
   expect_equal(one, four)
 })
 
@@ -116,6 +140,48 @@ test_that("Some n == 0 gives the same results for some methods", {
 
   expect_true(attr(three, "accept")[1, 2])
   expect_equal(three[1, 2], four[1, 2])
+})
+
+
+test_that("k == NA gives the same results for all methods", {
+  k <- matrix(NA, nrow = 5, ncol = 3)
+  L <- matrix(0, nrow = 5, ncol = 3)
+  prec <- diag(3)
+  set.seed(20210119)
+  one <- mh_pois_reg(L, k, mean = -3, precision = prec, proposal = "normal")
+  set.seed(20210119)
+  two <- mh_pois_reg(L, k, mean = -3, precision = prec, proposal = "unif")
+  set.seed(20210119)
+  three <- mh_pois_reg(L, k, mean = -3, precision = prec, proposal = "quad")
+  set.seed(20210119)
+  four <- ss_pois_reg(L, k, mean = -3, precision = prec)
+  set.seed(20210119)
+  five <- mh_pois_reg(L, k, mean = -3, precision = prec, proposal = "mv")
+  expect_equal(one, two)
+  expect_equal(one, three)
+
+  expect_true(all(attr(one, "accept")))
+  attr(one, "accept") <- NULL
+  expect_true(all(attr(five, "accept")))
+  attr(five, "accept") <- NULL
+  expect_equal(one, five)
+
+  expect_equal(one, four)
+})
+
+test_that("Some k == NA gives the same results for some methods", {
+
+  k <- matrix(c(NA, 1), nrow = 1, ncol = 2)
+  L <- matrix(0:1, nrow = 1, ncol = 2)
+  prec <- diag(100, 2)
+  set.seed(20210120)
+  three <- mh_pois_reg(L, k, mean = 2, precision = prec, proposal = "quad")
+  set.seed(20210120)
+  four <- ss_pois_reg(L, k, mean = 2, precision = prec)
+
+  expect_true(attr(three, "accept")[1, 1])
+  expect_equal(three[1, 1], four[1, 1])
+
 })
 
 

@@ -1,3 +1,9 @@
+# v0.10.0
+
+- Added `mh_pois_reg()`.
+
+- Added `proposal="mv quadratic taylor"` to `mh_binom_reg()` to do multivariate Taylor's approximations and MH steps.
+
 # v0.9.3
 
 - Added an option to `dmvnorm()` to opt out of the matrix trace.

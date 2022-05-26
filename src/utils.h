@@ -11,5 +11,6 @@ double multinom_LL(Rcpp::NumericVector p_j, Rcpp::LogicalVector z_j, double k, d
 
 Rcpp::NumericVector replace_it(Rcpp::NumericVector x, int i, double value);
 double cond_mv_mean(Rcpp::NumericVector x, Rcpp::NumericVector mean, Rcpp::NumericMatrix Q, int i);
+bool accept_reject(double ratio);
 
 #endif

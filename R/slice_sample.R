@@ -16,12 +16,18 @@
 #'   slice sampling is ignored in favor of a normal draw.
 #'   In the special case when an entire (multivariate) row of \code{k} is \code{NA}, the entire row
 #'   is simultaneously drawn (in R); when only some elements are \code{NA}, they're drawn univariately (in C++).
+#'   Note that only the latter is used when \code{proposal} indicates multivariate MH.
 #'
 #'   This is vectorized over \code{L}, \code{k}, and \code{mean}. If \code{precision} is a matrix,
 #'   \code{L} is assumed to be multivariately distributed, and a different function is used.
 #'
 #'   The internals are defined in C++.
-#' @seealso \code{\link{ss_binom_reg}}, \code{\link{ss_multinom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
+#' @seealso \code{\link{ss_binom_reg}}, \code{\link{ss_multinom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling},
+#' \url{https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm}, \url{https://arxiv.org/pdf/1308.0657.pdf}
+#' @name pois_reg
+NULL
+
+#' @rdname pois_reg
 #' @export
 ss_pois_reg <- function(L, k, mean, precision, ..., w = 1, nexpand = 10, ncontract = 100) {
   if(length(L) != length(k)) stop("'L' and 'k' must have the same length")
@@ -57,6 +63,7 @@ ss_pois_reg <- function(L, k, mean, precision, ..., w = 1, nexpand = 10, ncontra
 #' @param k the realized value from the binomial distribution
 #' @param n the number of trials
 #' @inheritParams ss_pois_reg
+#' @inherit ss_pois_reg seealso
 #' @details
 #'   \code{ss_binom_reg} slice samples and \code{mh_binom_reg} Metropolis-samples
 #'   \code{p} conditional on \code{k}, \code{n}, \code{mean}, and \code{precision},
@@ -65,13 +72,12 @@ ss_pois_reg <- function(L, k, mean, precision, ..., w = 1, nexpand = 10, ncontra
 #'   In the case that \code{n} is zero, slice sampling is ignored in favor of a normal draw.
 #'   In the special case when an entire (multivariate) row of \code{n} is zero, the entire row
 #'   is simultaneously drawn (in R); when only some elements are zero, they're drawn univariately (in C++).
+#'   Note that only the latter is used when \code{proposal} indicates multivariate MH.
 #'
 #'   Both vectorized over \code{p}, \code{k}, \code{n}, and \code{mean}. If \code{precision} is a matrix,
 #'   \code{p} is assumed to be multivariately distributed, and different internals are used.
 #'
 #'   The internals are defined in C++.
-#' @seealso \code{\link{ss_pois_reg}}, \code{\link{ss_multinom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling},
-#' \url{https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm}
 #' @name binom_reg
 NULL
 

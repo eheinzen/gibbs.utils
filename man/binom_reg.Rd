@@ -12,7 +12,7 @@ mh_binom_reg(
   n,
   mean,
   precision,
-  proposal = c("normal", "uniform", "quadratic taylor"),
+  proposal = c("normal", "uniform", "quadratic taylor", "mv quadratic taylor"),
   ...,
   proposal_sd = 1
 )
@@ -67,6 +67,7 @@ Slice sample a binomial regression rate
   In the case that \code{n} is zero, slice sampling is ignored in favor of a normal draw.
   In the special case when an entire (multivariate) row of \code{n} is zero, the entire row
   is simultaneously drawn (in R); when only some elements are zero, they're drawn univariately (in C++).
+  Note that only the latter is used when \code{proposal} indicates multivariate MH.
 
   Both vectorized over \code{p}, \code{k}, \code{n}, and \code{mean}. If \code{precision} is a matrix,
   \code{p} is assumed to be multivariately distributed, and different internals are used.
@@ -74,8 +75,6 @@ Slice sample a binomial regression rate
   The internals are defined in C++.
 }
 \seealso{
-\url{https://arxiv.org/pdf/1308.0657.pdf}
-
-\code{\link{ss_pois_reg}}, \code{\link{ss_multinom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling},
-\url{https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm}
+\code{\link{ss_binom_reg}}, \code{\link{ss_multinom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling},
+\url{https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm}, \url{https://arxiv.org/pdf/1308.0657.pdf}
 }

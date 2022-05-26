@@ -2,6 +2,12 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+// [[Rcpp::export]]
+bool accept_reject(double ratio) {
+  return log(R::runif(0.0, 1.0)) <= ratio;
+}
+
+
 double binom_LL(double p, double k, double n, double mean, double precision) {
   return k*p - n*log(1.0 + exp(p)) - 0.5*precision*(p - mean)*(p - mean);
 }
