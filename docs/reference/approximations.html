@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Impute Conjugate Values — impute • gibbs.utils</title>
+<title>Helper functions for approximations — approximations • gibbs.utils</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Impute Conjugate Values — impute" />
-<meta property="og:description" content="Impute Conjugate Values" />
+<meta property="og:title" content="Helper functions for approximations — approximations" />
+<meta property="og:description" content="Helper functions for approximations" />
 
 
 
@@ -121,46 +121,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Impute Conjugate Values</h1>
+    <h1>Helper functions for approximations</h1>
     
-    <div class="hidden name"><code>impute.Rd</code></div>
+    <div class="hidden name"><code>approximations.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Impute Conjugate Values</p>
+    <p>Helper functions for approximations</p>
     </div>
 
-    <pre class="usage"><span class='fu'>impute_conj_mvnorm_mu</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>impute</span>, <span class='va'>Q</span>, <span class='va'>mu0</span>, <span class='va'>tau0</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>mvqt_pois_approx</span><span class='op'>(</span><span class='va'>around</span>, <span class='va'>k</span>, <span class='va'>mean</span>, <span class='va'>Q</span><span class='op'>)</span>
+
+<span class='fu'>mvqt_binom_approx</span><span class='op'>(</span><span class='va'>around</span>, <span class='va'>k</span>, <span class='va'>n</span>, <span class='va'>mean</span>, <span class='va'>Q</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>y</th>
-      <td><p>A matrix of values drawn from the multivariate normal distribution
-whose mean we are to impute.</p></td>
+      <th>around</th>
+      <td><p>The vector around which to perform an approximation.</p></td>
     </tr>
     <tr>
-      <th>mu</th>
-      <td><p>the means we wish to impute. Should be the same size as <code>y</code>.
-No NA's are allowed; indices to impute are passed to <code>impute</code>. Instead,
-usually values are initialized and allowed to update within the MCMC framework.</p></td>
+      <th>k, n</th>
+      <td><p>Number of observations</p></td>
     </tr>
     <tr>
-      <th>impute</th>
-      <td><p>A logical matrix the size of <code>y</code>, indicating where to impute.</p></td>
-    </tr>
-    <tr>
-      <th>Q</th>
-      <td><p>the precision of the multivariate normal distribution from which <code>y</code> comes.
-Should be square, with dimension <code><a href='https://rdrr.io/r/base/nrow.html'>ncol(y)</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>mu0, tau0</th>
-      <td><p>The prior means/precisions for <code>mu</code>.
-Can be a matrix the same size as <code>mu</code>, in which case
-only the values corresponding to <code>impute == TRUE</code> are used, or a vector with length
-<code><a href='https://rdrr.io/r/base/sum.html'>sum(impute)</a></code>.</p></td>
+      <th>mean, Q</th>
+      <td><p>Priors</p></td>
     </tr>
     </table>
 
