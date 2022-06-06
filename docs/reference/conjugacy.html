@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.2</span>
       </span>
     </div>
 
@@ -135,7 +135,7 @@
 <span class='fu'>conj_mvnorm_mu</span><span class='op'>(</span>
   <span class='va'>y</span>,
   <span class='va'>Q</span>,
-  mu0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep_len</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='va'>p</span><span class='op'>)</span>,
+  mu0 <span class='op'>=</span> <span class='cn'>NULL</span>,
   Q0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>0.001</span>, <span class='va'>p</span><span class='op'>)</span>,
   newQ.inv <span class='op'>=</span> <span class='fu'><a href='chol_inv.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>mult</span> <span class='op'>*</span> <span class='va'>Q0</span> <span class='op'>+</span> <span class='va'>n</span> <span class='op'>*</span> <span class='va'>Q</span><span class='op'>)</span>,
   A <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/chol.html'>chol</a></span><span class='op'>(</span><span class='va'>newQ.inv</span><span class='op'>)</span><span class='op'>)</span>,
@@ -148,7 +148,7 @@
   <span class='va'>y</span>,
   <span class='va'>V</span>,
   U <span class='op'>=</span> <span class='cn'>NULL</span>,
-  <span class='va'>mu0</span>,
+  mu0 <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>Q0</span>,
   newQ.inv <span class='op'>=</span> <span class='fu'><a href='chol_inv.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>V</span> <span class='op'>%x%</span> <span class='va'>U</span> <span class='op'>+</span> <span class='va'>Q0</span><span class='op'>)</span>,
   A <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/chol.html'>chol</a></span><span class='op'>(</span><span class='va'>newQ.inv</span><span class='op'>)</span><span class='op'>)</span>,
@@ -162,7 +162,7 @@
   <span class='va'>X</span>,
   XtX <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/crossprod.html'>crossprod</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>,
   <span class='va'>tau</span>,
-  <span class='va'>mu0</span>,
+  mu0 <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>Q0</span>,
   newQ.inv <span class='op'>=</span> <span class='fu'><a href='chol_inv.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>tau</span> <span class='op'>*</span> <span class='va'>XtX</span> <span class='op'>+</span> <span class='va'>Q0</span><span class='op'>)</span>,
   A <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/chol.html'>chol</a></span><span class='op'>(</span><span class='va'>newQ.inv</span><span class='op'>)</span><span class='op'>)</span>,
@@ -175,7 +175,7 @@
   <span class='va'>X</span>,
   <span class='va'>V</span>,
   U <span class='op'>=</span> <span class='cn'>NULL</span>,
-  <span class='va'>mu0</span>,
+  mu0 <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>Q0</span>,
   diag <span class='op'>=</span> <span class='cn'>FALSE</span>,
   use.chol <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -187,7 +187,7 @@
   <span class='va'>X</span>,
   <span class='va'>V</span>,
   U <span class='op'>=</span> <span class='cn'>NULL</span>,
-  <span class='va'>mu0</span>,
+  mu0 <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>Q0</span>,
   use.chol <span class='op'>=</span> <span class='cn'>FALSE</span>,
   params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
@@ -241,7 +241,8 @@ this is an n-by-p matrix</p></td>
     </tr>
     <tr>
       <th>mu0</th>
-      <td><p>the prior mean of <code>mu</code> or <code>beta</code>.</p></td>
+      <td><p>the prior mean of <code>mu</code> or <code>beta</code>. The default (<code>NULL</code>) is the same as an appropriately-dimensioned
+vector/matrix of all zeros, but a little faster.</p></td>
     </tr>
     <tr>
       <th>mult</th>

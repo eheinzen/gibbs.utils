@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.2</span>
       </span>
     </div>
 
@@ -170,7 +170,8 @@ this is an n-by-p matrix</p></td>
     </tr>
     <tr>
       <th>mu0</th>
-      <td><p>the prior mean of <code>mu</code> or <code>beta</code>.</p></td>
+      <td><p>the prior mean of <code>mu</code> or <code>beta</code>. The default (<code>NULL</code>) is the same as an appropriately-dimensioned
+vector/matrix of all zeros, but a little faster.</p></td>
     </tr>
     <tr>
       <th>Q0</th>

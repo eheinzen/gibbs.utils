@@ -1,3 +1,7 @@
+# v0.10.2
+
+- Speed  up (slightly) the conjugacy functions using a default of `mu0 = NULL` to indicate zero.
+
 # v0.10.1
 
 - Export `mvqt_binom_approx()` and `mvqt_pois_approx()`.
