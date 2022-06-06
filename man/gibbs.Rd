@@ -31,7 +31,8 @@ this is an n-by-p matrix}
 
 \item{U}{the precision matrices for the matrix-normal distribution}
 
-\item{mu0}{the prior mean of \code{mu} or \code{beta}.}
+\item{mu0}{the prior mean of \code{mu} or \code{beta}. The default (\code{NULL}) is the same as an appropriately-dimensioned
+vector/matrix of all zeros, but a little faster.}
 
 \item{Q0}{the prior precision of \code{mu}.}
 

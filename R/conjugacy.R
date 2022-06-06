@@ -6,7 +6,8 @@
 #' @param y realizations from the distribution whose parameter is being drawn. For multivariate conjugacy,
 #'   this is an n-by-p matrix
 #' @param Q,tau the precision of the (multivariate) normal distribution from which \code{y} comes
-#' @param mu0 the prior mean of \code{mu} or \code{beta}.
+#' @param mu0 the prior mean of \code{mu} or \code{beta}. The default (\code{NULL}) is the same as an appropriately-dimensioned
+#'   vector/matrix of all zeros, but a little faster.
 #' @param Q0,tau0 the prior precision of \code{mu}.
 #' @param mult An optional multiplier for the prior precision; useful in some cases
 #' @param mu the mean of the normal distribution from which \code{y} comes
@@ -42,19 +43,20 @@ conj_norm_mu <- function(y, tau, mu0 = 0, tau0 = 0.001, mult = 1, params.only = 
 
 #' @rdname conjugacy
 #' @export
-conj_mvnorm_mu <- function(y, Q, mu0 = rep_len(0, p), Q0 = diag(0.001, p), newQ.inv = chol_inv(mult*Q0 + n*Q),
+conj_mvnorm_mu <- function(y, Q, mu0 = NULL, Q0 = diag(0.001, p), newQ.inv = chol_inv(mult*Q0 + n*Q),
                            A = t(chol(newQ.inv)), mult = 1, use.chol = FALSE, params.only = FALSE) {
   if(!is.matrix(y)) y <- matrix(y, nrow = 1)
   p <- ncol(y)
   n <- nrow(y)
-  mu <- drop(newQ.inv %*% (Q0 %*% mu0 + Q %*% colSums(y)))
+  Q0mu0 <- if(is.null(mu0)) 0 else Q0 %*% mu0
+  mu <- drop(newQ.inv %*% (Q0mu0 + Q %*% colSums(y)))
   if(params.only) return(gu_params(mu = mu, Q.inv = newQ.inv))
   if(use.chol) chol_mvrnorm(1, mu = mu, A = A) else MASS::mvrnorm(1, mu = mu, Sigma = newQ.inv)
 }
 
 #' @rdname conjugacy
 #' @export
-conj_matnorm_mu <- function(y, V, U = NULL, mu0, Q0, newQ.inv = chol_inv(V %x% U + Q0),
+conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, newQ.inv = chol_inv(V %x% U + Q0),
                             A = t(chol(newQ.inv)), diag = FALSE, use.chol = FALSE, params.only = FALSE) {
   if(!is.matrix(y)) stop("'y' must be a matrix")
   if(is.matrix(mu0)) mu0 <- as.numeric(mu0)
@@ -62,6 +64,7 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0, Q0, newQ.inv = chol_inv(V %x% U
 
   if(diag) {
     if(!missing(newQ.inv) || !missing(A)) warning("Arguments 'newQ.inv' and 'A' are being ignored because diag = TRUE")
+    if(is.null(mu0)) mu0 <- 0
     Q0.mat.lst <- asplit(matrix(diag(Q0), nrow = ncol(U), ncol = nrow(V)), 2)
     mu0.lst <- asplit(matrix(mu0, nrow = ncol(U), ncol = nrow(V)), 2)
     y.lst <- asplit(y, 2)
@@ -79,7 +82,8 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0, Q0, newQ.inv = chol_inv(V %x% U
     do.call(c, tmp)
 
   } else {
-    mu <- drop(newQ.inv %*% (Q0 %*% mu0 + as.numeric(U %*% y %*% V)))
+    Q0mu0 <- if(is.null(mu0)) 0 else Q0 %*% mu0
+    mu <- drop(newQ.inv %*% (Q0mu0 + as.numeric(U %*% y %*% V)))
     if(params.only) return(gu_params(mu = mu, Q.inv = newQ.inv))
     if(use.chol) chol_mvrnorm(1, mu = mu, A = A) else MASS::mvrnorm(1, mu = mu, Sigma = newQ.inv)
   }
@@ -87,16 +91,17 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0, Q0, newQ.inv = chol_inv(V %x% U
 
 #' @rdname conjugacy
 #' @export
-conj_lm_beta <- function(y, X, XtX = crossprod(X), tau, mu0, Q0, newQ.inv = chol_inv(tau * XtX + Q0),
+conj_lm_beta <- function(y, X, XtX = crossprod(X), tau, mu0 = NULL, Q0, newQ.inv = chol_inv(tau * XtX + Q0),
                          A = t(chol(newQ.inv)), use.chol = FALSE, params.only = FALSE) {
-  mu <- drop(newQ.inv %*% (Q0 %*% mu0 + tau*t(X) %*% y))
+  Q0mu0 <- if(is.null(mu0)) 0 else Q0 %*% mu0
+  mu <- drop(newQ.inv %*% (Q0mu0 + tau*t(X) %*% y))
   if(params.only) return(gu_params(mu = mu, Q.inv = newQ.inv))
   if(use.chol) chol_mvrnorm(1, mu = mu, A = A) else MASS::mvrnorm(1, mu = mu, Sigma = newQ.inv)
 }
 
 #' @rdname conjugacy
 #' @export
-conj_matlm_beta <- function(y, X, V, U = NULL, mu0, Q0, diag = FALSE, use.chol = FALSE, params.only = FALSE) {
+conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, diag = FALSE, use.chol = FALSE, params.only = FALSE) {
   if(!is.matrix(y)) stop("'y' must be a matrix")
   if(is.matrix(mu0)) mu0 <- as.numeric(mu0)
 
@@ -105,6 +110,7 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0, Q0, diag = FALSE, use.chol =
   FUN <- if(use.chol) chol_mvrnorm else MASS::mvrnorm
 
   if(diag) {
+    if(is.null(mu0)) mu0 <- 0
     Q0.mat.lst <- asplit(matrix(diag(Q0), nrow = ncol(X), ncol = nrow(V)), 2)
     mu0.lst <- asplit(matrix(mu0, nrow = ncol(X), ncol = nrow(V)), 2)
     y.lst <- asplit(y, 2)
@@ -123,7 +129,8 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0, Q0, diag = FALSE, use.chol =
   } else {
     newQ <- V %x% XtUX + Q0
     newQ.inv <- chol_inv(newQ)
-    mu <- drop(newQ.inv %*% (Q0 %*% mu0 + as.numeric(XtU %*% y %*% V)))
+    Q0mu0 <- if(is.null(mu0)) 0 else Q0 %*% mu0
+    mu <- drop(newQ.inv %*% (Q0mu0 + as.numeric(XtU %*% y %*% V)))
     if(params.only) return(gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv))
     FUN(1, mu = mu, Sigma = newQ.inv)
   }
@@ -132,7 +139,7 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0, Q0, diag = FALSE, use.chol =
 
 #' @rdname conjugacy
 #' @export
-conj_diagmatlm_beta <- function(y, X, V, U = NULL, mu0, Q0, use.chol = FALSE, params.only = FALSE) {
+conj_diagmatlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, use.chol = FALSE, params.only = FALSE) {
   if(!is.matrix(y)) stop("'y' must be a matrix")
   if(is.matrix(mu0)) mu0 <- as.numeric(mu0)
 
@@ -141,7 +148,8 @@ conj_diagmatlm_beta <- function(y, X, V, U = NULL, mu0, Q0, use.chol = FALSE, pa
   XtU <- if(is.null(U)) t(X) else crossprod(X, U)
   newQ <- crossprod(E, V %x% (XtU %*% X)) %*% E + Q0
   newQ.inv <- chol_inv(newQ)
-  mu <- drop(newQ.inv %*% (Q0 %*% mu0 + crossprod(E, as.numeric(XtU %*% y %*% V))))
+  Q0mu0 <- if(is.null(mu0)) 0 else Q0 %*% mu0
+  mu <- drop(newQ.inv %*% (Q0mu0 + crossprod(E, as.numeric(XtU %*% y %*% V))))
   if(params.only) return(gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv))
   FUN <- if(use.chol) chol_mvrnorm else MASS::mvrnorm
   FUN(1, mu = mu, Sigma = newQ.inv)

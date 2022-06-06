@@ -21,7 +21,7 @@ conj_norm_mu(y, tau, mu0 = 0, tau0 = 0.001, mult = 1, params.only = FALSE)
 conj_mvnorm_mu(
   y,
   Q,
-  mu0 = rep_len(0, p),
+  mu0 = NULL,
   Q0 = diag(0.001, p),
   newQ.inv = chol_inv(mult * Q0 + n * Q),
   A = t(chol(newQ.inv)),
@@ -34,7 +34,7 @@ conj_matnorm_mu(
   y,
   V,
   U = NULL,
-  mu0,
+  mu0 = NULL,
   Q0,
   newQ.inv = chol_inv(V \%x\% U + Q0),
   A = t(chol(newQ.inv)),
@@ -48,7 +48,7 @@ conj_lm_beta(
   X,
   XtX = crossprod(X),
   tau,
-  mu0,
+  mu0 = NULL,
   Q0,
   newQ.inv = chol_inv(tau * XtX + Q0),
   A = t(chol(newQ.inv)),
@@ -61,7 +61,7 @@ conj_matlm_beta(
   X,
   V,
   U = NULL,
-  mu0,
+  mu0 = NULL,
   Q0,
   diag = FALSE,
   use.chol = FALSE,
@@ -73,7 +73,7 @@ conj_diagmatlm_beta(
   X,
   V,
   U = NULL,
-  mu0,
+  mu0 = NULL,
   Q0,
   use.chol = FALSE,
   params.only = FALSE
@@ -121,7 +121,8 @@ conj_binom_p(k, n, a0 = 1, b0 = 1, params.only = FALSE)
 \item{y}{realizations from the distribution whose parameter is being drawn. For multivariate conjugacy,
 this is an n-by-p matrix}
 
-\item{mu0}{the prior mean of \code{mu} or \code{beta}.}
+\item{mu0}{the prior mean of \code{mu} or \code{beta}. The default (\code{NULL}) is the same as an appropriately-dimensioned
+vector/matrix of all zeros, but a little faster.}
 
 \item{mult}{An optional multiplier for the prior precision; useful in some cases}
 
