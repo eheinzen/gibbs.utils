@@ -1,6 +1,12 @@
+# v0.10.3
+
+- Add the same `mu0 = NULL` default to `gs_diagmatlm_beta()`.
+
 # v0.10.2
 
 - Speed  up (slightly) the conjugacy functions using a default of `mu0 = NULL` to indicate zero.
+  This also allows you to give infinite precisions when `mu0 = NULL = 0` (which would otherwise
+  give `Inf * 0 = NaN`).
 
 # v0.10.1
 
