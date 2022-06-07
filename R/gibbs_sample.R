@@ -10,7 +10,7 @@ NULL
 
 #' @rdname gibbs
 #' @export
-gs_diagmatlm_beta <- function(beta, y, X, V, U = NULL, mu0, Q0,
+gs_diagmatlm_beta <- function(beta, y, X, V, U = NULL, mu0 = NULL, Q0,
                               a0 = rep_len(-Inf, length(beta)), b0 = rep_len(Inf, length(beta)),
                               use.chol = FALSE, params.only = FALSE) {
   params <- conj_diagmatlm_beta(y = y, X = X, V = V, U = U, mu0 = mu0, Q0 = Q0, use.chol = use.chol, params.only = TRUE)

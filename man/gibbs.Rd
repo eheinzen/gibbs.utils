@@ -11,7 +11,7 @@ gs_diagmatlm_beta(
   X,
   V,
   U = NULL,
-  mu0,
+  mu0 = NULL,
   Q0,
   a0 = rep_len(-Inf, length(beta)),
   b0 = rep_len(Inf, length(beta)),
