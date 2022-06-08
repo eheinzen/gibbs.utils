@@ -1,3 +1,7 @@
+# v0.10.3.9000
+
+- Changed the default for the `use_trace=` argument introduced in v0.9.3, because in my experience it's faster not to use the matrix trace.
+
 # v0.10.3
 
 - Add the same `mu0 = NULL` default to `gs_diagmatlm_beta()`.

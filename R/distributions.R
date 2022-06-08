@@ -13,7 +13,7 @@ NULL
 
 #' @rdname distributions
 #' @export
-dmvnorm <- function(x, mu, Q, log = TRUE, use_trace = TRUE) {
+dmvnorm <- function(x, mu, Q, log = TRUE, use_trace = FALSE) {
   if(!is.matrix(x)) {
     x <- matrix(x, nrow = 1)
     mu <- matrix(mu, nrow = 1)

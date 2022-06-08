@@ -7,7 +7,7 @@
 \alias{dlogitnorm}
 \title{Statistical Distributions}
 \usage{
-dmvnorm(x, mu, Q, log = TRUE, use_trace = TRUE)
+dmvnorm(x, mu, Q, log = TRUE, use_trace = FALSE)
 
 dmatnorm(x, mu, V, U, log = TRUE)
 
