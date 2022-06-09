@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.5</span>
       </span>
     </div>
 
@@ -137,7 +137,7 @@
   <span class='va'>Q</span>,
   mu0 <span class='op'>=</span> <span class='cn'>NULL</span>,
   Q0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>0.001</span>, <span class='va'>p</span><span class='op'>)</span>,
-  newQ.inv <span class='op'>=</span> <span class='fu'><a href='chol_inv.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>mult</span> <span class='op'>*</span> <span class='va'>Q0</span> <span class='op'>+</span> <span class='va'>n</span> <span class='op'>*</span> <span class='va'>Q</span><span class='op'>)</span>,
+  <span class='va'>newQ.inv</span>,
   A <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/chol.html'>chol</a></span><span class='op'>(</span><span class='va'>newQ.inv</span><span class='op'>)</span><span class='op'>)</span>,
   mult <span class='op'>=</span> <span class='fl'>1</span>,
   use.chol <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -150,7 +150,7 @@
   U <span class='op'>=</span> <span class='cn'>NULL</span>,
   mu0 <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>Q0</span>,
-  newQ.inv <span class='op'>=</span> <span class='fu'><a href='chol_inv.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>V</span> <span class='op'>%x%</span> <span class='va'>U</span> <span class='op'>+</span> <span class='va'>Q0</span><span class='op'>)</span>,
+  <span class='va'>newQ.inv</span>,
   A <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/chol.html'>chol</a></span><span class='op'>(</span><span class='va'>newQ.inv</span><span class='op'>)</span><span class='op'>)</span>,
   diag <span class='op'>=</span> <span class='cn'>FALSE</span>,
   use.chol <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -164,7 +164,7 @@
   <span class='va'>tau</span>,
   mu0 <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>Q0</span>,
-  newQ.inv <span class='op'>=</span> <span class='fu'><a href='chol_inv.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>tau</span> <span class='op'>*</span> <span class='va'>XtX</span> <span class='op'>+</span> <span class='va'>Q0</span><span class='op'>)</span>,
+  <span class='va'>newQ.inv</span>,
   A <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/chol.html'>chol</a></span><span class='op'>(</span><span class='va'>newQ.inv</span><span class='op'>)</span><span class='op'>)</span>,
   use.chol <span class='op'>=</span> <span class='cn'>FALSE</span>,
   params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
