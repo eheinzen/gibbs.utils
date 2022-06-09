@@ -182,8 +182,9 @@ conj_mvnorm_Q <- function(y, mu, V0, v0, V0_inv = chol_inv(V0), params.only = FA
     mu <- matrix(mu, nrow = n, ncol = p, byrow = TRUE)
   }
   stopifnot(identical(dim(y), dim(mu)))
-  V2 <- chol_inv(V0_inv + crossprod(y - mu))
-  if(params.only) return(gu_params(V = V2, v = n + v0))
+  V2.inv <- V0_inv + crossprod(y - mu)
+  V2 <- chol_inv(V2.inv)
+  if(params.only) return(gu_params(V = V2, V.inv = V2.inv, v = n + v0))
   rWishart(
     1,
     Sigma = V2,
@@ -201,8 +202,9 @@ conj_matnorm_V <- function(y, mu, U = NULL, V0, v0, V0_inv = chol_inv(V0), param
   n <- nrow(mu)
   stopifnot(identical(dim(y), dim(mu)))
   ymu <- y - mu
-  V2 <- chol_inv(V0_inv + crossprod(ymu, U) %*% ymu)
-  if(params.only) return(gu_params(V = V2, v = n + v0))
+  V2.inv <- V0_inv + crossprod(ymu, U) %*% ymu
+  V2 <- chol_inv(V2.inv)
+  if(params.only) return(gu_params(V = V2, V.inv = V2.inv, v = n + v0))
   rWishart(
     1,
     Sigma = V2,
