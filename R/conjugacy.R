@@ -33,7 +33,7 @@ conj_norm_mu <- function(y, tau, mu0 = 0, tau0 = 0.001, mult = 1, params.only = 
   n <- length(y)
   newtau <- mult*tau0 + n*tau
   mean <- (tau0*mu0 + tau*sum(y)) / newtau
-  if(params.only) return(gu_params(mu = mean, sd = 1 / sqrt(newtau)))
+  if(params.only) return(gu_params(mu = mean, sd = 1 / sqrt(newtau), tau = newtau))
   rnorm(
     1,
     mean = mean,
