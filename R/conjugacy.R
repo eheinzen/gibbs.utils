@@ -43,20 +43,26 @@ conj_norm_mu <- function(y, tau, mu0 = 0, tau0 = 0.001, mult = 1, params.only = 
 
 #' @rdname conjugacy
 #' @export
-conj_mvnorm_mu <- function(y, Q, mu0 = NULL, Q0 = diag(0.001, p), newQ.inv = chol_inv(mult*Q0 + n*Q),
+conj_mvnorm_mu <- function(y, Q, mu0 = NULL, Q0 = diag(0.001, p), newQ.inv,
                            A = t(chol(newQ.inv)), mult = 1, use.chol = FALSE, params.only = FALSE) {
   if(!is.matrix(y)) y <- matrix(y, nrow = 1)
   p <- ncol(y)
   n <- nrow(y)
   Q0mu0 <- if(is.null(mu0)) 0 else Q0 %*% mu0
+  if(missing(newQ.inv)) {
+    newQ <- mult*Q0 + n*Q
+    newQ.inv <- chol_inv(newQ)
+  } else {
+    newQ <- NULL
+  }
   mu <- drop(newQ.inv %*% (Q0mu0 + Q %*% colSums(y)))
-  if(params.only) return(gu_params(mu = mu, Q.inv = newQ.inv))
+  if(params.only) return(gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv))
   if(use.chol) chol_mvrnorm(1, mu = mu, A = A) else MASS::mvrnorm(1, mu = mu, Sigma = newQ.inv)
 }
 
 #' @rdname conjugacy
 #' @export
-conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, newQ.inv = chol_inv(V %x% U + Q0),
+conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, newQ.inv,
                             A = t(chol(newQ.inv)), diag = FALSE, use.chol = FALSE, params.only = FALSE) {
   if(!is.matrix(y)) stop("'y' must be a matrix")
   if(is.matrix(mu0)) mu0 <- as.numeric(mu0)
@@ -83,19 +89,31 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, newQ.inv = chol_inv(
 
   } else {
     Q0mu0 <- if(is.null(mu0)) 0 else Q0 %*% mu0
+    if(missing(newQ.inv)) {
+      newQ <- V %x% U + Q0
+      newQ.inv <- chol_inv(newQ)
+    } else {
+      newQ <- NULL
+    }
     mu <- drop(newQ.inv %*% (Q0mu0 + as.numeric(U %*% y %*% V)))
-    if(params.only) return(gu_params(mu = mu, Q.inv = newQ.inv))
+    if(params.only) return(gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv))
     if(use.chol) chol_mvrnorm(1, mu = mu, A = A) else MASS::mvrnorm(1, mu = mu, Sigma = newQ.inv)
   }
 }
 
 #' @rdname conjugacy
 #' @export
-conj_lm_beta <- function(y, X, XtX = crossprod(X), tau, mu0 = NULL, Q0, newQ.inv = chol_inv(tau * XtX + Q0),
+conj_lm_beta <- function(y, X, XtX = crossprod(X), tau, mu0 = NULL, Q0, newQ.inv,
                          A = t(chol(newQ.inv)), use.chol = FALSE, params.only = FALSE) {
   Q0mu0 <- if(is.null(mu0)) 0 else Q0 %*% mu0
+  if(missing(newQ.inv)) {
+    newQ <- tau * XtX + Q0
+    newQ.inv <- chol_inv(newQ)
+  } else {
+    newQ <- NULL
+  }
   mu <- drop(newQ.inv %*% (Q0mu0 + tau*t(X) %*% y))
-  if(params.only) return(gu_params(mu = mu, Q.inv = newQ.inv))
+  if(params.only) return(gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv))
   if(use.chol) chol_mvrnorm(1, mu = mu, A = A) else MASS::mvrnorm(1, mu = mu, Sigma = newQ.inv)
 }
 
