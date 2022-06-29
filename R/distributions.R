@@ -7,13 +7,30 @@
 #' @param Q the precision matrix
 #' @param V,U the precision matrices for the matrix-normal distribution
 #' @param log Should the log-density be returned?
-#' @param use_trace Should the matrix trace be used, or a for-loop?
 #' @name distributions
 NULL
 
 #' @rdname distributions
 #' @export
-dmvnorm <- function(x, mu, Q, log = TRUE, use_trace = FALSE) {
+dmvnorm <- function(x, mu, Q, log = TRUE) {
+  if(!is.matrix(x)) {
+    x <- matrix(x, nrow = 1)
+    mu <- matrix(mu, nrow = 1)
+  }
+  stopifnot(identical(dim(x), dim(mu)))
+  p <- ncol(x)
+  n <- nrow(x)
+
+  xmu <- x - mu
+  num <- n/2 * as.numeric(determinant(Q, logarithm = TRUE)$modulus)
+  # tr(xmu Q xmu^T) = tr(xmu^T xmu Q) = vec(xmu)^T vec(xmu Q)
+  num <- num - 0.5*sum(xmu * (xmu %*% Q))
+
+  den <- n*p/2 * log(2*pi)
+  if(log) num - den else exp(num - den)
+}
+
+dmvnorm2 <- function(x, mu, Q, log = TRUE, use_trace = FALSE) {
   if(!is.matrix(x)) {
     x <- matrix(x, nrow = 1)
     mu <- matrix(mu, nrow = 1)
@@ -28,9 +45,7 @@ dmvnorm <- function(x, mu, Q, log = TRUE, use_trace = FALSE) {
     tmp <- xmu %*% tcrossprod(Q, xmu)
     num <- num - 0.5*sum(diag(tmp))
   } else {
-    for(i in seq_len(n)) {
-      num <- num - 0.5*as.numeric(xmu[i, , drop = FALSE] %*% tcrossprod(Q, xmu[i, , drop = FALSE]))
-    }
+    num <- num - 0.5*sum(xmu * (xmu %*% Q))
   }
 
   den <- n*p/2 * log(2*pi)

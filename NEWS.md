@@ -1,3 +1,10 @@
+# v0.10.6
+
+- Removed the `use_trace=` argument introduced in v0.9.3. When `x` was short, the trace was
+  faster. When `x` was long, the non-trace method was faster. Now, using a vectorization trick
+  with the trace, `dmvnorm()` is always at least as fast (and usually faster) than either of the previous
+  methods.
+
 # v0.10.5
 
 - Also return `V.inv` for conjugate Wishart parameters, `tau` for conjugate normal, and `Q` for some other

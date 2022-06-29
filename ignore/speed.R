@@ -91,6 +91,21 @@ microbenchmark::microbenchmark(
   times = 100
 )
 
+set.seed(99)
+Nr <- 10
+Nc <- 10
+mu <- matrix(0, Nr, Nc)
+y <- matrix(rnorm(Nr*Nc), Nr, Nc)
+Q <- rWishart(1, 200, diag(1000, Nc))[, , 1]
+microbenchmark::microbenchmark(
+  dmvnorm(y, mu, Q, log = TRUE),
+  dmvnorm(y, mu, Q, log = TRUE, use_trace = TRUE),
+  dmvnorm2(y, mu, Q, log = TRUE),
+  times = 1000,
+  check = "equal"
+)
+
+
 
 
 
