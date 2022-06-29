@@ -9,7 +9,7 @@
 \usage{
 dmvnorm(x, mu, Q, log = TRUE)
 
-dmatnorm(x, mu, V, U, log = TRUE)
+dmatnorm(x, mu, V, U = NULL, log = TRUE)
 
 dlogitnorm(x, mu, sd, log = FALSE)
 }

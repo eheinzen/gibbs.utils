@@ -30,45 +30,31 @@ dmvnorm <- function(x, mu, Q, log = TRUE) {
   if(log) num - den else exp(num - den)
 }
 
-dmvnorm2 <- function(x, mu, Q, log = TRUE, use_trace = FALSE) {
-  if(!is.matrix(x)) {
-    x <- matrix(x, nrow = 1)
-    mu <- matrix(mu, nrow = 1)
-  }
-  stopifnot(identical(dim(x), dim(mu)))
-  p <- ncol(x)
-  n <- nrow(x)
-
-  xmu <- x - mu
-  num <- n/2 * as.numeric(determinant(Q, logarithm = TRUE)$modulus)
-  if(use_trace) {
-    tmp <- xmu %*% tcrossprod(Q, xmu)
-    num <- num - 0.5*sum(diag(tmp))
-  } else {
-    num <- num - 0.5*sum(xmu * (xmu %*% Q))
-  }
-
-  den <- n*p/2 * log(2*pi)
-  if(log) num - den else exp(num - den)
-}
-
-
 #' @rdname distributions
 #' @export
-dmatnorm <- function(x, mu, V, U, log = TRUE) {
+dmatnorm <- function(x, mu, V, U = NULL, log = TRUE) {
   stopifnot(identical(dim(x), dim(mu)))
   p <- ncol(x)
   n <- nrow(x)
-  stopifnot(p == dim(V), n == dim(U))
-
-  Udet <- as.numeric(determinant(U, logarithm = TRUE)$modulus)
+  stopifnot(p == dim(V))
   Vdet <- as.numeric(determinant(V, logarithm = TRUE)$modulus)
 
-  xmu <- as.numeric(x - mu)
-  num <- 0.5*(p*Udet + n*Vdet) - 0.5*as.numeric(t(xmu) %*% (V %x% U) %*% xmu)
+  if(!is.null(U)) {
+    stopifnot(n == dim(U))
+    Udet <- as.numeric(determinant(U, logarithm = TRUE)$modulus)
+  } else Udet <- 0
+
+
+  xmu <- x - mu
+  xV <- xmu %*% V
+  UxV <- if(is.null(U)) xV else U %*% xV
+  # tr(V x^T U x) = vec(x) vec(U x V)
+
+  num <- 0.5*(p*Udet + n*Vdet - sum(xmu * UxV))
   den <- n*p/2 * log(2*pi)
   if(log) num - den else exp(num - den)
 }
+
 
 
 #' @rdname distributions

@@ -1,9 +1,13 @@
+# v0.10.7
+
+- Applied the same vectorization trick to `dmatnorm()`, for speed gains of over 1000x for large inputs. The default
+  for `U=` is also now `NULL`, indicating the identity matrix.
+
 # v0.10.6
 
 - Removed the `use_trace=` argument introduced in v0.9.3. When `x` was short, the trace was
-  faster. When `x` was long, the non-trace method was faster. Now, using a vectorization trick
-  with the trace, `dmvnorm()` is always at least as fast (and usually faster) than either of the previous
-  methods.
+  faster. When `x=` was long, the non-trace method was faster. Now, using a vectorization trick
+  with the trace, `dmvnorm()` is always at least as fast (and usually faster) than either of the previous methods.
 
 # v0.10.5
 

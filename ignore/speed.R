@@ -108,4 +108,20 @@ microbenchmark::microbenchmark(
 
 
 
+set.seed(99)
+Nr <- 100
+Nc <- 180
+mu <- matrix(0, Nr, Nc)
+y <- matrix(rnorm(Nr*Nc), Nr, Nc)
+V <- rWishart(1, 200, diag(1000, Nc))[, , 1]
+U <- diag(1, Nr)
+microbenchmark::microbenchmark(
+  dmatnorm(y, mu, V = V, U = U, log = TRUE),
+  dmatnorm2(y, mu, V = V, U = NULL, log = TRUE),
+  dmatnorm2(y, mu, V = V, U = U, log = TRUE),
+  times = 100,
+  check = "equal"
+)
+
+
 
