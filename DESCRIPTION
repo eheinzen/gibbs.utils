@@ -1,7 +1,7 @@
 Package: gibbs.utils
 Type: Package
 Title: Utilities for Gibbs Sampling
-Version: 0.10.7
+Version: 0.10.8
 Authors@R: c(
     person("Ethan", "Heinzen", email = "heinzen.ethan@mayo.edu", role = c("aut", "cre"))
   )
