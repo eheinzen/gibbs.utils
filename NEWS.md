@@ -1,3 +1,7 @@
+# v0.10.8
+
+- Added arguments for pre-computed determinants to `dmvnorm()` and `dmatnorm()`.
+
 # v0.10.7
 
 - Applied the same vectorization trick to `dmatnorm()`, for speed gains of over 1000x for large inputs. The default

@@ -7,9 +7,17 @@
 \alias{dlogitnorm}
 \title{Statistical Distributions}
 \usage{
-dmvnorm(x, mu, Q, log = TRUE)
+dmvnorm(x, mu, Q, detQ = determinant(Q, logarithm = TRUE)$modulus, log = TRUE)
 
-dmatnorm(x, mu, V, U = NULL, log = TRUE)
+dmatnorm(
+  x,
+  mu,
+  V,
+  U = NULL,
+  detV = determinant(V, logarithm = TRUE)$modulus,
+  detU = determinant(U, logarithm = TRUE)$modulus,
+  log = TRUE
+)
 
 dlogitnorm(x, mu, sd, log = FALSE)
 }
@@ -19,6 +27,8 @@ dlogitnorm(x, mu, sd, log = FALSE)
 \item{mu}{the mean}
 
 \item{Q}{the precision matrix}
+
+\item{detQ, detU, detV}{Pre-computed log-determinants}
 
 \item{log}{Should the log-density be returned?}
 

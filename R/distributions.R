@@ -6,13 +6,14 @@
 #' @param sd the standard deviation
 #' @param Q the precision matrix
 #' @param V,U the precision matrices for the matrix-normal distribution
+#' @param detQ,detU,detV Pre-computed log-determinants
 #' @param log Should the log-density be returned?
 #' @name distributions
 NULL
 
 #' @rdname distributions
 #' @export
-dmvnorm <- function(x, mu, Q, log = TRUE) {
+dmvnorm <- function(x, mu, Q, detQ = determinant(Q, logarithm = TRUE)$modulus, log = TRUE) {
   if(!is.matrix(x)) {
     x <- matrix(x, nrow = 1)
     mu <- matrix(mu, nrow = 1)
@@ -22,7 +23,7 @@ dmvnorm <- function(x, mu, Q, log = TRUE) {
   n <- nrow(x)
 
   xmu <- x - mu
-  num <- n/2 * as.numeric(determinant(Q, logarithm = TRUE)$modulus)
+  num <- n/2 * as.numeric(detQ)
   # tr(xmu Q xmu^T) = tr(xmu^T xmu Q) = vec(xmu)^T vec(xmu Q)
   num <- num - 0.5*sum(xmu * (xmu %*% Q))
 
@@ -32,16 +33,16 @@ dmvnorm <- function(x, mu, Q, log = TRUE) {
 
 #' @rdname distributions
 #' @export
-dmatnorm <- function(x, mu, V, U = NULL, log = TRUE) {
+dmatnorm <- function(x, mu, V, U = NULL, detV = determinant(V, logarithm = TRUE)$modulus, detU = determinant(U, logarithm = TRUE)$modulus, log = TRUE) {
   stopifnot(identical(dim(x), dim(mu)))
   p <- ncol(x)
   n <- nrow(x)
   stopifnot(p == dim(V))
-  Vdet <- as.numeric(determinant(V, logarithm = TRUE)$modulus)
+  Vdet <- as.numeric(detV)
 
   if(!is.null(U)) {
     stopifnot(n == dim(U))
-    Udet <- as.numeric(determinant(U, logarithm = TRUE)$modulus)
+    Udet <- as.numeric(detU)
   } else Udet <- 0
 
 
