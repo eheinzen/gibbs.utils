@@ -123,7 +123,7 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, diag = FALSE, use
   if(!is.matrix(y)) stop("'y' must be a matrix")
   if(is.matrix(mu0)) mu0 <- as.numeric(mu0)
 
-  XtU <- if(is.null(U)) t(X) else crossprod(X, U)
+  XtU <- if(is.null(U)) t(X) else t(X) %*% U
   XtUX <- XtU %*% X
   FUN <- if(use.chol) chol_mvrnorm else MASS::mvrnorm
 
@@ -163,11 +163,11 @@ conj_diagmatlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, use.chol = FA
 
   p <- ncol(y)
   E <- replace(matrix(0, p^2, p), vapply(1:p, function(i) (i-1)*p^2 + (i-1)*p + i, NA_real_), 1)
-  XtU <- if(is.null(U)) t(X) else crossprod(X, U)
-  newQ <- crossprod(E, V %x% (XtU %*% X)) %*% E + Q0
+  XtU <- if(is.null(U)) t(X) else t(X) %*% U
+  newQ <- t(E) %*% (V %x% (XtU %*% X)) %*% E + Q0
   newQ.inv <- chol_inv(newQ)
   Q0mu0 <- if(is.null(mu0)) 0 else Q0 %*% mu0
-  mu <- drop(newQ.inv %*% (Q0mu0 + crossprod(E, as.numeric(XtU %*% y %*% V))))
+  mu <- drop(newQ.inv %*% (Q0mu0 + t(E) %*% as.numeric(XtU %*% y %*% V)))
   if(params.only) return(gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv))
   FUN <- if(use.chol) chol_mvrnorm else MASS::mvrnorm
   FUN(1, mu = mu, Sigma = newQ.inv)
@@ -200,7 +200,7 @@ conj_mvnorm_Q <- function(y, mu, V0, v0, V0_inv = chol_inv(V0), params.only = FA
     mu <- matrix(mu, nrow = n, ncol = p, byrow = TRUE)
   }
   stopifnot(identical(dim(y), dim(mu)))
-  V2.inv <- V0_inv + crossprod(y - mu)
+  V2.inv <- V0_inv + t(y - mu) %*% (y - mu)
   V2 <- chol_inv(V2.inv)
   if(params.only) return(gu_params(V = V2, V.inv = V2.inv, v = n + v0))
   rWishart(
@@ -220,7 +220,7 @@ conj_matnorm_V <- function(y, mu, U = NULL, V0, v0, V0_inv = chol_inv(V0), param
   n <- nrow(mu)
   stopifnot(identical(dim(y), dim(mu)))
   ymu <- y - mu
-  V2.inv <- V0_inv + crossprod(ymu, U) %*% ymu
+  V2.inv <- V0_inv + t(ymu) %*% U %*% ymu
   V2 <- chol_inv(V2.inv)
   if(params.only) return(gu_params(V = V2, V.inv = V2.inv, v = n + v0))
   rWishart(
