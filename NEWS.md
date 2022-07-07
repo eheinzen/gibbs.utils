@@ -1,3 +1,9 @@
+# v0.10.9
+
+- Replaced `crossprod(x, y)` with `t(x) %*% y` in almost all instances, to be compatible with, e.g., the `spam` package for sparse matrices.
+
+- Fixed a typo in the vignette
+
 # v0.10.8
 
 - Added arguments for pre-computed determinants to `dmvnorm()` and `dmatnorm()`.
