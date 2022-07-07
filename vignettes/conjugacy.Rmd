@@ -128,7 +128,7 @@ We jump to the equivalent of \eqref{eq:matnormexpanded}:
 \begin{equation}
 \begin{split}
 &\vect(\diag{\beta})^\intercal ((I_p \otimes X^\intercal) (V \otimes U) (I_p \otimes X))\vect(\diag{\beta}) + \beta^\intercal Q_0 \beta \\
-&- 2(\vect(Y)^\intercal(V \otimes U)(I_p \otimes X) + )\vect(\diag{\beta}) - 2\mu_0^\intercal Q_0\beta
+&- 2(\vect(Y)^\intercal(V \otimes U)(I_p \otimes X))\vect(\diag{\beta}) - 2\mu_0^\intercal Q_0\beta
 \end{split}
 \end{equation}
 
