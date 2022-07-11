@@ -16,17 +16,17 @@
 \alias{conj_binom_p}
 \title{Draw Conjugate Samples}
 \usage{
-conj_norm_mu(y, tau, mu0 = 0, tau0 = 0.001, mult = 1, params.only = FALSE)
+conj_norm_mu(y, tau, mu0 = 0, tau0 = 0.001, ..., mult = 1, params.only = FALSE)
 
 conj_mvnorm_mu(
   y,
   Q,
   mu0 = NULL,
   Q0 = diag(0.001, p),
-  newQ.inv,
-  A = t(chol(newQ.inv)),
+  ...,
+  newQ = mult * Q0 + n * Q,
+  newQ.chol = gu_chol(newQ),
   mult = 1,
-  use.chol = FALSE,
   params.only = FALSE
 )
 
@@ -36,10 +36,10 @@ conj_matnorm_mu(
   U = NULL,
   mu0 = NULL,
   Q0,
-  newQ.inv,
-  A = t(chol(newQ.inv)),
+  ...,
+  newQ = V \%x\% U + Q0,
+  newQ.chol = gu_chol(newQ),
   diag = FALSE,
-  use.chol = FALSE,
   params.only = FALSE
 )
 
@@ -50,9 +50,9 @@ conj_lm_beta(
   tau,
   mu0 = NULL,
   Q0,
-  newQ.inv,
-  A = t(chol(newQ.inv)),
-  use.chol = FALSE,
+  ...,
+  newQ = tau * XtX + Q0,
+  newQ.chol = gu_chol(newQ),
   params.only = FALSE
 )
 
@@ -63,8 +63,10 @@ conj_matlm_beta(
   U = NULL,
   mu0 = NULL,
   Q0,
+  ...,
+  newQ = V \%x\% XtUX + Q0,
+  newQ.chol = gu_chol(newQ),
   diag = FALSE,
-  use.chol = FALSE,
   params.only = FALSE
 )
 
@@ -75,7 +77,9 @@ conj_diagmatlm_beta(
   U = NULL,
   mu0 = NULL,
   Q0,
-  use.chol = FALSE,
+  ...,
+  newQ = t(E) \%*\% (V \%x\% (XtU \%*\% X)) \%*\% E + Q0,
+  newQ.chol = gu_chol(newQ),
   params.only = FALSE
 )
 
@@ -124,6 +128,8 @@ this is an n-by-p matrix}
 \item{mu0}{the prior mean of \code{mu} or \code{beta}. The default (\code{NULL}) is the same as an appropriately-dimensioned
 vector/matrix of all zeros, but a little faster.}
 
+\item{...}{Other arguments, passed to \code{\link[spam]{rmvnorm.canonical}}}
+
 \item{mult}{An optional multiplier for the prior precision; useful in some cases}
 
 \item{params.only}{Should just a list of the updated parameters be returned?}
@@ -132,8 +138,6 @@ vector/matrix of all zeros, but a little faster.}
 
 \item{Q0, tau0}{the prior precision of \code{mu}.}
 
-\item{use.chol}{Logical, determining whether to use \code{MASS::\link{mvrnorm}()} (\code{FALSE}, the default) or \code{\link{chol_mvrnorm}}.}
-
 \item{V, U}{the precision matrices for the matrix-normal distribution}
 
 \item{diag}{If \code{TRUE}, both \code{V} and \code{Q0} are assumed (but not confirmed!) to be diagonal,
@@ -141,7 +145,7 @@ which can speed up the Cholesky decomposition up to 100x. Default \code{FALSE}.}
 
 \item{X}{the data matrix on \code{beta}}
 
-\item{XtX, V0_inv, Xbeta, newQ.inv, A}{pre-computed "shortcut" arguments for efficiency reasons}
+\item{XtX, V0_inv, Xbeta, newQ, newQ.chol}{pre-computed "shortcut" arguments for efficiency reasons}
 
 \item{mu}{the mean of the normal distribution from which \code{y} comes}
 

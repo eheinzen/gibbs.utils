@@ -15,7 +15,6 @@ gs_diagmatlm_beta(
   Q0,
   a0 = rep_len(-Inf, length(beta)),
   b0 = rep_len(Inf, length(beta)),
-  use.chol = FALSE,
   params.only = FALSE
 )
 }
@@ -37,8 +36,6 @@ vector/matrix of all zeros, but a little faster.}
 \item{Q0}{the prior precision of \code{mu}.}
 
 \item{a0, b0}{Optional limits of truncation for a truncated normal prior.}
-
-\item{use.chol}{Logical, determining whether to use \code{MASS::\link{mvrnorm}()} (\code{FALSE}, the default) or \code{\link{chol_mvrnorm}}.}
 
 \item{params.only}{Should just a list of the updated parameters be returned?}
 }

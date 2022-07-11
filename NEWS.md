@@ -1,3 +1,11 @@
+# v1.0.0
+
+- Overhauled the conjugate normal functions, to use `spam::rmvnorm.canonical()` instead of taking two inverses. 
+  This method is slower than what we had before when inputs are really small (when the conjugacy is super fast anyway, so I wasn't worried)
+  but almost 2x faster when inputs are big. Furthermore, we can get more performance when inputs are `spam` objects already.
+  
+- `spam` was added as a dependency.
+
 # v0.10.9
 
 - Replaced `crossprod(x, y)` with `t(x) %*% y` in almost all instances, to be compatible with, e.g., the `spam` package for sparse matrices.

@@ -125,3 +125,21 @@ microbenchmark::microbenchmark(
 
 
 
+
+
+set.seed(99)
+Nr <- 100
+Nc <- 22
+y <- matrix(rnorm(Nr*Nc), Nr, Nc)
+Q <- diag(1, Nc)
+Q0 <- diag(1, Nc)
+microbenchmark::microbenchmark(
+  conj_mvnorm_mu2(y = y, Q = Q, mu0 = NULL, Q0 = Q0, use = "chol"),
+  conj_mvnorm_mu2(y = y, Q = Q, mu0 = NULL, Q0 = Q0, use = "spam"),
+  conj_mvnorm_mu2(y = y, Q = Q, mu0 = NULL, Q0 = Q0, use = "MASS"),
+  times = 1000
+)
+
+
+
+

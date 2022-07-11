@@ -12,8 +12,8 @@ NULL
 #' @export
 gs_diagmatlm_beta <- function(beta, y, X, V, U = NULL, mu0 = NULL, Q0,
                               a0 = rep_len(-Inf, length(beta)), b0 = rep_len(Inf, length(beta)),
-                              use.chol = FALSE, params.only = FALSE) {
-  params <- conj_diagmatlm_beta(y = y, X = X, V = V, U = U, mu0 = mu0, Q0 = Q0, use.chol = use.chol, params.only = TRUE)
+                              params.only = FALSE) {
+  params <- conj_diagmatlm_beta(y = y, X = X, V = V, U = U, mu0 = mu0, Q0 = Q0, params.only = TRUE)
   if(params.only) {
     tmp <- lapply(seq_along(beta), function(i) {
       cond_mvnorm(y = beta, mu = params$mu, Q = params$Q, which = i, a = a0[i], b = b0[i], params.only = TRUE)

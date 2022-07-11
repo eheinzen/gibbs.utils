@@ -15,10 +15,30 @@ check_one_or_all <- function(x, len) {
 #' @param mu,Sigma,Precision parameters for a multivariate normal distribution. One of \code{Sigma} and
 #'   \code{Precision} must be supplied.
 #' @param A the "square root" by which we multiply the independent normals. Used only for speed.
+#' @param ... Other arguments (not in use at this time)
 #' @details
 #'   Unlike \code{MASS::\link[MASS]{mvrnorm}()}, \code{chol_mvrnorm()} uses the Cholesky decomposition
 #'   to draw random samples. This is usually faster; the largest gains are seen when \code{n} is small
 #'   (when \code{n} is large, the matrix multiplication becomes the limiting factor).
+#' @name utilities
+NULL
+
+
+#' @rdname utilities
+#' @export
+gu_chol <- function(x, ...) {
+  out <- chol(x, ...)
+  class(out) <- c("gu_chol", class(out))
+  out
+}
+
+#' @rdname utilities
+#' @export
+chol.gu_chol <- function(x, ...) {
+  x
+}
+
+
 #' @rdname utilities
 #' @export
 chol_inv <- function(x) {
