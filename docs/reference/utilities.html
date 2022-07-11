@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Other Utilities — chol_inv • gibbs.utils</title>
+<title>Other Utilities — utilities • gibbs.utils</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Other Utilities — chol_inv" />
+<meta property="og:title" content="Other Utilities — utilities" />
 <meta property="og:description" content="Other Utilities" />
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -130,7 +130,12 @@
     <p>Other Utilities</p>
     </div>
 
-    <pre class="usage"><span class='fu'>chol_inv</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>gu_chol</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='co'># S3 method for gu_chol</span>
+<span class='fu'><a href='https://rdrr.io/r/base/chol.html'>chol</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='fu'>chol_inv</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
 <span class='fu'>chol_mvrnorm</span><span class='op'>(</span>
   n <span class='op'>=</span> <span class='fl'>1</span>,
@@ -151,6 +156,10 @@
     <tr>
       <th>x</th>
       <td><p>A matrix for <code>chol_inv</code> or a numeric vector for <code>expit</code></p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Other arguments (not in use at this time)</p></td>
     </tr>
     <tr>
       <th>n</th>

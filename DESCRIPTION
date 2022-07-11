@@ -1,7 +1,7 @@
 Package: gibbs.utils
 Type: Package
 Title: Utilities for Gibbs Sampling
-Version: 0.10.9
+Version: 1.0.0
 Authors@R: c(
     person("Ethan", "Heinzen", email = "heinzen.ethan@mayo.edu", role = c("aut", "cre"))
   )
@@ -12,6 +12,7 @@ Imports:
     Rcpp (>= 1.0.6),
     MASS,
     truncnorm,
+    spam,
     stats
 LinkingTo: Rcpp
 RoxygenNote: 7.1.2
