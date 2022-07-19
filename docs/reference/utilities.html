@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -130,12 +130,14 @@
     <p>Other Utilities</p>
     </div>
 
-    <pre class="usage"><span class='fu'>gu_chol</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>gu_chol</span><span class='op'>(</span><span class='va'>x</span>, take.chol <span class='op'>=</span> <span class='op'>!</span><span class='fu'>is.gu_chol</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='fu'>is.gu_chol</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
 <span class='co'># S3 method for gu_chol</span>
-<span class='fu'><a href='https://rdrr.io/r/base/chol.html'>chol</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/chol.html'>chol</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>chol_inv</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
+<span class='fu'>chol_inv</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='fu'>chol_mvrnorm</span><span class='op'>(</span>
   n <span class='op'>=</span> <span class='fl'>1</span>,
@@ -158,8 +160,16 @@
       <td><p>A matrix for <code>chol_inv</code> or a numeric vector for <code>expit</code></p></td>
     </tr>
     <tr>
+      <th>take.chol</th>
+      <td><p>Should the cholesky be taken?</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>Other arguments (not in use at this time)</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>Logical, indicating whether to print some stuff.</p></td>
     </tr>
     <tr>
       <th>n</th>
