@@ -52,7 +52,7 @@ conj_mvnorm_mu <- function(y, Q, mu0 = NULL, Q0 = diag(0.001, p), ..., newQ = mu
   b <- Q0mu0 + Q %*% colSums(y)
 
   if(params.only) {
-    newQ.inv <- chol_inv(newQ.chol)
+    newQ.inv <- chol2inv(newQ.chol)
     mu <- drop(newQ.inv %*% b)
     gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv, b = drop(b))
   } else {
@@ -102,7 +102,7 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
     b <- Q0mu0 + as.numeric(U %*% y %*% V)
 
     if(params.only) {
-      newQ.inv <- chol_inv(newQ.chol)
+      newQ.inv <- chol2inv(newQ.chol)
       mu <- drop(newQ.inv %*% b)
       gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv, b = drop(b))
     } else {
@@ -125,7 +125,7 @@ conj_lm_beta <- function(y, X, XtX = crossprod(X), tau, mu0 = NULL, Q0, ...,
   b <- Q0mu0 + tau*t(X) %*% y
 
   if(params.only) {
-    newQ.inv <- chol_inv(newQ.chol)
+    newQ.inv <- chol2inv(newQ.chol)
     mu <- drop(newQ.inv %*% b)
     gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv, b = drop(b))
   } else {
@@ -177,7 +177,7 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
     Q0mu0 <- if(is.null(mu0)) 0 else Q0 %*% mu0
     b <- Q0mu0 + as.numeric(XtU %*% y %*% V)
     if(params.only) {
-      newQ.inv <- chol_inv(newQ.chol)
+      newQ.inv <- chol2inv(newQ.chol)
       mu <- drop(newQ.inv %*% b)
       gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv, b = drop(b))
     } else {
@@ -206,7 +206,7 @@ conj_diagmatlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
   b <- Q0mu0 + t(E) %*% as.numeric(XtU %*% y %*% V)
 
   if(params.only) {
-    newQ.inv <- chol_inv(newQ.chol)
+    newQ.inv <- chol2inv(newQ.chol)
     mu <- drop(newQ.inv %*% b)
     gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv, b = drop(b))
   } else {
