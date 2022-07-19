@@ -1,3 +1,13 @@
+# v1.1.0
+
+- Added `is.gu_chol()`, and now allow for passing of `newQ.chol=` to be taken into account when sampling with `spam::rmvnorm.canonical()` (by appending the `gu_chol` class, which doesn't take the Cholesky another time). Notably, this doesn't work for `spam` objects, because they are S4.
+
+- `chol.gu_chol()` gained a `verbose=` argument (mostly for debugging).
+
+- `gu_chol()` gained a `take.chol=` argument, to mark existing Cholesky matrices as such without taking `chol()` again.
+
+- Fixed a bug when `params.only=TRUE` and the input `newQ.chol=` is just a regular matrix.
+
 # v1.0.0
 
 - Overhauled the conjugate normal functions, to use `spam::rmvnorm.canonical()` instead of taking two inverses. 

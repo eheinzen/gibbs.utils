@@ -122,5 +122,26 @@ test_that("mu0 = NULL works for conj_matlm_beta", {
 
 
 
+test_that("newQ.chol= works", {
+  Q <- cbind(1:2, c(2, 10))
+  Q0 <- diag(1, 2)
+  y <- cbind(1:3, 1)
+  out1 <- conj_mvnorm_mu(y = y, Q = Q, Q0 = Q0, params.only = TRUE)
+  out2 <- conj_mvnorm_mu(y = y, Q = Q, Q0 = Q0, newQ.chol = chol(3*Q + Q0), params.only = TRUE)
+  expect_identical(out1, out2)
+  set.seed(20220719)
+  out1 <- conj_mvnorm_mu(y = y, Q = Q, Q0 = Q0)
+  set.seed(20220719)
+  out2 <- conj_mvnorm_mu(y = y, Q = Q, Q0 = Q0, newQ.chol = chol(3*Q + Q0))
+  expect_equal(out1, out2)
+
+  set.seed(20220719)
+  out1 <- conj_mvnorm_mu(y = y, Q = Q, Q0 = Q0, mult = 1.25)
+  set.seed(20220719)
+  out2 <- conj_mvnorm_mu(y = y, Q = Q, Q0 = Q0, newQ.chol = chol(3*Q + 1.25*Q0))
+  expect_equal(out1, out2)
+})
+
+
 
 

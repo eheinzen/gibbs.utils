@@ -22,7 +22,8 @@
 #' @param XtX,V0_inv,Xbeta,newQ,newQ.chol pre-computed "shortcut" arguments for efficiency reasons
 #' @param diag If \code{TRUE}, both \code{V} and \code{Q0} are assumed (but not confirmed!) to be diagonal,
 #'   which can speed up the Cholesky decomposition up to 100x. Default \code{FALSE}.
-#' @param ... Other arguments, passed to \code{\link[spam]{rmvnorm.canonical}}
+#' @param ... Other arguments. Examples include \code{verbose=}, \code{take.chol=}, and
+#'   \code{Rstruct=}.
 #' @param params.only Should just a list of the updated parameters be returned?
 #' @name conjugacy
 NULL
@@ -55,6 +56,12 @@ conj_mvnorm_mu <- function(y, Q, mu0 = NULL, Q0 = diag(0.001, p), ..., newQ = mu
     mu <- drop(newQ.inv %*% b)
     gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv, b = drop(b))
   } else {
+    newQ <- if(!missing(newQ.chol) && is.matrix(newQ.chol)) {
+      gu_chol(newQ.chol, take.chol = FALSE) # the cholesky shouldn't be taken anymore after this
+    } else {
+      if(!missing(newQ.chol)) warning("'newQ.chol=' is being ignored")
+      newQ
+    }
     drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
   }
 }
@@ -99,6 +106,12 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
       mu <- drop(newQ.inv %*% b)
       gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv, b = drop(b))
     } else {
+      newQ <- if(!missing(newQ.chol) && is.matrix(newQ.chol)) {
+        gu_chol(newQ.chol, take.chol = FALSE) # the cholesky shouldn't be taken anymore after this
+      } else {
+        if(!missing(newQ.chol)) warning("'newQ.chol=' is being ignored")
+        newQ
+      }
       drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
     }
   }
@@ -116,6 +129,12 @@ conj_lm_beta <- function(y, X, XtX = crossprod(X), tau, mu0 = NULL, Q0, ...,
     mu <- drop(newQ.inv %*% b)
     gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv, b = drop(b))
   } else {
+    newQ <- if(!missing(newQ.chol) && is.matrix(newQ.chol)) {
+      gu_chol(newQ.chol, take.chol = FALSE) # the cholesky shouldn't be taken anymore after this
+    } else {
+      if(!missing(newQ.chol)) warning("'newQ.chol=' is being ignored")
+      newQ
+    }
     drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
   }
 }
@@ -162,6 +181,12 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
       mu <- drop(newQ.inv %*% b)
       gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv, b = drop(b))
     } else {
+      newQ <- if(!missing(newQ.chol) && is.matrix(newQ.chol)) {
+        gu_chol(newQ.chol, take.chol = FALSE) # the cholesky shouldn't be taken anymore after this
+      } else {
+        if(!missing(newQ.chol)) warning("'newQ.chol=' is being ignored")
+        newQ
+      }
       drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
     }
   }
@@ -185,6 +210,12 @@ conj_diagmatlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
     mu <- drop(newQ.inv %*% b)
     gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv, b = drop(b))
   } else {
+    newQ <- if(!missing(newQ.chol) && is.matrix(newQ.chol)) {
+      gu_chol(newQ.chol, take.chol = FALSE) # the cholesky shouldn't be taken anymore after this
+    } else {
+      if(!missing(newQ.chol)) warning("'newQ.chol=' is being ignored")
+      newQ
+    }
     drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
   }
 }

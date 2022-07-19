@@ -128,7 +128,8 @@ this is an n-by-p matrix}
 \item{mu0}{the prior mean of \code{mu} or \code{beta}. The default (\code{NULL}) is the same as an appropriately-dimensioned
 vector/matrix of all zeros, but a little faster.}
 
-\item{...}{Other arguments, passed to \code{\link[spam]{rmvnorm.canonical}}}
+\item{...}{Other arguments. Examples include \code{verbose=}, \code{take.chol=}, and
+\code{Rstruct=}.}
 
 \item{mult}{An optional multiplier for the prior precision; useful in some cases}
 

@@ -16,6 +16,8 @@ check_one_or_all <- function(x, len) {
 #'   \code{Precision} must be supplied.
 #' @param A the "square root" by which we multiply the independent normals. Used only for speed.
 #' @param ... Other arguments (not in use at this time)
+#' @param verbose Logical, indicating whether to print some stuff.
+#' @param take.chol Should the cholesky be taken?
 #' @details
 #'   Unlike \code{MASS::\link[MASS]{mvrnorm}()}, \code{chol_mvrnorm()} uses the Cholesky decomposition
 #'   to draw random samples. This is usually faster; the largest gains are seen when \code{n} is small
@@ -26,23 +28,30 @@ NULL
 
 #' @rdname utilities
 #' @export
-gu_chol <- function(x, ...) {
-  out <- chol(x, ...)
-  class(out) <- c("gu_chol", class(out))
+gu_chol <- function(x, take.chol = !is.gu_chol(x), ...) {
+  out <- if(take.chol) chol(x, ...) else x
+  class(out) <- c("gu_chol", class(out)[class(out) != "gu_chol"])
   out
 }
 
 #' @rdname utilities
 #' @export
-chol.gu_chol <- function(x, ...) {
+is.gu_chol <- function(x) {
+  inherits(x, "gu_chol")
+}
+
+#' @rdname utilities
+#' @export
+chol.gu_chol <- function(x, ..., verbose = FALSE) {
+  if(verbose) cat("Not taking cholesky again\n")
   x
 }
 
 
 #' @rdname utilities
 #' @export
-chol_inv <- function(x) {
-  chol2inv(chol(x))
+chol_inv <- function(x, ...) {
+  chol2inv(chol(x, ...))
 }
 
 #' @rdname utilities
