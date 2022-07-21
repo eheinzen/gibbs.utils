@@ -147,14 +147,24 @@ Then we get
 \tilde{Q} &= E^\intercal(I_p \otimes X^\intercal) (V \otimes U) (I_p \otimes X)E + Q_0\\
 &=E^\intercal(I_p \otimes X^\intercal) ((VI_p) \otimes (UX))E + Q_0\\
 &= E^\intercal((I_pVI_p) \otimes (X^\intercal U X))E + Q_0\\
-&= E^\intercal (V \otimes (X^\intercal U X))E + Q_0
+&= E^\intercal (V \otimes (X^\intercal U X))E + Q_0 \\
+&= \sum E^\intercal (V \otimes (X^\intercal U X))(e_i \otimes (e_i e_i^\intercal)) + Q_0 \\
+&= \sum E^\intercal ((Ve_i) \otimes (X^\intercal U X e_i e_i^\intercal)) \\
+&= \sum  ((Ve_i) \otimes (X^\intercal U X e_i e_i^\intercal)) \\
+&= \sum \sum (e_j^\intercal Ve_i) \otimes (e_j e_j^\intercal X^\intercal U X e_i e_i^\intercal) \\
+&= \sum \sum V_{ji} (e_j (X^\intercal U X)_{ji} e_i^\intercal) \\
+&= \sum \sum V_{ji}(X^\intercal U X)_{ji} e_j e_i^\intercal \\
+&= V \odot (X^\intercal U X)
 \end{split}
 \end{equation}
 
 Then we get the mean as in \eqref{eq:matnormmu}
 
 \begin{equation}
-\tilde{\mu} = \tilde{Q}^{-1}\left[E^\intercal\vect{(X^\intercal UYV)} + Q_0 \mu_0 \right]
+\begin{split}
+\tilde{\mu} &= \tilde{Q}^{-1}\left[E^\intercal\vect{(X^\intercal UYV)} + Q_0 \mu_0 \right] \\
+&= \tilde{Q}^{-1}\left[\diag(X^\intercal UYV) + Q_0 \mu_0 \right]
+\end{split}
 \end{equation}
 
 ## Normal Regression: beta

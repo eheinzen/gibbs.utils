@@ -1,3 +1,8 @@
+# v1.1.1
+
+- Sped up `conj_diagmatlm_beta()` (and hence `gs_diagmatlm_beta()`) by taking the linear algebra
+  a few steps further.
+
 # v1.1.0
 
 - Added `is.gu_chol()`, and now allow for passing of `newQ.chol=` to be taken into account when sampling with `spam::rmvnorm.canonical()` (by appending the `gu_chol` class, which doesn't take the Cholesky another time). Notably, this doesn't work for `spam` objects, because they are S4.

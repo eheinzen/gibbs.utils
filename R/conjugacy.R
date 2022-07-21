@@ -195,15 +195,14 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
 #' @rdname conjugacy
 #' @export
 conj_diagmatlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
-                                newQ = t(E) %*% (V %x% (XtU %*% X)) %*% E + Q0, newQ.chol = gu_chol(newQ), params.only = FALSE) {
+                                newQ = V * (XtU %*% X) + Q0, newQ.chol = gu_chol(newQ), params.only = FALSE) {
   if(!is.matrix(y)) stop("'y' must be a matrix")
   if(is.matrix(mu0)) mu0 <- as.numeric(mu0)
 
   p <- ncol(y)
-  E <- replace(matrix(0, p^2, p), vapply(1:p, function(i) (i-1)*p^2 + (i-1)*p + i, NA_real_), 1)
   XtU <- if(is.null(U)) t(X) else t(X) %*% U
   Q0mu0 <- if(is.null(mu0)) 0 else Q0 %*% mu0
-  b <- Q0mu0 + t(E) %*% as.numeric(XtU %*% y %*% V)
+  b <- Q0mu0 + diag(XtU %*% y %*% V)
 
   if(params.only) {
     newQ.inv <- chol2inv(newQ.chol)
