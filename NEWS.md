@@ -1,3 +1,7 @@
+# v1.2.1
+
+- I accidentally padded the results from the changes in v1.2.0 to include the structural zeros, when they shouldn't have.
+
 # v1.2.0
 
 - Added the `zero=` argument to `conj_matnorm_mu()` and `conj_matlm_beta()` to indicate structural zeros. As such, we removed `conj_diagmatlm_beta()`, which

@@ -133,7 +133,7 @@ vector/matrix of all zeros, but a little faster.}
 which can speed up the Cholesky decomposition up to 100x. Default \code{FALSE}.}
 
 \item{zero}{A matrix of ones and zeros, the same size as the beta to sample. Zero indicates a structural zero in the beta.
-In the event that this is specified, when everything returned is of size \code{sum(zero)}.}
+In the event that this is specified, everything returned is of size \code{sum(zero)}.}
 
 \item{X}{the data matrix on \code{beta}}
 

@@ -23,7 +23,7 @@
 #' @param diag If \code{TRUE}, both \code{V} and \code{Q0} are assumed (but not confirmed!) to be diagonal,
 #'   which can speed up the Cholesky decomposition up to 100x. Default \code{FALSE}.
 #' @param zero A matrix of ones and zeros, the same size as the beta to sample. Zero indicates a structural zero in the beta.
-#'   In the event that this is specified, when everything returned is of size \code{sum(zero)}.
+#'   In the event that this is specified, everything returned is of size \code{sum(zero)}.
 #' @param ... Other arguments. Examples include \code{verbose=}, \code{take.chol=}, and
 #'   \code{Rstruct=}.
 #' @param params.only Should just a list of the updated parameters be returned?
@@ -142,9 +142,7 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
         if(!missing(newQ.chol)) warning("'newQ.chol=' is being ignored")
         newQ
       }
-      out <- drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
-      if(!is.null(zero)) out <- as.vector(replace(zero, zero == 1, out))
-      out
+      drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
     }
   }
 }
@@ -247,9 +245,7 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
         if(!missing(newQ.chol)) warning("'newQ.chol=' is being ignored")
         newQ
       }
-      out <- drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
-      if(!is.null(zero)) out <- as.vector(replace(zero, zero == 1, out))
-      out
+      drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
     }
   }
 }
