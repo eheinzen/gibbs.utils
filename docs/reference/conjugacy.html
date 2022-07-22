@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -154,6 +154,7 @@
   newQ <span class='op'>=</span> <span class='va'>V</span> <span class='op'>%x%</span> <span class='va'>U</span> <span class='op'>+</span> <span class='va'>Q0</span>,
   newQ.chol <span class='op'>=</span> <span class='fu'><a href='utilities.html'>gu_chol</a></span><span class='op'>(</span><span class='va'>newQ</span><span class='op'>)</span>,
   diag <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  zero <span class='op'>=</span> <span class='cn'>NULL</span>,
   params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
 
@@ -181,19 +182,7 @@
   newQ <span class='op'>=</span> <span class='va'>V</span> <span class='op'>%x%</span> <span class='va'>XtUX</span> <span class='op'>+</span> <span class='va'>Q0</span>,
   newQ.chol <span class='op'>=</span> <span class='fu'><a href='utilities.html'>gu_chol</a></span><span class='op'>(</span><span class='va'>newQ</span><span class='op'>)</span>,
   diag <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span>
-
-<span class='fu'>conj_diagmatlm_beta</span><span class='op'>(</span>
-  <span class='va'>y</span>,
-  <span class='va'>X</span>,
-  <span class='va'>V</span>,
-  U <span class='op'>=</span> <span class='cn'>NULL</span>,
-  mu0 <span class='op'>=</span> <span class='cn'>NULL</span>,
-  <span class='va'>Q0</span>,
-  <span class='va'>...</span>,
-  newQ <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='va'>E</span><span class='op'>)</span> <span class='op'>%*%</span> <span class='op'>(</span><span class='va'>V</span> <span class='op'>%x%</span> <span class='op'>(</span><span class='va'>XtU</span> <span class='op'>%*%</span> <span class='va'>X</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%*%</span> <span class='va'>E</span> <span class='op'>+</span> <span class='va'>Q0</span>,
-  newQ.chol <span class='op'>=</span> <span class='fu'><a href='utilities.html'>gu_chol</a></span><span class='op'>(</span><span class='va'>newQ</span><span class='op'>)</span>,
+  zero <span class='op'>=</span> <span class='cn'>NULL</span>,
   params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
 
@@ -277,6 +266,11 @@ vector/matrix of all zeros, but a little faster.</p></td>
       <th>diag</th>
       <td><p>If <code>TRUE</code>, both <code>V</code> and <code>Q0</code> are assumed (but not confirmed!) to be diagonal,
 which can speed up the Cholesky decomposition up to 100x. Default <code>FALSE</code>.</p></td>
+    </tr>
+    <tr>
+      <th>zero</th>
+      <td><p>A matrix of ones and zeros, the same size as the beta to sample. Zero indicates a structural zero in the beta.
+In the event that this is specified, when everything returned is of size <code><a href='https://rdrr.io/r/base/sum.html'>sum(zero)</a></code>.</p></td>
     </tr>
     <tr>
       <th>X</th>

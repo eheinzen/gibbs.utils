@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -193,12 +193,55 @@ Y \sim \mathcal{MN}_{n,p}(X\mathop{\mathrm{diag}}{\beta}, U, V)
 \tilde{Q} &amp;= E^\intercal(I_p \otimes X^\intercal) (V \otimes U) (I_p \otimes X)E + Q_0\\
 &amp;=E^\intercal(I_p \otimes X^\intercal) ((VI_p) \otimes (UX))E + Q_0\\
 &amp;= E^\intercal((I_pVI_p) \otimes (X^\intercal U X))E + Q_0\\
-&amp;= E^\intercal (V \otimes (X^\intercal U X))E + Q_0
+&amp;= E^\intercal (V \otimes (X^\intercal U X))E + Q_0 \\
+&amp;= \sum E^\intercal (V \otimes (X^\intercal U X))(e_j \otimes (e_j e_j^\intercal)) + Q_0 \\
+&amp;= \sum E^\intercal ((Ve_j) \otimes (X^\intercal U X e_j e_j^\intercal)) \\
+&amp;= \sum  ((Ve_j) \otimes (X^\intercal U X e_j e_j^\intercal)) \\
+&amp;= \sum \sum (e_i^\intercal Ve_j) \otimes (e_i e_i^\intercal X^\intercal U X e_j e_j^\intercal) \\
+&amp;= \sum \sum V_{ij} (e_i (X^\intercal U X)_{ij} e_j^\intercal) \\
+&amp;= \sum \sum V_{ij}(X^\intercal U X)_{ij} e_i e_j^\intercal \\
+&amp;= V \odot (X^\intercal U X)
 \end{split}
 \end{equation}\]</span></p>
 <p>Then we get the mean as in </p>
 <p><span class="math display">\[\begin{equation}
-\tilde{\mu} = \tilde{Q}^{-1}\left[E^\intercal\mathop{\mathrm{vec}}{(X^\intercal UYV)} + Q_0 \mu_0 \right]
+\begin{split}
+\tilde{\mu} &amp;= \tilde{Q}^{-1}\left[E^\intercal\mathop{\mathrm{vec}}{(X^\intercal UYV)} + Q_0 \mu_0 \right] \\
+&amp;= \tilde{Q}^{-1}\left[\mathop{\mathrm{diag}}(X^\intercal UYV) + Q_0 \mu_0 \right]
+\end{split}
+\end{equation}\]</span></p>
+</div>
+<div id="matrix-normal-regression-beta-with-structural-zeros" class="section level2">
+<h2 class="hasAnchor">
+<a href="#matrix-normal-regression-beta-with-structural-zeros" class="anchor"></a>Matrix Normal Regression: beta with structural zeros</h2>
+<p>More generally, here we consider when <span class="math inline">\(\beta\)</span> has structural zeros. This is equivalent to setting <span class="math inline">\(Q_0\)</span> entries to <span class="math inline">\(\infty\)</span> where appropriate (in fact, that’s the the code does in some cases). However, when <span class="math inline">\(\beta\)</span> is sparse, we can gain efficiency by not computing the Kronecker product of <span class="math inline">\(V\)</span> and <span class="math inline">\(U\)</span>.</p>
+<p>Let <span class="math inline">\(\beta\)</span> be <span class="math inline">\(m\)</span> by <span class="math inline">\(p\)</span>, and <span class="math inline">\(X\)</span> be <span class="math inline">\(n\)</span> by <span class="math inline">\(m\)</span>. Define a matrix <span class="math inline">\(Z\)</span> that is <span class="math inline">\(m\)</span> by <span class="math inline">\(p\)</span>, such that <span class="math inline">\(Z_{ij} = 0 \iff \beta_{ij} \equiv 0\)</span>, else <span class="math inline">\(z_{ij}=1\)</span>. Then denote <span class="math inline">\(\beta_Z\)</span> as the (vectorized) vector corresponding to the nonzero entries of <span class="math inline">\(\beta\)</span>.</p>
+<p>We will further design a matrix <span class="math inline">\(E\)</span> which is <span class="math inline">\(mp\)</span> by <span class="math inline">\(z = \sum Z_{ij}\)</span>. Let <span class="math inline">\(i \in \{1, ..., z\}\)</span> denote the i-th nonzero element of <span class="math inline">\(Z\)</span> (counting down rows first, then across columns, as with standard vectorization). Let <span class="math inline">\(m(i)\)</span> denote the row of that element, and let <span class="math inline">\(p(i)\)</span> denote the column of that element in <span class="math inline">\(Z\)</span>. Then we define <span class="math display">\[E = \sum_{i=1}^{z} e^p_{p(i)} \otimes (e^m_{m(i)} {e^z_{i}}^\intercal)\]</span></p>
+<p>Alternatively, we can define <span class="math inline">\(E\)</span> as the column-subset of the <span class="math inline">\(mp\)</span> by <span class="math inline">\(mp\)</span> identity matrix, whose columns correspond to the <span class="math inline">\(z\)</span> nonzero entries of <span class="math inline">\(\mathop{\mathrm{vec}}Z\)</span>.</p>
+<p>Note then that <span class="math inline">\(E\beta_Z = \mathop{\mathrm{vec}}\beta\)</span> and that <span class="math inline">\(\beta_Z = E^\intercal \mathop{\mathrm{vec}}\beta\)</span></p>
+<p>So then we have</p>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+\mathop{\mathrm{vec}}(Y) &amp;\sim \mathcal{N}(\mathop{\mathrm{vec}}(X\beta) = (I_p \otimes X)\mathop{\mathrm{vec}}(\beta) = (I_p \otimes X)E\beta_Z, V \otimes U) \\
+\beta_Z &amp;\sim \mathcal{N}(\mu_0, Q_0)
+\end{split}
+\end{equation}\]</span></p>
+<p>We jump to a temporary results from the diagonal beta derivation:</p>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+\tilde{Q} &amp;= E^\intercal (V \otimes (X^\intercal U X))E + Q_0 \\
+&amp;= Q_0 + \sum \sum ({e^p_{p(i)}}^\intercal V e^p_{p(j)}) \otimes (e^z_{i} {e^m_{m(i)}}^\intercal X^\intercal U X e^m_{m(j)} {e^z_{j}}^\intercal) \\
+&amp;= Q_0 + \sum \sum V_{p(i)p(j)} (e^z_{i} (X^\intercal U X)_{m(i)m(j)} {e^z_{j}}^\intercal) \\
+&amp;= Q_0 + \sum \sum V_{p(i)p(j)}(X^\intercal U X)_{m(i)m(j)} e^z_{i} {e^z_{j}}^\intercal \\
+&amp;= \{Q_{ij}\} = \{ V_{p(i)p(j)}(X^\intercal U X)_{m(i)m(j)} + {Q_0}_{ij} \}
+\end{split}
+\end{equation}\]</span></p>
+<p>Then we get the mean</p>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+\tilde{\mu} &amp;= \tilde{Q}^{-1}\left[E^\intercal\mathop{\mathrm{vec}}{(X^\intercal UYV)} + Q_0 \mu_0 \right] \\
+&amp;= \tilde{Q}^{-1}\left[(X^\intercal UYV)_Z + Q_0 \mu_0 \right]
+\end{split}
 \end{equation}\]</span></p>
 </div>
 <div id="normal-regression-beta" class="section level2">
