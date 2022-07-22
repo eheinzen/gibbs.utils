@@ -22,6 +22,8 @@
 #' @param XtX,V0_inv,Xbeta,newQ,newQ.chol pre-computed "shortcut" arguments for efficiency reasons
 #' @param diag If \code{TRUE}, both \code{V} and \code{Q0} are assumed (but not confirmed!) to be diagonal,
 #'   which can speed up the Cholesky decomposition up to 100x. Default \code{FALSE}.
+#' @param zero A matrix of ones and zeros, the same size as the beta to sample. Zero indicates a structural zero in the beta.
+#'   In the event that this is specified, when everything returned is of size \code{sum(zero)}.
 #' @param ... Other arguments. Examples include \code{verbose=}, \code{take.chol=}, and
 #'   \code{Rstruct=}.
 #' @param params.only Should just a list of the updated parameters be returned?
@@ -69,20 +71,39 @@ conj_mvnorm_mu <- function(y, Q, mu0 = NULL, Q0 = diag(0.001, p), ..., newQ = mu
 #' @rdname conjugacy
 #' @export
 conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
-                            newQ = V %x% U + Q0, newQ.chol = gu_chol(newQ), diag = FALSE, params.only = FALSE) {
+                            newQ = V %x% U + Q0, newQ.chol = gu_chol(newQ), diag = FALSE, zero = NULL, params.only = FALSE) {
   if(!is.matrix(y)) stop("'y' must be a matrix")
   if(is.matrix(mu0)) mu0 <- as.numeric(mu0)
-  if(is.null(U)) U <- diag(nrow(Q0) / nrow(V))
+  if(is.null(U)) U <- diag(1, nrow(Q0) / nrow(V))
+  m <- ncol(U)
+  p <- nrow(V)
+
+  z <- if(is.null(zero)) m*p else {
+    if(!is.matrix(zero) || nrow(zero) != m || ncol(zero) != p) stop("'zero' must be of dimension ", m, " x ", p)
+    sum(zero == 1)
+  }
+  if(any(dim(Q0) != z)) stop("'Q0' should be of dimension ", z, " x ", z)
+  if(!is.null(mu0) && length(mu0) != z) stop("'mu0' must be of length ", z)
 
   if(diag) {
     if(!missing(newQ) || !missing(newQ.chol)) warning("Arguments 'newQ' and 'newQ.chol' are being ignored because diag = TRUE")
     if(is.null(mu0)) mu0 <- 0
-    Q0.mat.lst <- asplit(matrix(diag(Q0), nrow = ncol(U), ncol = nrow(V)), 2)
-    mu0.lst <- asplit(matrix(mu0, nrow = ncol(U), ncol = nrow(V)), 2)
+    Q0 <- diag(Q0)
+    if(!is.null(zero)) {
+      Q0 <- as.vector(replace(zero, zero == 1, Q0))
+      mu0 <- as.vector(replace(zero, zero == 1, mu0))
+    }
+    Q0.mat.lst <- asplit(matrix(Q0, nrow = m, ncol = p), 2)
+    mu0.lst <- asplit(matrix(mu0, nrow = m, ncol = p), 2)
     y.lst <- asplit(y, 2)
-    tmp <- Map(function(v, q, m, yy) {
+    zero.lst <- if(is.null(zero)) rep_len(list(NULL), p) else asplit(zero == 1, 2)
+    tmp <- Map(function(v, q, m, yy, zz) {
       newQ <- v * U + diag(q)
       b <- q*m + as.numeric(U %*% yy * v)
+      if(!is.null(zz)) {
+        newQ <- newQ[zz, zz, drop = FALSE]
+        b <- b[zz]
+      }
 
       if(params.only) {
         newQ.inv <- chol_inv(newQ)
@@ -91,7 +112,7 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
       } else {
         drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
       }
-    }, v = diag(V), q = Q0.mat.lst, m = mu0.lst, yy = y.lst)
+    }, v = diag(V), q = Q0.mat.lst, m = mu0.lst, yy = y.lst, zz = zero.lst)
     if(params.only) {
       return(gu_params(mu = lapply(tmp, "[[", "mu"), Q = lapply(tmp, "[[", "Q"), Q.inv = lapply(tmp, "[[", "Q.inv"), b = lapply(tmp, "[[", "b")))
     }
@@ -99,7 +120,16 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
 
   } else {
     Q0mu0 <- if(is.null(mu0)) 0 else Q0 %*% mu0
-    b <- Q0mu0 + as.numeric(U %*% y %*% V)
+    UyV <- U %*% y %*% V
+    b <- Q0mu0 + if(is.null(zero)) as.numeric(UyV) else UyV[zero == 1]
+    if(missing(newQ) && missing(newQ.chol) && !is.null(zero)) {
+      rz <- row(zero)[zero == 1]
+      cz <- col(zero)[zero == 1]
+      newQ <- matrix(0, z, z) #this method is faster than using rep, apparently
+      ii <- as.vector(row(newQ))
+      jj <- as.vector(col(newQ))
+      newQ[] <- V[cbind(cz[ii], cz[jj])] * U[cbind(rz[ii], rz[jj])] + Q0
+    }
 
     if(params.only) {
       newQ.inv <- chol2inv(newQ.chol)
@@ -112,7 +142,9 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
         if(!missing(newQ.chol)) warning("'newQ.chol=' is being ignored")
         newQ
       }
-      drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
+      out <- drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
+      if(!is.null(zero)) out <- as.vector(replace(zero, zero == 1, out))
+      out
     }
   }
 }
@@ -142,23 +174,41 @@ conj_lm_beta <- function(y, X, XtX = crossprod(X), tau, mu0 = NULL, Q0, ...,
 #' @rdname conjugacy
 #' @export
 conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
-                            newQ = V %x% XtUX + Q0, newQ.chol = gu_chol(newQ), diag = FALSE, params.only = FALSE) {
+                            newQ = V %x% XtUX + Q0, newQ.chol = gu_chol(newQ), diag = FALSE, zero = NULL, params.only = FALSE) {
   if(!is.matrix(y)) stop("'y' must be a matrix")
   if(is.matrix(mu0)) mu0 <- as.numeric(mu0)
+  m <- ncol(X)
+  p <- nrow(V)
 
+  z <- if(is.null(zero)) m*p else {
+    if(!is.matrix(zero) || nrow(zero) != m || ncol(zero) != p) stop("'zero' must be of dimension ", m, " x ", p)
+    sum(zero == 1)
+  }
+  if(any(dim(Q0) != z)) stop("'Q0' should be of dimension ", z, " x ", z)
+  if(!is.null(mu0) && length(mu0) != z) stop("'mu0' must be of length ", z)
   XtU <- if(is.null(U)) t(X) else t(X) %*% U
   XtUX <- XtU %*% X
 
   if(diag) {
     if(!missing(newQ) || !missing(newQ.chol)) warning("Arguments 'newQ' and 'newQ.chol' are being ignored because diag = TRUE")
     if(is.null(mu0)) mu0 <- 0
-    Q0.mat.lst <- asplit(matrix(diag(Q0), nrow = ncol(X), ncol = nrow(V)), 2)
-    mu0.lst <- asplit(matrix(mu0, nrow = ncol(X), ncol = nrow(V)), 2)
+    Q0 <- diag(Q0)
+    if(!is.null(zero)) {
+      Q0 <- as.vector(replace(zero, zero == 1, Q0))
+      mu0 <- as.vector(replace(zero, zero == 1, mu0))
+    }
+    Q0.mat.lst <- asplit(matrix(Q0, nrow = m, ncol = p), 2)
+    mu0.lst <- asplit(matrix(mu0, nrow = m, ncol = p), 2)
     y.lst <- asplit(y, 2)
-    tmp <- Map(function(v, q, m, yy) {
+    zero.lst <- if(is.null(zero)) rep_len(list(NULL), p) else asplit(zero == 1, 2)
+    tmp <- Map(function(v, q, m, yy, zz) {
 
       newQ <- v * XtUX + diag(q)
       b <- q*m + as.numeric(XtU %*% yy * v)
+      if(!is.null(zz)) {
+        newQ <- newQ[zz, zz, drop = FALSE]
+        b <- b[zz]
+      }
 
       if(params.only) {
         newQ.inv <- chol_inv(newQ)
@@ -167,7 +217,7 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
       } else {
         drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
       }
-    }, v = diag(V), q = Q0.mat.lst, m = mu0.lst, yy = y.lst)
+    }, v = diag(V), q = Q0.mat.lst, m = mu0.lst, yy = y.lst, zz = zero.lst)
     if(params.only) {
       return(gu_params(mu = lapply(tmp, "[[", "mu"), Q = lapply(tmp, "[[", "Q"), Q.inv = lapply(tmp, "[[", "Q.inv"), b = lapply(tmp, "[[", "b")))
     }
@@ -175,7 +225,17 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
 
   } else {
     Q0mu0 <- if(is.null(mu0)) 0 else Q0 %*% mu0
-    b <- Q0mu0 + as.numeric(XtU %*% y %*% V)
+    XtUyV <- XtU %*% y %*% V
+    b <- Q0mu0 + if(is.null(zero)) as.numeric(XtUyV) else XtUyV[zero == 1]
+    if(missing(newQ) && missing(newQ.chol) && !is.null(zero)) {
+      rz <- row(zero)[zero == 1]
+      cz <- col(zero)[zero == 1]
+      newQ <- matrix(0, z, z) #this method is faster than using rep, apparently
+      ii <- as.vector(row(newQ))
+      jj <- as.vector(col(newQ))
+      newQ[] <- V[cbind(cz[ii], cz[jj])] * XtUX[cbind(rz[ii], rz[jj])] + Q0
+    }
+
     if(params.only) {
       newQ.inv <- chol2inv(newQ.chol)
       mu <- drop(newQ.inv %*% b)
@@ -187,41 +247,12 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
         if(!missing(newQ.chol)) warning("'newQ.chol=' is being ignored")
         newQ
       }
-      drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
+      out <- drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
+      if(!is.null(zero)) out <- as.vector(replace(zero, zero == 1, out))
+      out
     }
   }
 }
-
-#' @rdname conjugacy
-#' @export
-conj_diagmatlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
-                                newQ = V * (XtU %*% X) + Q0, newQ.chol = gu_chol(newQ), params.only = FALSE) {
-  if(!is.matrix(y)) stop("'y' must be a matrix")
-  if(is.matrix(mu0)) mu0 <- as.numeric(mu0)
-
-  p <- ncol(y)
-  XtU <- if(is.null(U)) t(X) else t(X) %*% U
-  Q0mu0 <- if(is.null(mu0)) 0 else Q0 %*% mu0
-  b <- Q0mu0 + diag(XtU %*% y %*% V)
-
-  if(params.only) {
-    newQ.inv <- chol2inv(newQ.chol)
-    mu <- drop(newQ.inv %*% b)
-    gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv, b = drop(b))
-  } else {
-    newQ <- if(!missing(newQ.chol) && is.matrix(newQ.chol)) {
-      gu_chol(newQ.chol, take.chol = FALSE) # the cholesky shouldn't be taken anymore after this
-    } else {
-      if(!missing(newQ.chol)) warning("'newQ.chol=' is being ignored")
-      newQ
-    }
-    drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
-  }
-}
-
-
-
-
 
 
 

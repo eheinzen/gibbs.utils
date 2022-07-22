@@ -148,12 +148,12 @@ Then we get
 &=E^\intercal(I_p \otimes X^\intercal) ((VI_p) \otimes (UX))E + Q_0\\
 &= E^\intercal((I_pVI_p) \otimes (X^\intercal U X))E + Q_0\\
 &= E^\intercal (V \otimes (X^\intercal U X))E + Q_0 \\
-&= \sum E^\intercal (V \otimes (X^\intercal U X))(e_i \otimes (e_i e_i^\intercal)) + Q_0 \\
-&= \sum E^\intercal ((Ve_i) \otimes (X^\intercal U X e_i e_i^\intercal)) \\
-&= \sum  ((Ve_i) \otimes (X^\intercal U X e_i e_i^\intercal)) \\
-&= \sum \sum (e_j^\intercal Ve_i) \otimes (e_j e_j^\intercal X^\intercal U X e_i e_i^\intercal) \\
-&= \sum \sum V_{ji} (e_j (X^\intercal U X)_{ji} e_i^\intercal) \\
-&= \sum \sum V_{ji}(X^\intercal U X)_{ji} e_j e_i^\intercal \\
+&= \sum E^\intercal (V \otimes (X^\intercal U X))(e_j \otimes (e_j e_j^\intercal)) + Q_0 \\
+&= \sum E^\intercal ((Ve_j) \otimes (X^\intercal U X e_j e_j^\intercal)) \\
+&= \sum  ((Ve_j) \otimes (X^\intercal U X e_j e_j^\intercal)) \\
+&= \sum \sum (e_i^\intercal Ve_j) \otimes (e_i e_i^\intercal X^\intercal U X e_j e_j^\intercal) \\
+&= \sum \sum V_{ij} (e_i (X^\intercal U X)_{ij} e_j^\intercal) \\
+&= \sum \sum V_{ij}(X^\intercal U X)_{ij} e_i e_j^\intercal \\
 &= V \odot (X^\intercal U X)
 \end{split}
 \end{equation}
@@ -166,6 +166,56 @@ Then we get the mean as in \eqref{eq:matnormmu}
 &= \tilde{Q}^{-1}\left[\diag(X^\intercal UYV) + Q_0 \mu_0 \right]
 \end{split}
 \end{equation}
+
+
+
+## Matrix Normal Regression: beta with structural zeros
+
+More generally, here we consider when $\beta$ has structural zeros. This is equivalent to setting $Q_0$ entries to $\infty$ where appropriate (in fact,
+that's the the code does in some cases). However, when $\beta$ is sparse, we can gain efficiency by not computing the Kronecker product of $V$ and $U$.
+
+Let $\beta$ be $m$ by $p$, and $X$ be $n$ by $m$. Define a matrix $Z$ that is $m$ by $p$, such that $Z_{ij} = 0 \iff \beta_{ij} \equiv 0$, else $z_{ij}=1$.
+Then denote $\beta_Z$ as the (vectorized) vector corresponding to the nonzero entries of $\beta$.
+
+We will further design a matrix $E$ which is $mp$ by $z = \sum Z_{ij}$. Let $i \in \{1, ..., z\}$ denote the i-th nonzero element of $Z$
+(counting down rows first, then across columns, as with standard vectorization). Let $m(i)$ denote the row of that element, and let $p(i)$ denote the
+column of that element in $Z$. Then we define 
+$$E = \sum_{i=1}^{z} e^p_{p(i)} \otimes (e^m_{m(i)} {e^z_{i}}^\intercal)$$
+
+Alternatively, we can define $E$ as the column-subset of the $mp$ by $mp$ identity matrix, whose columns correspond to the $z$ nonzero entries of $\vect Z$.
+
+Note then that $E\beta_Z = \vect\beta$ and that $\beta_Z = E^\intercal \vect\beta$
+
+So then we have
+
+\begin{equation}
+\begin{split}
+\vect(Y) &\sim \norm(\vect(X\beta) = (I_p \otimes X)\vect(\beta) = (I_p \otimes X)E\beta_Z, V \otimes U) \\
+\beta_Z &\sim \norm(\mu_0, Q_0)
+\end{split}
+\end{equation}
+
+We jump to a temporary results from the diagonal beta derivation:
+
+\begin{equation}
+\begin{split}
+\tilde{Q} &= E^\intercal (V \otimes (X^\intercal U X))E + Q_0 \\
+&= Q_0 + \sum \sum ({e^p_{p(i)}}^\intercal V e^p_{p(j)}) \otimes (e^z_{i} {e^m_{m(i)}}^\intercal X^\intercal U X e^m_{m(j)} {e^z_{j}}^\intercal) \\
+&= Q_0 + \sum \sum V_{p(i)p(j)} (e^z_{i} (X^\intercal U X)_{m(i)m(j)} {e^z_{j}}^\intercal) \\
+&= Q_0 + \sum \sum V_{p(i)p(j)}(X^\intercal U X)_{m(i)m(j)} e^z_{i} {e^z_{j}}^\intercal \\
+&= \{Q_{ij}\} = \{ V_{p(i)p(j)}(X^\intercal U X)_{m(i)m(j)} + {Q_0}_{ij} \}
+\end{split}
+\end{equation}
+
+Then we get the mean
+
+\begin{equation}
+\begin{split}
+\tilde{\mu} &= \tilde{Q}^{-1}\left[E^\intercal\vect{(X^\intercal UYV)} + Q_0 \mu_0 \right] \\
+&= \tilde{Q}^{-1}\left[(X^\intercal UYV)_Z + Q_0 \mu_0 \right]
+\end{split}
+\end{equation}
+
 
 ## Normal Regression: beta
 

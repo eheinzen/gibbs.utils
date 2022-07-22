@@ -7,7 +7,6 @@
 \alias{conj_matnorm_mu}
 \alias{conj_lm_beta}
 \alias{conj_matlm_beta}
-\alias{conj_diagmatlm_beta}
 \alias{conj_norm_tau}
 \alias{conj_mvnorm_Q}
 \alias{conj_matnorm_V}
@@ -40,6 +39,7 @@ conj_matnorm_mu(
   newQ = V \%x\% U + Q0,
   newQ.chol = gu_chol(newQ),
   diag = FALSE,
+  zero = NULL,
   params.only = FALSE
 )
 
@@ -67,19 +67,7 @@ conj_matlm_beta(
   newQ = V \%x\% XtUX + Q0,
   newQ.chol = gu_chol(newQ),
   diag = FALSE,
-  params.only = FALSE
-)
-
-conj_diagmatlm_beta(
-  y,
-  X,
-  V,
-  U = NULL,
-  mu0 = NULL,
-  Q0,
-  ...,
-  newQ = t(E) \%*\% (V \%x\% (XtU \%*\% X)) \%*\% E + Q0,
-  newQ.chol = gu_chol(newQ),
+  zero = NULL,
   params.only = FALSE
 )
 
@@ -143,6 +131,9 @@ vector/matrix of all zeros, but a little faster.}
 
 \item{diag}{If \code{TRUE}, both \code{V} and \code{Q0} are assumed (but not confirmed!) to be diagonal,
 which can speed up the Cholesky decomposition up to 100x. Default \code{FALSE}.}
+
+\item{zero}{A matrix of ones and zeros, the same size as the beta to sample. Zero indicates a structural zero in the beta.
+In the event that this is specified, when everything returned is of size \code{sum(zero)}.}
 
 \item{X}{the data matrix on \code{beta}}
 

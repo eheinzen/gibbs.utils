@@ -1,3 +1,11 @@
+# v1.2.0
+
+- Added the `zero=` argument to `conj_matnorm_mu()` and `conj_matlm_beta()` to indicate structural zeros. As such, we removed `conj_diagmatlm_beta()`, which
+  was slightly faster with small inputs, and about the same speed with larger ones. (Author's note: implementing a special condition for when `zero` is a diagonal
+  matrix does remedy the small inputs speed difference, but I decided it wasn't worth maintaining more code for something that's already very fast).
+  
+- Added the derivation of the above conjugate case to the vignette.
+
 # v1.1.1
 
 - Sped up `conj_diagmatlm_beta()` (and hence `gs_diagmatlm_beta()`) by taking the linear algebra

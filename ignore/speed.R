@@ -142,4 +142,20 @@ microbenchmark::microbenchmark(
 
 
 
+set.seed(99)
+n <- 1000
+p <- 154
+one <- matrix(rnorm(n*p), n, p)
+Q0 <- diag(1, p)
+ten <- diag(10, p)
+X <- matrix(sample(0:1, n*p, replace = TRUE), n, p)
+zero <- diag(1, p)
+old <- options(gu_ignore_diag_case = TRUE)
+microbenchmark::microbenchmark(
+  newer = conj_matlm_beta(y = one, X = X, V = ten, U = NULL, mu0 = NULL, Q0 = Q0, zero = zero, params.only = TRUE),
+  older = conj_diagmatlm_beta(y = one, X = X, V = ten, U = NULL, mu0 = NULL, Q0 = Q0, params.only = TRUE),
+  check = "equal", times = 10
+)
+options(old)
+
 
