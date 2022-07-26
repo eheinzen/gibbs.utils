@@ -1,3 +1,8 @@
+# v1.3.0
+
+- Replaced `gs_diagmatlm_beta()` with `gs_matlm_beta()`, which now passes arguments to `conj_matlm_beta()` through the dots. This includes the new `zero=` argument,
+  which can be used to recover the performance of `gs_diagmatlm_beta()`.
+
 # v1.2.1
 
 - I accidentally padded the results from the changes in v1.2.0 to include the structural zeros, when they shouldn't have.

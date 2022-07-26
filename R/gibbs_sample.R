@@ -5,15 +5,16 @@
 #'
 #' @inheritParams conjugacy
 #' @param a0,b0 Optional limits of truncation for a truncated normal prior.
+#' @param ... Passed through to \code{\link{conj_matlm_beta}}
 #' @name gibbs
 NULL
 
 #' @rdname gibbs
 #' @export
-gs_diagmatlm_beta <- function(beta, y, X, V, U = NULL, mu0 = NULL, Q0,
+gs_matlm_beta <- function(beta, ...,
                               a0 = rep_len(-Inf, length(beta)), b0 = rep_len(Inf, length(beta)),
                               params.only = FALSE) {
-  params <- conj_matlm_beta(y = y, X = X, V = V, U = U, mu0 = mu0, Q0 = Q0, zero = diag(1, length(beta)), params.only = TRUE)
+  params <- conj_matlm_beta(..., params.only = TRUE)
   if(params.only) {
     tmp <- lapply(seq_along(beta), function(i) {
       cond_mvnorm(y = beta, mu = params$mu, Q = params$Q, which = i, a = a0[i], b = b0[i], params.only = TRUE)

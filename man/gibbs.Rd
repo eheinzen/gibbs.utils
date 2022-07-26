@@ -2,17 +2,12 @@
 % Please edit documentation in R/gibbs_sample.R
 \name{gibbs}
 \alias{gibbs}
-\alias{gs_diagmatlm_beta}
+\alias{gs_matlm_beta}
 \title{Draw Gibbs Samples}
 \usage{
-gs_diagmatlm_beta(
+gs_matlm_beta(
   beta,
-  y,
-  X,
-  V,
-  U = NULL,
-  mu0 = NULL,
-  Q0,
+  ...,
   a0 = rep_len(-Inf, length(beta)),
   b0 = rep_len(Inf, length(beta)),
   params.only = FALSE
@@ -21,19 +16,7 @@ gs_diagmatlm_beta(
 \arguments{
 \item{beta}{the coefficients on \code{X}}
 
-\item{y}{realizations from the distribution whose parameter is being drawn. For multivariate conjugacy,
-this is an n-by-p matrix}
-
-\item{X}{the data matrix on \code{beta}}
-
-\item{V}{the precision matrices for the matrix-normal distribution}
-
-\item{U}{the precision matrices for the matrix-normal distribution}
-
-\item{mu0}{the prior mean of \code{mu} or \code{beta}. The default (\code{NULL}) is the same as an appropriately-dimensioned
-vector/matrix of all zeros, but a little faster.}
-
-\item{Q0}{the prior precision of \code{mu}.}
+\item{...}{Passed through to \code{\link{conj_matlm_beta}}}
 
 \item{a0, b0}{Optional limits of truncation for a truncated normal prior.}
 
