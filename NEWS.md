@@ -1,3 +1,7 @@
+# v1.3.1
+
+- Replaced `as.numeric()` with `as.vector()`, for compatibility with `spam`.
+
 # v1.3.0
 
 - Replaced `gs_diagmatlm_beta()` with `gs_matlm_beta()`, which now passes arguments to `conj_matlm_beta()` through the dots. This includes the new `zero=` argument,
