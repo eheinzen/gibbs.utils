@@ -1,3 +1,7 @@
+# v1.3.2
+
+- `options(spam.structurebased=FALSE)`.
+
 # v1.3.1
 
 - Replaced `as.numeric()` with `as.vector()`, for compatibility with `spam`.

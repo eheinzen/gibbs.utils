@@ -73,7 +73,7 @@ conj_mvnorm_mu <- function(y, Q, mu0 = NULL, Q0 = diag(0.001, p), ..., newQ = mu
 conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
                             newQ = V %x% U + Q0, newQ.chol = gu_chol(newQ), diag = FALSE, zero = NULL, params.only = FALSE) {
   if(!is.matrix(y)) stop("'y' must be a matrix")
-  if(is.matrix(mu0)) mu0 <- as.vector(mu0)
+  if(is.matrix(mu0)) mu0 <- vec(mu0)
   if(is.null(U)) U <- diag(1, nrow(Q0) / nrow(V))
   m <- ncol(U)
   p <- nrow(V)
@@ -90,8 +90,8 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
     if(is.null(mu0)) mu0 <- 0
     Q0 <- diag(Q0)
     if(!is.null(zero)) {
-      Q0 <- as.vector(replace(zero, zero == 1, Q0))
-      mu0 <- as.vector(replace(zero, zero == 1, mu0))
+      Q0 <- vec(replace(zero, zero == 1, Q0))
+      mu0 <- vec(replace(zero, zero == 1, mu0))
     }
     Q0.mat.lst <- asplit(matrix(Q0, nrow = m, ncol = p), 2)
     mu0.lst <- asplit(matrix(mu0, nrow = m, ncol = p), 2)
@@ -99,7 +99,7 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
     zero.lst <- if(is.null(zero)) rep_len(list(NULL), p) else asplit(zero == 1, 2)
     tmp <- Map(function(v, q, m, yy, zz) {
       newQ <- v * U + diag(q)
-      b <- q*m + as.vector(U %*% yy * v)
+      b <- q*m + vec(U %*% yy * v)
       if(!is.null(zz)) {
         newQ <- newQ[zz, zz, drop = FALSE]
         b <- b[zz]
@@ -121,7 +121,7 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
   } else {
     Q0mu0 <- if(is.null(mu0)) 0 else Q0 %*% mu0
     UyV <- U %*% y %*% V
-    b <- Q0mu0 + if(is.null(zero)) as.vector(UyV) else UyV[zero == 1]
+    b <- Q0mu0 + if(is.null(zero)) vec(UyV) else UyV[zero == 1]
     if(missing(newQ) && missing(newQ.chol) && !is.null(zero)) {
       rz <- row(zero)[zero == 1]
       cz <- col(zero)[zero == 1]
@@ -174,7 +174,7 @@ conj_lm_beta <- function(y, X, XtX = crossprod(X), tau, mu0 = NULL, Q0, ...,
 conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
                             newQ = V %x% XtUX + Q0, newQ.chol = gu_chol(newQ), diag = FALSE, zero = NULL, params.only = FALSE) {
   if(!is.matrix(y)) stop("'y' must be a matrix")
-  if(is.matrix(mu0)) mu0 <- as.vector(mu0)
+  if(is.matrix(mu0)) mu0 <- vec(mu0)
   m <- ncol(X)
   p <- nrow(V)
 
@@ -192,8 +192,8 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
     if(is.null(mu0)) mu0 <- 0
     Q0 <- diag(Q0)
     if(!is.null(zero)) {
-      Q0 <- as.vector(replace(zero, zero == 1, Q0))
-      mu0 <- as.vector(replace(zero, zero == 1, mu0))
+      Q0 <- vec(replace(zero, zero == 1, Q0))
+      mu0 <- vec(replace(zero, zero == 1, mu0))
     }
     Q0.mat.lst <- asplit(matrix(Q0, nrow = m, ncol = p), 2)
     mu0.lst <- asplit(matrix(mu0, nrow = m, ncol = p), 2)
@@ -202,7 +202,7 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
     tmp <- Map(function(v, q, m, yy, zz) {
 
       newQ <- v * XtUX + diag(q)
-      b <- q*m + as.vector(XtU %*% yy * v)
+      b <- q*m + vec(XtU %*% yy * v)
       if(!is.null(zz)) {
         newQ <- newQ[zz, zz, drop = FALSE]
         b <- b[zz]
@@ -224,7 +224,7 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
   } else {
     Q0mu0 <- if(is.null(mu0)) 0 else Q0 %*% mu0
     XtUyV <- XtU %*% y %*% V
-    b <- Q0mu0 + if(is.null(zero)) as.vector(XtUyV) else XtUyV[zero == 1]
+    b <- Q0mu0 + if(is.null(zero)) vec(XtUyV) else XtUyV[zero == 1]
     if(missing(newQ) && missing(newQ.chol) && !is.null(zero)) {
       rz <- row(zero)[zero == 1]
       cz <- col(zero)[zero == 1]

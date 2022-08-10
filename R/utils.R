@@ -7,6 +7,12 @@ check_one_or_all <- function(x, len) {
   if(length(x) == 1) rep_len(x, len) else if(length(x) == len) x else stop("'x' must be of length 1 or ", len)
 }
 
+vec <- function(...) {
+  op <- options(spam.structurebased=FALSE)
+  on.exit(options(op))
+  as.vector(...)
+}
+
 #' Other Utilities
 #'
 #' @param x A matrix for \code{chol_inv} or a numeric vector for \code{expit}
