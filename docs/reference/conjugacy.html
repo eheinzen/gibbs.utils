@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -161,7 +161,7 @@
 <span class='fu'>conj_lm_beta</span><span class='op'>(</span>
   <span class='va'>y</span>,
   <span class='va'>X</span>,
-  XtX <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/crossprod.html'>crossprod</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>,
+  XtX <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span> <span class='op'>%*%</span> <span class='va'>X</span>,
   <span class='va'>tau</span>,
   mu0 <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>Q0</span>,
@@ -179,6 +179,8 @@
   mu0 <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>Q0</span>,
   <span class='va'>...</span>,
+  XtU <span class='op'>=</span> <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NULL.html'>is.null</a></span><span class='op'>(</span><span class='va'>U</span><span class='op'>)</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span> <span class='kw'>else</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span> <span class='op'>%*%</span> <span class='va'>U</span>,
+  XtUX <span class='op'>=</span> <span class='va'>XtU</span> <span class='op'>%*%</span> <span class='va'>X</span>,
   newQ <span class='op'>=</span> <span class='va'>V</span> <span class='op'>%x%</span> <span class='va'>XtUX</span> <span class='op'>+</span> <span class='va'>Q0</span>,
   newQ.chol <span class='op'>=</span> <span class='fu'><a href='utilities.html'>gu_chol</a></span><span class='op'>(</span><span class='va'>newQ</span><span class='op'>)</span>,
   diag <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -196,6 +198,8 @@
   U <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>V0</span>,
   <span class='va'>v0</span>,
+  <span class='va'>...</span>,
+  ytUy <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='va'>ymu</span><span class='op'>)</span> <span class='op'>%*%</span> <span class='va'>U</span> <span class='op'>%*%</span> <span class='va'>ymu</span>,
   V0_inv <span class='op'>=</span> <span class='fu'><a href='utilities.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>V0</span><span class='op'>)</span>,
   params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
@@ -207,18 +211,6 @@
   Xbeta <span class='op'>=</span> <span class='va'>X</span> <span class='op'>%*%</span> <span class='va'>beta</span>,
   a0 <span class='op'>=</span> <span class='fl'>0.001</span>,
   b0 <span class='op'>=</span> <span class='fl'>0.001</span>,
-  params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span>
-
-<span class='fu'>conj_matlm_V</span><span class='op'>(</span>
-  <span class='va'>y</span>,
-  <span class='va'>X</span>,
-  <span class='va'>beta</span>,
-  Xbeta <span class='op'>=</span> <span class='va'>X</span> <span class='op'>%*%</span> <span class='va'>beta</span>,
-  U <span class='op'>=</span> <span class='cn'>NULL</span>,
-  <span class='va'>V0</span>,
-  <span class='va'>v0</span>,
-  V0_inv <span class='op'>=</span> <span class='fu'><a href='utilities.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>V0</span><span class='op'>)</span>,
   params.only <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
 
@@ -277,7 +269,7 @@ In the event that this is specified, everything returned is of size <code><a hre
       <td><p>the data matrix on <code>beta</code></p></td>
     </tr>
     <tr>
-      <th>XtX, V0_inv, Xbeta, newQ, newQ.chol</th>
+      <th>XtX, XtU, XtUX, ytUy, V0_inv, Xbeta, newQ, newQ.chol</th>
       <td><p>pre-computed "shortcut" arguments for efficiency reasons</p></td>
     </tr>
     <tr>

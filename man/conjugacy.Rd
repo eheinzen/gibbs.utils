@@ -11,7 +11,6 @@
 \alias{conj_mvnorm_Q}
 \alias{conj_matnorm_V}
 \alias{conj_lm_tau}
-\alias{conj_matlm_V}
 \alias{conj_binom_p}
 \title{Draw Conjugate Samples}
 \usage{
@@ -46,7 +45,7 @@ conj_matnorm_mu(
 conj_lm_beta(
   y,
   X,
-  XtX = crossprod(X),
+  XtX = t(X) \%*\% X,
   tau,
   mu0 = NULL,
   Q0,
@@ -64,6 +63,8 @@ conj_matlm_beta(
   mu0 = NULL,
   Q0,
   ...,
+  XtU = if (is.null(U)) t(X) else t(X) \%*\% U,
+  XtUX = XtU \%*\% X,
   newQ = V \%x\% XtUX + Q0,
   newQ.chol = gu_chol(newQ),
   diag = FALSE,
@@ -81,6 +82,8 @@ conj_matnorm_V(
   U = NULL,
   V0,
   v0,
+  ...,
+  ytUy = t(ymu) \%*\% U \%*\% ymu,
   V0_inv = chol_inv(V0),
   params.only = FALSE
 )
@@ -92,18 +95,6 @@ conj_lm_tau(
   Xbeta = X \%*\% beta,
   a0 = 0.001,
   b0 = 0.001,
-  params.only = FALSE
-)
-
-conj_matlm_V(
-  y,
-  X,
-  beta,
-  Xbeta = X \%*\% beta,
-  U = NULL,
-  V0,
-  v0,
-  V0_inv = chol_inv(V0),
   params.only = FALSE
 )
 
@@ -137,7 +128,7 @@ In the event that this is specified, everything returned is of size \code{sum(ze
 
 \item{X}{the data matrix on \code{beta}}
 
-\item{XtX, V0_inv, Xbeta, newQ, newQ.chol}{pre-computed "shortcut" arguments for efficiency reasons}
+\item{XtX, XtU, XtUX, ytUy, V0_inv, Xbeta, newQ, newQ.chol}{pre-computed "shortcut" arguments for efficiency reasons}
 
 \item{mu}{the mean of the normal distribution from which \code{y} comes}
 
