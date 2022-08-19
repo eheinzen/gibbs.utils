@@ -1,3 +1,9 @@
+# v1.4.0
+
+- Removed `conj_matlm_V()`, which is nearly an exact duplicate of `conj_matnorm_V()`.
+
+- Added some shortcut arguments for `t(X) %*% U`, `t(X) %*% U %*% X`, and `t(ymu) %*% U %*% ymu` to `conj_matlm_beta()` and `conj_matnorm_V()`.
+
 # v1.3.2
 
 - `options(spam.structurebased=FALSE)`.

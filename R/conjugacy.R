@@ -19,7 +19,7 @@
 #' @param V,U the precision matrices for the matrix-normal distribution
 #' @param X the data matrix on \code{beta}
 #' @param beta the coefficients on \code{X}
-#' @param XtX,V0_inv,Xbeta,newQ,newQ.chol pre-computed "shortcut" arguments for efficiency reasons
+#' @param XtX,XtU,XtUX,ytUy,V0_inv,Xbeta,newQ,newQ.chol pre-computed "shortcut" arguments for efficiency reasons
 #' @param diag If \code{TRUE}, both \code{V} and \code{Q0} are assumed (but not confirmed!) to be diagonal,
 #'   which can speed up the Cholesky decomposition up to 100x. Default \code{FALSE}.
 #' @param zero A matrix of ones and zeros, the same size as the beta to sample. Zero indicates a structural zero in the beta.
@@ -149,7 +149,7 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
 
 #' @rdname conjugacy
 #' @export
-conj_lm_beta <- function(y, X, XtX = crossprod(X), tau, mu0 = NULL, Q0, ...,
+conj_lm_beta <- function(y, X, XtX = t(X) %*% X, tau, mu0 = NULL, Q0, ...,
                          newQ = tau * XtX + Q0, newQ.chol = gu_chol(newQ), params.only = FALSE) {
   Q0mu0 <- if(is.null(mu0)) 0 else Q0 %*% mu0
   b <- Q0mu0 + tau*t(X) %*% y
@@ -171,11 +171,11 @@ conj_lm_beta <- function(y, X, XtX = crossprod(X), tau, mu0 = NULL, Q0, ...,
 
 #' @rdname conjugacy
 #' @export
-conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
+conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ..., XtU = if(is.null(U)) t(X) else t(X) %*% U, XtUX = XtU %*% X,
                             newQ = V %x% XtUX + Q0, newQ.chol = gu_chol(newQ), diag = FALSE, zero = NULL, params.only = FALSE) {
   if(!is.matrix(y)) stop("'y' must be a matrix")
   if(is.matrix(mu0)) mu0 <- vec(mu0)
-  m <- ncol(X)
+  m <- ncol(XtUX)
   p <- nrow(V)
 
   z <- if(is.null(zero)) m*p else {
@@ -184,8 +184,6 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ...,
   }
   if(any(dim(Q0) != z)) stop("'Q0' should be of dimension ", z, " x ", z)
   if(!is.null(mu0) && length(mu0) != z) stop("'mu0' must be of length ", z)
-  XtU <- if(is.null(U)) t(X) else t(X) %*% U
-  XtUX <- XtU %*% X
 
   if(diag) {
     if(!missing(newQ) || !missing(newQ.chol)) warning("Arguments 'newQ' and 'newQ.chol' are being ignored because diag = TRUE")
@@ -285,15 +283,15 @@ conj_mvnorm_Q <- function(y, mu, V0, v0, V0_inv = chol_inv(V0), params.only = FA
 
 #' @rdname conjugacy
 #' @export
-conj_matnorm_V <- function(y, mu, U = NULL, V0, v0, V0_inv = chol_inv(V0), params.only = FALSE) {
+conj_matnorm_V <- function(y, mu, U = NULL, V0, v0, ..., ytUy = t(ymu) %*% U %*% ymu, V0_inv = chol_inv(V0), params.only = FALSE) {
   if(!is.matrix(y) || !is.matrix(mu)) stop("'y' and 'mu' must be matrices")
-  if(is.null(U)) {
+  if((missing(U) || is.null(U)) && missing(ytUy)) {
     return(conj_mvnorm_Q(y = y, mu = mu, v0 = v0, V0_inv = V0_inv, params.only = params.only))
   }
   n <- nrow(mu)
   stopifnot(identical(dim(y), dim(mu)))
   ymu <- y - mu
-  V2.inv <- V0_inv + t(ymu) %*% U %*% ymu
+  V2.inv <- V0_inv + ytUy
   V2 <- chol_inv(V2.inv)
   if(params.only) return(gu_params(V = V2, V.inv = V2.inv, v = n + v0))
   rWishart(
@@ -308,14 +306,6 @@ conj_matnorm_V <- function(y, mu, U = NULL, V0, v0, V0_inv = chol_inv(V0), param
 conj_lm_tau <- function(y, X, beta, Xbeta = X %*% beta, a0 = 0.001, b0 = 0.001, params.only = FALSE) {
   conj_norm_tau(y = y, mu = Xbeta, a0 = a0, b0 = b0, params.only = params.only)
 }
-
-#' @rdname conjugacy
-#' @export
-conj_matlm_V <- function(y, X, beta, Xbeta = X %*% beta, U = NULL, V0, v0, V0_inv = chol_inv(V0), params.only = FALSE) {
-  conj_matnorm_V(y = y, mu = Xbeta, U = U, v0 = v0, V0_inv = V0_inv, params.only = params.only)
-}
-
-
 
 
 
