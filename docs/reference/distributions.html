@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.1</span>
       </span>
     </div>
 
@@ -132,6 +132,8 @@
 
     <pre class="usage"><span class='fu'>dmvnorm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, detQ <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/det.html'>determinant</a></span><span class='op'>(</span><span class='va'>Q</span>, logarithm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>$</span><span class='va'>modulus</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
+<span class='fu'>dmvnorm_diff</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+
 <span class='fu'>dmatnorm</span><span class='op'>(</span>
   <span class='va'>x</span>,
   <span class='va'>mu</span>,
@@ -148,7 +150,7 @@
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
+      <th>x, y</th>
       <td><p>vector of quantiles</p></td>
     </tr>
     <tr>
@@ -177,6 +179,10 @@
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p><code>dmvnorm_diff(x, y, mu, Q)</code> is equivalent to (but usually twice as fast as)
+  <code>dmvnorm(x, mu, Q) - dmvnorm(y, mu, Q)</code>.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
