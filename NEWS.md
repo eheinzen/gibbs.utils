@@ -1,3 +1,8 @@
+# v1.4.1
+
+- Added `dmvnorm_diff()` for taking the difference of two (log-) densities, useful in, e.g. Metropolis-Hastings sampling, but faster
+  than taking individual densities twice.
+
 # v1.4.0
 
 - Removed `conj_matlm_V()`, which is nearly an exact duplicate of `conj_matnorm_V()`.

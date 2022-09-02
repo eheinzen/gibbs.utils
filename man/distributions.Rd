@@ -3,11 +3,14 @@
 \name{distributions}
 \alias{distributions}
 \alias{dmvnorm}
+\alias{dmvnorm_diff}
 \alias{dmatnorm}
 \alias{dlogitnorm}
 \title{Statistical Distributions}
 \usage{
 dmvnorm(x, mu, Q, detQ = determinant(Q, logarithm = TRUE)$modulus, log = TRUE)
+
+dmvnorm_diff(x, y, mu, Q, log = TRUE)
 
 dmatnorm(
   x,
@@ -22,7 +25,7 @@ dmatnorm(
 dlogitnorm(x, mu, sd, log = FALSE)
 }
 \arguments{
-\item{x}{vector of quantiles}
+\item{x, y}{vector of quantiles}
 
 \item{mu}{the mean}
 
@@ -38,4 +41,8 @@ dlogitnorm(x, mu, sd, log = FALSE)
 }
 \description{
 Statistical Distributions
+}
+\details{
+\code{dmvnorm_diff(x, y, mu, Q)} is equivalent to (but usually twice as fast as)
+  \code{dmvnorm(x, mu, Q) - dmvnorm(y, mu, Q)}.
 }

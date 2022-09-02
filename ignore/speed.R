@@ -159,3 +159,36 @@ microbenchmark::microbenchmark(
 options(old)
 
 
+
+
+
+set.seed(88)
+Q <- rWishart(1, 360, diag(1, 300))[, , 1]
+
+x <- matrix(rnorm(1000*300), 1000, 300)
+y <- matrix(rnorm(1000*300), 1000, 300)
+mu <- matrix(rnorm(1000*300), 1000, 300)
+expect_equal(
+  dmvnorm(x, mu, Q, log = TRUE) - dmvnorm(y, mu, Q, log = TRUE),
+  dmvnorm_diff(x, y, mu, Q, log = TRUE)
+)
+microbenchmark::microbenchmark(
+  dmvnorm(x, mu, Q, log = TRUE) - dmvnorm(y, mu, Q, log = TRUE),
+  dmvnorm_diff(x, y, mu, Q, log = TRUE)
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,13 +1,16 @@
 
 #' Statistical Distributions
 #'
-#' @param x vector of quantiles
+#' @param x,y vector of quantiles
 #' @param mu the mean
 #' @param sd the standard deviation
 #' @param Q the precision matrix
 #' @param V,U the precision matrices for the matrix-normal distribution
 #' @param detQ,detU,detV Pre-computed log-determinants
 #' @param log Should the log-density be returned?
+#' @details
+#'   \code{dmvnorm_diff(x, y, mu, Q)} is equivalent to (but usually twice as fast as)
+#'   \code{dmvnorm(x, mu, Q) - dmvnorm(y, mu, Q)}.
 #' @name distributions
 NULL
 
@@ -30,6 +33,27 @@ dmvnorm <- function(x, mu, Q, detQ = determinant(Q, logarithm = TRUE)$modulus, l
   den <- n*p/2 * log(2*pi)
   if(log) num - den else exp(num - den)
 }
+
+#' @rdname distributions
+#' @export
+dmvnorm_diff <- function(x, y, mu, Q, log = TRUE) {
+  if(!is.matrix(x)) {
+    x <- matrix(x, nrow = 1)
+    y <- matrix(y, nrow = 1)
+    mu <- matrix(mu, nrow = 1)
+  }
+  stopifnot(identical(dim(x), dim(mu)), identical(dim(y), dim(mu)))
+  p <- ncol(x)
+  n <- nrow(x)
+
+  # tr((x - mu) Q (x - mu)^T - (y - mu) Q (y - mu)^T)
+  # tr(XQX^T - YQY^T - 2(X - Y)Q mu^T)
+  # tr((X - Y)Q(X^T + Y^T - 2 mu^T))
+  # tr((X + Y - 2 mu)^T (X - Y) Q)
+  num <- -0.5*sum((x + y - 2*mu) * ((x - y) %*% Q))
+  if(log) num else exp(num)
+}
+
 
 #' @rdname distributions
 #' @export
