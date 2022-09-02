@@ -10,7 +10,7 @@
 #' @param log Should the log-density be returned?
 #' @details
 #'   \code{dmvnorm_diff(x, y, mu, Q)} is equivalent to (but usually twice as fast as)
-#'   \code{dmvnorm(x, mu, Q) - dmvnorm(y, mu, Q)}.
+#'   \code{dmvnorm(x, mu, Q) - dmvnorm(y, mu, Q)}. Likewise \code{dmatnorm_diff}.
 #' @name distributions
 NULL
 
@@ -78,6 +78,24 @@ dmatnorm <- function(x, mu, V, U = NULL, detV = determinant(V, logarithm = TRUE)
   num <- 0.5*(p*Udet + n*Vdet - sum(xmu * UxV))
   den <- n*p/2 * log(2*pi)
   if(log) num - den else exp(num - den)
+}
+
+#' @rdname distributions
+#' @export
+dmatnorm_diff <- function(x, y, mu, V, U = NULL, log = TRUE) {
+  stopifnot(identical(dim(x), dim(mu)), identical(dim(y), dim(mu)))
+  p <- ncol(x)
+  n <- nrow(x)
+  stopifnot(p == dim(V))
+  if(!is.null(U)) {
+    stopifnot(n == dim(U))
+  }
+
+
+  xyV <- (x - y) %*% V
+  UxV <- if(is.null(U)) xyV else U %*% xyV
+  num <- -0.5*sum((x + y - 2*mu) * UxV)
+  if(log) num else exp(num)
 }
 
 

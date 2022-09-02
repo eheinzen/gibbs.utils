@@ -1,3 +1,7 @@
+# v1.4.2
+
+- Added `dmatnorm_diff()`, akin to `dmvnorm_diff()`.
+  
 # v1.4.1
 
 - Added `dmvnorm_diff()` for taking the difference of two (log-) densities, useful in, e.g. Metropolis-Hastings sampling, but faster

@@ -5,6 +5,7 @@
 \alias{dmvnorm}
 \alias{dmvnorm_diff}
 \alias{dmatnorm}
+\alias{dmatnorm_diff}
 \alias{dlogitnorm}
 \title{Statistical Distributions}
 \usage{
@@ -21,6 +22,8 @@ dmatnorm(
   detU = determinant(U, logarithm = TRUE)$modulus,
   log = TRUE
 )
+
+dmatnorm_diff(x, y, mu, V, U = NULL, log = TRUE)
 
 dlogitnorm(x, mu, sd, log = FALSE)
 }
@@ -44,5 +47,5 @@ Statistical Distributions
 }
 \details{
 \code{dmvnorm_diff(x, y, mu, Q)} is equivalent to (but usually twice as fast as)
-  \code{dmvnorm(x, mu, Q) - dmvnorm(y, mu, Q)}.
+  \code{dmvnorm(x, mu, Q) - dmvnorm(y, mu, Q)}. Likewise \code{dmatnorm_diff}.
 }

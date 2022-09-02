@@ -26,4 +26,16 @@ test_that("dmatnorm", {
     dmatnorm(matrix(1:10, nrow = 5), matrix(0:9, nrow = 5), V = diag(c(1, 1/2)), U = diag(1/(100:104)), log = TRUE),
     sum(dnorm(1:10, 0:9, sqrt(c(100:104, 2*(100:104))), log = TRUE))
   )
+
+  V <- matrix(c(1, -0.5, -0.5, 1.25), 2, 2)
+  U <- diag(1/(100:104))
+  x <- matrix(1:10, nrow = 5)
+  y <- matrix(2:11, nrow = 5)
+  mu <- matrix(0:9, nrow = 5)
+  expect_equal(
+    dmatnorm(x, mu = mu, V = V, U = U, log = TRUE) - dmatnorm(y, mu = mu, V = V, U = U, log = TRUE),
+    dmatnorm_diff(x, y, mu, V = V, U = U, log = TRUE)
+  )
+
+
 })
