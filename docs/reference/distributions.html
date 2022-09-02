@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
       </span>
     </div>
 
@@ -144,6 +144,8 @@
   log <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span>
 
+<span class='fu'>dmatnorm_diff</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>V</span>, U <span class='op'>=</span> <span class='cn'>NULL</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+
 <span class='fu'>dlogitnorm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mu</span>, <span class='va'>sd</span>, log <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -182,7 +184,7 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>dmvnorm_diff(x, y, mu, Q)</code> is equivalent to (but usually twice as fast as)
-  <code>dmvnorm(x, mu, Q) - dmvnorm(y, mu, Q)</code>.</p>
+  <code>dmvnorm(x, mu, Q) - dmvnorm(y, mu, Q)</code>. Likewise <code>dmatnorm_diff</code>.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
