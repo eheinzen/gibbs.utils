@@ -53,3 +53,27 @@ NumericMatrix slice_sample_multinom_mv(List p_j, LogicalMatrix z, NumericMatrix 
   }
   return out;
 }
+
+
+
+// [[Rcpp::export]]
+NumericMatrix slice_sample_multinom_mv_zlist(List p_j, List z, NumericMatrix k, NumericMatrix n, NumericMatrix p_i, NumericMatrix mean, NumericMatrix Q, int j, double w, int nexpand, int ncontract) {
+  // p_j is a list of length r with matrices of dim i x j
+  // p_i is a matrix of dim r x i
+  // because we don't loop through the j-dim here, and because each r is assumed independent,
+  //   we don't reuse and elements of p_j in the log-likelihood; therefore, no need to update in this step
+  NumericMatrix out = clone(p_i);
+  for(int r=0; r < p_i.nrow(); r++) {
+    NumericMatrix pp_jj = p_j[r];
+    NumericVector kk = k(r, _);
+    NumericVector nn = n(r, _);
+    NumericVector mm = mean(r, _);
+    LogicalMatrix zz = z[r];
+    for(int i=0; i < p_i.ncol(); i++) {
+      // safe not to replace out(r, i) because it's not used in this calculation
+      double mmm = cond_mv_mean(out(r, _), mm, Q, i);
+      out(r, i) = one_multinom_slice(pp_jj(i, _), zz(i, _), kk[i], nn[i], mmm, Q(i, i), j, w, nexpand, ncontract);
+    }
+  }
+  return out;
+}

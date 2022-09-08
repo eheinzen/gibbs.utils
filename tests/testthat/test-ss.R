@@ -175,6 +175,30 @@ test_that("multivariate slice sampling works for multinomial", {
 
 
 
+test_that("multivariate slice sampling works 3-D z", {
+  tmp <- cbind(0, matrix(c(0, 0, 0.7, 0.7), nrow = 2))
+  p <- array(rep(tmp, each = 400), dim = c(400, 2, 3))
+  mean <- round(p)
+  set.seed(99)
+  n <- rpois(400*2, 1200)
+  k <- t(sapply(n, function(x) rmultinom(1, size = x, prob = c(0.25, 0.25, 0.5))))
+  dim(k) <- c(400, 2, 3)
+  stopifnot(rowSums(k, dims = 2) == n)
+
+  z <- matrix(1, nrow = 2, ncol = 3)
+  Q <- array(0, c(2, 2, 3))
+  for(j in 1:3) Q[, , j] <- matrix(c(2, 1, 1, 2), 2)
+  mean <- mean[, , -1]
+  Q <- Q[, , -1]
+  set.seed(9909)
+  m1 <- ss_multinom_reg(p = p, z = array(rep(z, each = 400), dim = dim(k)), k = k, mean = mean, precision = Q)
+  set.seed(9909)
+  m2 <- ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q)
+  expect_equal(m1, m2)
+})
+
+
+
 test_that("multivariate slice sampling works when ref == 'last'", {
   tmp <- cbind(matrix(-0.7, nrow = 2, ncol = 2), 0)
   p <- array(rep(tmp, each = 400), dim = c(400, 2, 3))

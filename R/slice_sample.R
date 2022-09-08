@@ -164,9 +164,17 @@ ss_multinom_reg <- function(p, z, k, mean, precision, ref = c("first", "last"), 
     stop("'precision' must be have dim = i x i x (j-1): ", d2[2], " x ", d2[2], " x ", d2[3])
   }
 
-  if(!identical(dim(z), d[2:3])) stop("'z' must be a matrix with dim = i x j")
-  z <- TRUE & z
-  if(any(!z & colSums(k))) stop("z == 0 but k > 0")
+  err <- paste0("'z' must be a matrix with dim = i x j (", d[2], " x ", d[3], ") or an array with dim = r x i x j (", d[1], " x ", d[2], " x ", d[3], ")")
+  if(length(dim(z)) == 3) {
+    if(!identical(dim(z), d)) stop(err)
+    z <- TRUE & z
+    if(any(!z & k > 0)) stop("z == 0 but k > 0")
+    z <- asplit(z, 1)
+  } else {
+    if(!identical(dim(z), d[2:3])) stop(err)
+    z <- TRUE & z
+    if(any(!z & colSums(k) > 0)) stop("z == 0 but k > 0")
+  }
   n <- rowSums(k, dims = 2)
   subset_third <- function(x, i) {
     # this is in case 'x' has other dims of length 1
@@ -174,8 +182,9 @@ ss_multinom_reg <- function(p, z, k, mean, precision, ref = c("first", "last"), 
     dim(out) <- dim(x)[1:2]
     out
   }
+  FUN <- if(is.list(z)) slice_sample_multinom_mv_zlist else slice_sample_multinom_mv
   for(j in seq_len(d[3])[-ref]) {
-    p[, , j] <- slice_sample_multinom_mv(
+    p[, , j] <- FUN(
       p_j = unclass(asplit(p, 1)),
       z = z,
       k = subset_third(k, j),

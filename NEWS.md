@@ -1,3 +1,7 @@
+# v1.4.3
+
+- `ss_multinom_reg()` now allows a 3-dimensional `z=` argument, for a small speed penalty.
+
 # v1.4.2
 
 - Added `dmatnorm_diff()`, akin to `dmvnorm_diff()`.
