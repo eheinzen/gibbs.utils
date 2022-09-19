@@ -42,14 +42,6 @@ If \code{"last"}, then \code{mean} and \code{precision} map to the first through
 elements of \code{p}.
 If \code{2}, then \code{mean} and \code{precision} map to the first and third through j-th elements of \code{p}.
 Etc.}
-
-\item{...}{Other arguments (not used)}
-
-\item{w}{The width of each expansion (to the right and left each)}
-
-\item{nexpand}{The maximum number of expansions (to the right and left each)}
-
-\item{ncontract}{The maximum number of contractions. If this is exceeded, the original value is returned}
 }
 \description{
 Slice sample a multinomial regression rate

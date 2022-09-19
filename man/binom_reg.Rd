@@ -35,26 +35,6 @@ ss_binom_reg(
 \item{k}{the realized value from the binomial distribution}
 
 \item{n}{the number of trials}
-
-\item{mean}{the prior mean}
-
-\item{precision}{the prior precision}
-
-\item{proposal}{The method to use to propose new values. \code{"normal"} proposes normal deviates from the current
-value. \code{"uniform"} proposes uniform deviates. \code{"quadratic taylor"} proposes using a second-order Taylor
-approximation of the log-density at the current value, which amounts to a normal proposal with mean (usually) not equal
-to the current value.}
-
-\item{...}{Other arguments (not used)}
-
-\item{proposal_sd}{For \code{"normal"} proposals, the standard deviation(s) of proposals. For \code{"uniform"} proposals,
-the half-width of the uniform proposal interval.}
-
-\item{w}{The width of each expansion (to the right and left each)}
-
-\item{nexpand}{The maximum number of expansions (to the right and left each)}
-
-\item{ncontract}{The maximum number of contractions. If this is exceeded, the original value is returned}
 }
 \description{
 Slice sample a binomial regression rate
@@ -73,8 +53,4 @@ Slice sample a binomial regression rate
   \code{p} is assumed to be multivariately distributed, and different internals are used.
 
   The internals are defined in C++.
-}
-\seealso{
-\code{\link{ss_binom_reg}}, \code{\link{ss_multinom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling},
-\url{https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm}, \url{https://arxiv.org/pdf/1308.0657.pdf}
 }

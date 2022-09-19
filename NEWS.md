@@ -1,3 +1,8 @@
+# v2.0.0
+
+- `ss_pois_reg()` and `mh_pois_reg()` now have a unified interface: `sample_pois_reg()`, with slightly different naming conventions for
+  extra arguments.
+
 # v1.4.3
 
 - `ss_multinom_reg()` now allows a 3-dimensional `z=` argument, for a small speed penalty.

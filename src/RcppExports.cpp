@@ -107,40 +107,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// m_pois
-NumericVector m_pois(NumericVector L, NumericVector proposal, NumericVector k, LogicalVector k_na, NumericVector mean, NumericVector precision);
-RcppExport SEXP _gibbs_utils_m_pois(SEXP LSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP k_naSEXP, SEXP meanSEXP, SEXP precisionSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type proposal(proposalSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type k_na(k_naSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type precision(precisionSEXP);
-    rcpp_result_gen = Rcpp::wrap(m_pois(L, proposal, k, k_na, mean, precision));
-    return rcpp_result_gen;
-END_RCPP
-}
-// m_pois_mv
-NumericVector m_pois_mv(NumericMatrix L, NumericMatrix proposal, NumericMatrix k, LogicalMatrix k_na, NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm);
-RcppExport SEXP _gibbs_utils_m_pois_mv(SEXP LSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP k_naSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP use_normSEXP, SEXP normSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type L(LSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type proposal(proposalSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type k(kSEXP);
-    Rcpp::traits::input_parameter< LogicalMatrix >::type k_na(k_naSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type use_norm(use_normSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type norm(normSEXP);
-    rcpp_result_gen = Rcpp::wrap(m_pois_mv(L, proposal, k, k_na, mean, Q, use_norm, norm));
-    return rcpp_result_gen;
-END_RCPP
-}
 // qt_pois_approx
 NumericVector qt_pois_approx(double around, double k, double mean, double tau);
 RcppExport SEXP _gibbs_utils_qt_pois_approx(SEXP aroundSEXP, SEXP kSEXP, SEXP meanSEXP, SEXP tauSEXP) {
@@ -155,35 +121,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// qt_pois
-NumericVector qt_pois(NumericVector L, NumericVector k, LogicalVector k_na, NumericVector mean, NumericVector precision);
-RcppExport SEXP _gibbs_utils_qt_pois(SEXP LSEXP, SEXP kSEXP, SEXP k_naSEXP, SEXP meanSEXP, SEXP precisionSEXP) {
+// mh_pois
+NumericVector mh_pois(bool qt, NumericVector L, NumericVector proposal, NumericVector k, LogicalVector k_na, NumericVector mean, NumericVector precision);
+RcppExport SEXP _gibbs_utils_mh_pois(SEXP qtSEXP, SEXP LSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP k_naSEXP, SEXP meanSEXP, SEXP precisionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< bool >::type qt(qtSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type proposal(proposalSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
     Rcpp::traits::input_parameter< LogicalVector >::type k_na(k_naSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type precision(precisionSEXP);
-    rcpp_result_gen = Rcpp::wrap(qt_pois(L, k, k_na, mean, precision));
+    rcpp_result_gen = Rcpp::wrap(mh_pois(qt, L, proposal, k, k_na, mean, precision));
     return rcpp_result_gen;
 END_RCPP
 }
-// qt_pois_mv
-NumericVector qt_pois_mv(NumericMatrix L, NumericMatrix k, LogicalMatrix k_na, NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm);
-RcppExport SEXP _gibbs_utils_qt_pois_mv(SEXP LSEXP, SEXP kSEXP, SEXP k_naSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP use_normSEXP, SEXP normSEXP) {
+// mh_pois_mv
+NumericVector mh_pois_mv(bool qt, NumericMatrix L, NumericMatrix proposal, NumericMatrix k, LogicalMatrix k_na, NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm);
+RcppExport SEXP _gibbs_utils_mh_pois_mv(SEXP qtSEXP, SEXP LSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP k_naSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP use_normSEXP, SEXP normSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< bool >::type qt(qtSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type L(LSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type proposal(proposalSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type k(kSEXP);
     Rcpp::traits::input_parameter< LogicalMatrix >::type k_na(k_naSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type mean(meanSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
     Rcpp::traits::input_parameter< LogicalVector >::type use_norm(use_normSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type norm(normSEXP);
-    rcpp_result_gen = Rcpp::wrap(qt_pois_mv(L, k, k_na, mean, Q, use_norm, norm));
+    rcpp_result_gen = Rcpp::wrap(mh_pois_mv(qt, L, proposal, k, k_na, mean, Q, use_norm, norm));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -379,11 +349,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gibbs_utils_qt_binom_approx", (DL_FUNC) &_gibbs_utils_qt_binom_approx, 5},
     {"_gibbs_utils_qt_binom", (DL_FUNC) &_gibbs_utils_qt_binom, 5},
     {"_gibbs_utils_qt_binom_mv", (DL_FUNC) &_gibbs_utils_qt_binom_mv, 7},
-    {"_gibbs_utils_m_pois", (DL_FUNC) &_gibbs_utils_m_pois, 6},
-    {"_gibbs_utils_m_pois_mv", (DL_FUNC) &_gibbs_utils_m_pois_mv, 8},
     {"_gibbs_utils_qt_pois_approx", (DL_FUNC) &_gibbs_utils_qt_pois_approx, 4},
-    {"_gibbs_utils_qt_pois", (DL_FUNC) &_gibbs_utils_qt_pois, 5},
-    {"_gibbs_utils_qt_pois_mv", (DL_FUNC) &_gibbs_utils_qt_pois_mv, 7},
+    {"_gibbs_utils_mh_pois", (DL_FUNC) &_gibbs_utils_mh_pois, 7},
+    {"_gibbs_utils_mh_pois_mv", (DL_FUNC) &_gibbs_utils_mh_pois_mv, 9},
     {"_gibbs_utils_one_binom_slice", (DL_FUNC) &_gibbs_utils_one_binom_slice, 8},
     {"_gibbs_utils_slice_sample_binom", (DL_FUNC) &_gibbs_utils_slice_sample_binom, 8},
     {"_gibbs_utils_slice_sample_binom_mv", (DL_FUNC) &_gibbs_utils_slice_sample_binom_mv, 10},
