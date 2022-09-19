@@ -14,11 +14,11 @@
 #' @param width For \code{"normal"} proposals, the standard deviation(s) of proposals. For \code{"uniform"} proposals,
 #' the half-width of the uniform proposal interval. For \code{"slice"}, the width of each expansion (to the right and left each)
 #' @details
-#'   This function slice samples \code{L} conditional on \code{k}, \code{mean}, and \code{precision},
+#'   This function samples \code{L} conditional on \code{k}, \code{mean}, and \code{precision},
 #'   where \code{k ~ Pois(exp(L))} and \code{L ~ N(mean, precision)}.
 #'
-#'   In the case that \code{k} is \code{NA} (akin to \code{\link{ss_binom_reg}} in the case \code{n == k == 0}),
-#'   slice sampling is ignored in favor of a normal draw.
+#'   In the case that \code{k} is \code{NA} (akin to \code{\link{sample_binom_reg}} in the case \code{n == k == 0}),
+#'   sampling is ignored in favor of a normal draw.
 #'   In the special case when an entire (multivariate) row of \code{k} is \code{NA}, the entire row
 #'   is simultaneously drawn (in R); when only some elements are \code{NA}, they're drawn univariately (in C++).
 #'   Note that only the latter is used when \code{proposal} indicates multivariate MH.
@@ -27,12 +27,8 @@
 #'   \code{L} is assumed to be multivariately distributed, and a different function is used.
 #'
 #'   The internals are defined in C++.
-#' @seealso \code{\link{ss_binom_reg}}, \code{\link{ss_multinom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling},
+#' @seealso \url{https://en.wikipedia.org/wiki/Slice_sampling},
 #' \url{https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm}, \url{https://arxiv.org/pdf/1308.0657.pdf}
-#' @name pois_reg
-NULL
-
-#' @rdname pois_reg
 #' @export
 sample_pois_reg <- function(L, k, mean, precision, method = c("slice", "normal", "uniform", "quadratic taylor", "mv quadratic taylor"), ...,
                             width = 1, nexpand = 10, ncontract = 100) {

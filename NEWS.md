@@ -2,6 +2,9 @@
 
 - `ss_pois_reg()` and `mh_pois_reg()` now have a unified interface: `sample_pois_reg()`, with slightly different naming conventions for
   extra arguments.
+  
+- `ss_binom_reg()` and `mh_binom_reg()` now have a unified interface: `sample_binom_reg()`, with slightly different naming conventions for
+  extra arguments.
 
 # v1.4.3
 

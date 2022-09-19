@@ -30,6 +30,7 @@ NumericVector one_qt_pois_proposal_ratio(double L, double k, double mean, double
   double proposal = R::rnorm(prop_params[0], prop_params[1]);
 
   NumericVector orig_params = qt_pois_approx(proposal, k, mean, precision);
+
   double ratio = one_m_pois_ratio(L, proposal, k, mean, precision);
   ratio -= R::dnorm(proposal, prop_params[0], prop_params[1], 1);
   ratio += R::dnorm(L, orig_params[0], orig_params[1], 1);
@@ -53,8 +54,8 @@ NumericVector mh_pois(bool qt, NumericVector L, NumericVector proposal, NumericV
     double ratio, prop;
     if(qt) { // 'proposal' is ignored
       NumericVector prop_ratio = one_qt_pois_proposal_ratio(L[i], k[i], mean[i], precision[i]);
-      ratio = prop_ratio[1];
       prop = prop_ratio[0];
+      ratio = prop_ratio[1];
     } else {
       prop = proposal[i];
       ratio = one_m_pois_ratio(L[i], prop, k[i], mean[i], precision[i]);
@@ -102,8 +103,8 @@ NumericVector mh_pois_mv(bool qt, NumericMatrix L, NumericMatrix proposal, Numer
       double ratio, prop;
       if(qt) { // 'proposal' is ignored
         NumericVector prop_ratio = one_qt_pois_proposal_ratio(out(r, i), kk[i], mmm, Q(i, i));
-        ratio = prop_ratio[1];
         prop = prop_ratio[0];
+        ratio = prop_ratio[1];
       } else {
         prop = proposal(r, i);
         ratio = one_m_pois_ratio(out(r, i), proposal(r, i), kk[i], mmm, Q(i, i));
