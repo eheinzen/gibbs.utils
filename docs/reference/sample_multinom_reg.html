@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Slice sample a Poisson regression rate — ss_pois_reg • gibbs.utils</title>
+<title>Sample a multinomial regression rate — sample_multinom_reg • gibbs.utils</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Slice sample a Poisson regression rate — ss_pois_reg" />
-<meta property="og:description" content="Slice sample a Poisson regression rate" />
+<meta property="og:title" content="Sample a multinomial regression rate — sample_multinom_reg" />
+<meta property="og:description" content="Sample a multinomial regression rate" />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -121,43 +121,83 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Slice sample a Poisson regression rate</h1>
+    <h1>Sample a multinomial regression rate</h1>
     
-    <div class="hidden name"><code>ss_pois_reg.Rd</code></div>
+    <div class="hidden name"><code>sample_multinom_reg.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Slice sample a Poisson regression rate</p>
+    <p>Sample a multinomial regression rate</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ss_pois_reg</span><span class='op'>(</span><span class='va'>L</span>, <span class='va'>k</span>, <span class='va'>mean</span>, <span class='va'>precision</span>, <span class='va'>...</span>, w <span class='op'>=</span> <span class='fl'>1</span>, nexpand <span class='op'>=</span> <span class='fl'>10</span>, ncontract <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>sample_multinom_reg</span><span class='op'>(</span>
+  <span class='va'>p</span>,
+  <span class='va'>z</span>,
+  <span class='va'>k</span>,
+  <span class='va'>mean</span>,
+  <span class='va'>precision</span>,
+  method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"slice"</span><span class='op'>)</span>,
+  ref <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"first"</span>, <span class='st'>"last"</span><span class='op'>)</span>,
+  <span class='va'>...</span>,
+  width <span class='op'>=</span> <span class='fl'>1</span>,
+  nexpand <span class='op'>=</span> <span class='fl'>10</span>,
+  ncontract <span class='op'>=</span> <span class='fl'>100</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>L</th>
-      <td><p>the previous iteration of the log-rate</p></td>
+      <th>p</th>
+      <td><p>the previous iteration of the logit-probability, as an array of dimension <code>r x i x j</code>,
+where <code>r</code> is the number of realizations, <code>i</code> is the number of (correlated)
+betas (that is, the dimension of <code>precision</code>), and <code>j</code> is the number of
+classes to split between. It is expected that <code>p[, , ref] == 0</code></p></td>
+    </tr>
+    <tr>
+      <th>z</th>
+      <td><p>a matrix of zeros and ones. The zeros determine so-called "structural zeros": outcomes
+which are not possible. This is assumed not to change over the first dimension (<code>r</code>) of <code>p</code>.
+This is of dimension <code>i x j</code>.</p></td>
     </tr>
     <tr>
       <th>k</th>
-      <td><p>the realized value from the Poisson distribution</p></td>
+      <td><p>the realized value from the binomial distribution; the same size as <code>p</code> (<code>r x i x j</code>).</p></td>
     </tr>
     <tr>
       <th>mean</th>
-      <td><p>the prior mean</p></td>
+      <td><p>the prior mean for <code>p</code>. Must be either a scalar or an array of size <code>r x i x (j-1)</code></p></td>
     </tr>
     <tr>
       <th>precision</th>
-      <td><p>the prior precision</p></td>
+      <td><p>an array of dimension <code>i x i x (j-1)</code>.
+The <code>j</code>-dimension is assumed to be independent.</p></td>
+    </tr>
+    <tr>
+      <th>method</th>
+      <td><p>The method to use to propose new values. <code>"normal"</code> proposes normal deviates from the current
+value. <code>"uniform"</code> proposes uniform deviates. <code>"quadratic taylor"</code> proposes using a second-order Taylor
+approximation of the log-density at the current value, which amounts to a normal proposal with mean (usually) not equal
+to the current value.</p></td>
+    </tr>
+    <tr>
+      <th>ref</th>
+      <td><p>One of <code>"first"</code> or <code>"last"</code> or a numeric value, denoting which "column" (the third dimension)
+ of <code>p</code> is the reference.
+If <code>"first"</code>, then <code>mean</code> and <code>precision</code> map to the second through j-th elements of <code>p</code>.
+If <code>"last"</code>, then <code>mean</code> and <code>precision</code> map to the first through (j-1)-th
+elements of <code>p</code>.
+If <code>2</code>, then <code>mean</code> and <code>precision</code> map to the first and third through j-th elements of <code>p</code>.
+Etc.</p></td>
     </tr>
     <tr>
       <th>...</th>
       <td><p>Other arguments (not used)</p></td>
     </tr>
     <tr>
-      <th>w</th>
-      <td><p>The width of each expansion (to the right and left each)</p></td>
+      <th>width</th>
+      <td><p>For <code>"normal"</code> proposals, the standard deviation(s) of proposals. For <code>"uniform"</code> proposals,
+the half-width of the uniform proposal interval. For <code>"slice"</code>, the width of each expansion (to the right and left each)</p></td>
     </tr>
     <tr>
       <th>nexpand</th>
@@ -171,18 +211,11 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function slice samples <code>L</code> conditional on <code>k</code>, <code>mean</code>, and <code>precision</code>,
-  where <code>k ~ Pois(exp(L))</code> and <code>L ~ N(mean, precision)</code>.</p>
-<p>In the case that <code>k</code> is <code>NA</code> (akin to <code><a href='mh_binom_reg.html'>ss_binom_reg</a></code> in the case <code>n == k == 0</code>),
-  slice sampling is ignored in favor of a normal draw.
-  In the special case when an entire (multivariate) row of <code>k</code> is <code>NA</code>, the entire row
-  is simultaneously drawn (in R); when only some elements are <code>NA</code>, they're drawn univariately (in C++).</p>
-<p>This is vectorized over <code>L</code>, <code>k</code>, and <code>mean</code>. If <code>precision</code> is a matrix,
-  <code>L</code> is assumed to be multivariately distributed, and a different function is used.</p>
-<p>The internals are defined in C++.</p>
+    <p>The internals are defined in C++.</p>
+<p>In the case that <code>n</code> is zero or <code>z</code> is zero, slice sampling is ignored in favor of a normal draw.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='mh_binom_reg.html'>ss_binom_reg</a></code>, <code><a href='multinom_reg.html'>ss_multinom_reg</a></code>, <a href='https://en.wikipedia.org/wiki/Slice_sampling'>https://en.wikipedia.org/wiki/Slice_sampling</a></p></div>
+    <div class='dont-index'><p><code><a href='sample_pois_reg.html'>sample_pois_reg</a></code>, <code><a href='sample_binom_reg.html'>sample_binom_reg</a></code>, <a href='https://en.wikipedia.org/wiki/Slice_sampling'>https://en.wikipedia.org/wiki/Slice_sampling</a></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

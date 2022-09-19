@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Slice sample a Poisson regression rate — mh_pois_reg • gibbs.utils</title>
+<title>Sample a Poisson regression rate — sample_pois_reg • gibbs.utils</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Slice sample a Poisson regression rate — mh_pois_reg" />
-<meta property="og:description" content="Slice sample a Poisson regression rate" />
+<meta property="og:title" content="Sample a Poisson regression rate — sample_pois_reg" />
+<meta property="og:description" content="Sample a Poisson regression rate" />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -121,26 +121,26 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Slice sample a Poisson regression rate</h1>
+    <h1>Sample a Poisson regression rate</h1>
     
-    <div class="hidden name"><code>pois_reg.Rd</code></div>
+    <div class="hidden name"><code>sample_pois_reg.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Slice sample a Poisson regression rate</p>
+    <p>Sample a Poisson regression rate</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mh_pois_reg</span><span class='op'>(</span>
+    <pre class="usage"><span class='fu'>sample_pois_reg</span><span class='op'>(</span>
   <span class='va'>L</span>,
   <span class='va'>k</span>,
   <span class='va'>mean</span>,
   <span class='va'>precision</span>,
-  proposal <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normal"</span>, <span class='st'>"uniform"</span>, <span class='st'>"quadratic taylor"</span>, <span class='st'>"mv quadratic taylor"</span><span class='op'>)</span>,
+  method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"slice"</span>, <span class='st'>"normal"</span>, <span class='st'>"uniform"</span>, <span class='st'>"quadratic taylor"</span>, <span class='st'>"mv quadratic taylor"</span><span class='op'>)</span>,
   <span class='va'>...</span>,
-  proposal_sd <span class='op'>=</span> <span class='fl'>1</span>
-<span class='op'>)</span>
-
-<span class='fu'>ss_pois_reg</span><span class='op'>(</span><span class='va'>L</span>, <span class='va'>k</span>, <span class='va'>mean</span>, <span class='va'>precision</span>, <span class='va'>...</span>, w <span class='op'>=</span> <span class='fl'>1</span>, nexpand <span class='op'>=</span> <span class='fl'>10</span>, ncontract <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span></pre>
+  width <span class='op'>=</span> <span class='fl'>1</span>,
+  nexpand <span class='op'>=</span> <span class='fl'>10</span>,
+  ncontract <span class='op'>=</span> <span class='fl'>100</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -162,7 +162,7 @@
       <td><p>the prior precision</p></td>
     </tr>
     <tr>
-      <th>proposal</th>
+      <th>method</th>
       <td><p>The method to use to propose new values. <code>"normal"</code> proposes normal deviates from the current
 value. <code>"uniform"</code> proposes uniform deviates. <code>"quadratic taylor"</code> proposes using a second-order Taylor
 approximation of the log-density at the current value, which amounts to a normal proposal with mean (usually) not equal
@@ -173,13 +173,9 @@ to the current value.</p></td>
       <td><p>Other arguments (not used)</p></td>
     </tr>
     <tr>
-      <th>proposal_sd</th>
+      <th>width</th>
       <td><p>For <code>"normal"</code> proposals, the standard deviation(s) of proposals. For <code>"uniform"</code> proposals,
-the half-width of the uniform proposal interval.</p></td>
-    </tr>
-    <tr>
-      <th>w</th>
-      <td><p>The width of each expansion (to the right and left each)</p></td>
+the half-width of the uniform proposal interval. For <code>"slice"</code>, the width of each expansion (to the right and left each)</p></td>
     </tr>
     <tr>
       <th>nexpand</th>
@@ -193,10 +189,10 @@ the half-width of the uniform proposal interval.</p></td>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function slice samples <code>L</code> conditional on <code>k</code>, <code>mean</code>, and <code>precision</code>,
+    <p>This function samples <code>L</code> conditional on <code>k</code>, <code>mean</code>, and <code>precision</code>,
   where <code>k ~ Pois(exp(L))</code> and <code>L ~ N(mean, precision)</code>.</p>
-<p>In the case that <code>k</code> is <code>NA</code> (akin to <code><a href='mh_binom_reg.html'>ss_binom_reg</a></code> in the case <code>n == k == 0</code>),
-  slice sampling is ignored in favor of a normal draw.
+<p>In the case that <code>k</code> is <code>NA</code> (akin to <code><a href='sample_binom_reg.html'>sample_binom_reg</a></code> in the case <code>n == k == 0</code>),
+  sampling is ignored in favor of a normal draw.
   In the special case when an entire (multivariate) row of <code>k</code> is <code>NA</code>, the entire row
   is simultaneously drawn (in R); when only some elements are <code>NA</code>, they're drawn univariately (in C++).
   Note that only the latter is used when <code>proposal</code> indicates multivariate MH.</p>
@@ -205,7 +201,7 @@ the half-width of the uniform proposal interval.</p></td>
 <p>The internals are defined in C++.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='mh_binom_reg.html'>ss_binom_reg</a></code>, <code><a href='multinom_reg.html'>ss_multinom_reg</a></code>, <a href='https://en.wikipedia.org/wiki/Slice_sampling'>https://en.wikipedia.org/wiki/Slice_sampling</a>,
+    <div class='dont-index'><p><a href='https://en.wikipedia.org/wiki/Slice_sampling'>https://en.wikipedia.org/wiki/Slice_sampling</a>,
 <a href='https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm'>https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm</a>, <a href='https://arxiv.org/pdf/1308.0657.pdf'>https://arxiv.org/pdf/1308.0657.pdf</a></p></div>
 
   </div>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Slice sample a binomial regression rate — mh_binom_reg • gibbs.utils</title>
+<title>Sample a binomial regression rate — sample_binom_reg • gibbs.utils</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Slice sample a binomial regression rate — mh_binom_reg" />
-<meta property="og:description" content="Slice sample a binomial regression rate" />
+<meta property="og:title" content="Sample a binomial regression rate — sample_binom_reg" />
+<meta property="og:description" content="Sample a binomial regression rate" />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -121,34 +121,24 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Slice sample a binomial regression rate</h1>
+    <h1>Sample a binomial regression rate</h1>
     
-    <div class="hidden name"><code>binom_reg.Rd</code></div>
+    <div class="hidden name"><code>sample_binom_reg.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Slice sample a binomial regression rate</p>
+    <p>Sample a binomial regression rate</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mh_binom_reg</span><span class='op'>(</span>
+    <pre class="usage"><span class='fu'>sample_binom_reg</span><span class='op'>(</span>
   <span class='va'>p</span>,
   <span class='va'>k</span>,
   <span class='va'>n</span>,
   <span class='va'>mean</span>,
   <span class='va'>precision</span>,
-  proposal <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normal"</span>, <span class='st'>"uniform"</span>, <span class='st'>"quadratic taylor"</span>, <span class='st'>"mv quadratic taylor"</span><span class='op'>)</span>,
+  method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"slice"</span>, <span class='st'>"normal"</span>, <span class='st'>"uniform"</span>, <span class='st'>"quadratic taylor"</span>, <span class='st'>"mv quadratic taylor"</span><span class='op'>)</span>,
   <span class='va'>...</span>,
-  proposal_sd <span class='op'>=</span> <span class='fl'>1</span>
-<span class='op'>)</span>
-
-<span class='fu'>ss_binom_reg</span><span class='op'>(</span>
-  <span class='va'>p</span>,
-  <span class='va'>k</span>,
-  <span class='va'>n</span>,
-  <span class='va'>mean</span>,
-  <span class='va'>precision</span>,
-  <span class='va'>...</span>,
-  w <span class='op'>=</span> <span class='fl'>1</span>,
+  width <span class='op'>=</span> <span class='fl'>1</span>,
   nexpand <span class='op'>=</span> <span class='fl'>10</span>,
   ncontract <span class='op'>=</span> <span class='fl'>100</span>
 <span class='op'>)</span></pre>
@@ -177,7 +167,7 @@
       <td><p>the prior precision</p></td>
     </tr>
     <tr>
-      <th>proposal</th>
+      <th>method</th>
       <td><p>The method to use to propose new values. <code>"normal"</code> proposes normal deviates from the current
 value. <code>"uniform"</code> proposes uniform deviates. <code>"quadratic taylor"</code> proposes using a second-order Taylor
 approximation of the log-density at the current value, which amounts to a normal proposal with mean (usually) not equal
@@ -188,13 +178,9 @@ to the current value.</p></td>
       <td><p>Other arguments (not used)</p></td>
     </tr>
     <tr>
-      <th>proposal_sd</th>
+      <th>width</th>
       <td><p>For <code>"normal"</code> proposals, the standard deviation(s) of proposals. For <code>"uniform"</code> proposals,
-the half-width of the uniform proposal interval.</p></td>
-    </tr>
-    <tr>
-      <th>w</th>
-      <td><p>The width of each expansion (to the right and left each)</p></td>
+the half-width of the uniform proposal interval. For <code>"slice"</code>, the width of each expansion (to the right and left each)</p></td>
     </tr>
     <tr>
       <th>nexpand</th>
@@ -208,19 +194,18 @@ the half-width of the uniform proposal interval.</p></td>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>ss_binom_reg</code> slice samples and <code>mh_binom_reg</code> Metropolis-samples
-  <code>p</code> conditional on <code>k</code>, <code>n</code>, <code>mean</code>, and <code>precision</code>,
+    <p>This function samples <code>p</code> conditional on <code>k</code>, <code>n</code>, <code>mean</code>, and <code>precision</code>,
   where <code>k ~ Binom(n, expit(p))</code> and <code>p ~ N(mean, precision)</code>.</p>
-<p>In the case that <code>n</code> is zero, slice sampling is ignored in favor of a normal draw.
+<p>In the case that <code>n</code> is zero, sampling is ignored in favor of a normal draw.
   In the special case when an entire (multivariate) row of <code>n</code> is zero, the entire row
   is simultaneously drawn (in R); when only some elements are zero, they're drawn univariately (in C++).
   Note that only the latter is used when <code>proposal</code> indicates multivariate MH.</p>
-<p>Both vectorized over <code>p</code>, <code>k</code>, <code>n</code>, and <code>mean</code>. If <code>precision</code> is a matrix,
+<p>This is vectorized over <code>p</code>, <code>k</code>, <code>n</code>, and <code>mean</code>. If <code>precision</code> is a matrix,
   <code>p</code> is assumed to be multivariately distributed, and different internals are used.</p>
 <p>The internals are defined in C++.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code>ss_binom_reg</code>, <code><a href='multinom_reg.html'>ss_multinom_reg</a></code>, <a href='https://en.wikipedia.org/wiki/Slice_sampling'>https://en.wikipedia.org/wiki/Slice_sampling</a>,
+    <div class='dont-index'><p><a href='https://en.wikipedia.org/wiki/Slice_sampling'>https://en.wikipedia.org/wiki/Slice_sampling</a>,
 <a href='https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm'>https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm</a>, <a href='https://arxiv.org/pdf/1308.0657.pdf'>https://arxiv.org/pdf/1308.0657.pdf</a></p></div>
 
   </div>
