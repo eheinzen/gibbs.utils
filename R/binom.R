@@ -1,4 +1,4 @@
-#' Slice sample a binomial regression rate
+#' Sample a binomial regression rate
 #'
 #' @param p the previous iteration of the logit-probability
 #' @param k the realized value from the binomial distribution

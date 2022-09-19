@@ -2,7 +2,7 @@
 % Please edit documentation in R/pois.R
 \name{sample_pois_reg}
 \alias{sample_pois_reg}
-\title{Slice sample a Poisson regression rate}
+\title{Sample a Poisson regression rate}
 \usage{
 sample_pois_reg(
   L,
@@ -40,7 +40,7 @@ the half-width of the uniform proposal interval. For \code{"slice"}, the width o
 \item{ncontract}{The maximum number of contractions. If this is exceeded, the original value is returned}
 }
 \description{
-Slice sample a Poisson regression rate
+Sample a Poisson regression rate
 }
 \details{
 This function samples \code{L} conditional on \code{k}, \code{mean}, and \code{precision},

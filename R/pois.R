@@ -1,4 +1,4 @@
-#' Slice sample a Poisson regression rate
+#' Sample a Poisson regression rate
 #'
 #' @param L the previous iteration of the log-rate
 #' @param k the realized value from the Poisson distribution

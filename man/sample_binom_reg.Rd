@@ -2,7 +2,7 @@
 % Please edit documentation in R/binom.R
 \name{sample_binom_reg}
 \alias{sample_binom_reg}
-\title{Slice sample a binomial regression rate}
+\title{Sample a binomial regression rate}
 \usage{
 sample_binom_reg(
   p,
@@ -43,7 +43,7 @@ the half-width of the uniform proposal interval. For \code{"slice"}, the width o
 \item{ncontract}{The maximum number of contractions. If this is exceeded, the original value is returned}
 }
 \description{
-Slice sample a binomial regression rate
+Sample a binomial regression rate
 }
 \details{
 This function samples \code{p} conditional on \code{k}, \code{n}, \code{mean}, and \code{precision},

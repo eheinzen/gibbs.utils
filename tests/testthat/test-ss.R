@@ -157,18 +157,18 @@ test_that("multivariate slice sampling works for multinomial", {
   z <- matrix(1, nrow = 2, ncol = 3)
   Q <- array(0, c(2, 2, 3))
   for(j in 1:3) Q[, , j] <- matrix(c(2, 1, 1, 2), 2)
-  expect_error(ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q), "mean")
+  expect_error(sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q), "mean")
   mean <- mean[, , -1]
-  expect_error(ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q), "precision")
+  expect_error(sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q), "precision")
   Q <- Q[, , -1]
-  m <- apply(ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q), 3, mean)
+  m <- apply(sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q), 3, mean)
   expect_true(all(abs(m - c(0, 0, log(2))) < 0.01))
 
   z <- cbind(1, c(0, 1), c(1, 1))
-  expect_error(ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q))
+  expect_error(sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q))
 
   k[, 1, 2] <- 0
-  m <- apply(ss <- ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q), 2:3, mean)
+  m <- apply(ss <- sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q), 2:3, mean)
   expect_true(all(m[, 1] == 0))
   expect_true(all(abs(m[4:6] - c(0, log(2), log(2))) < 0.01))
 })
@@ -191,9 +191,9 @@ test_that("multivariate slice sampling works 3-D z", {
   mean <- mean[, , -1]
   Q <- Q[, , -1]
   set.seed(9909)
-  m1 <- ss_multinom_reg(p = p, z = array(rep(z, each = 400), dim = dim(k)), k = k, mean = mean, precision = Q)
+  m1 <- sample_multinom_reg(p = p, z = array(rep(z, each = 400), dim = dim(k)), k = k, mean = mean, precision = Q)
   set.seed(9909)
-  m2 <- ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q)
+  m2 <- sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q)
   expect_equal(m1, m2)
 })
 
@@ -212,7 +212,7 @@ test_that("multivariate slice sampling works when ref == 'last'", {
   z <- matrix(1, nrow = 2, ncol = 3)
   Q <- array(0, c(2, 2, 2))
   for(j in 1:2) Q[, , j] <- matrix(c(2, 1, 1, 2), 2)
-  m <- apply(ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q, ref = "last"), 3, mean)
+  m <- apply(sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q, ref = "last"), 3, mean)
   expect_true(all(abs(m - c(-log(2), -log(2), 0)) < 0.01))
 })
 
@@ -230,11 +230,11 @@ test_that("multivariate slice sampling works when ref == {number}", {
   Q <- array(0, c(2, 2, 2))
   for(j in 1:2) Q[, , j] <- matrix(c(2, 1, 1, 2), 2)
   set.seed(20220124)
-  m_last <- ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q, ref = "last")
+  m_last <- sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q, ref = "last")
   set.seed(20220124)
-  m_2 <- ss_multinom_reg(p = p[, , c(1, 3, 2)], z = z, k = k[, , c(1, 3, 2)], mean = mean, precision = Q, ref = 2)
+  m_2 <- sample_multinom_reg(p = p[, , c(1, 3, 2)], z = z, k = k[, , c(1, 3, 2)], mean = mean, precision = Q, ref = 2)
   set.seed(20220124)
-  m_first <- ss_multinom_reg(p = p[, , c(3, 1:2)], z = z, k = k[, , c(3, 1:2)], mean = mean, precision = Q, ref = "first")
+  m_first <- sample_multinom_reg(p = p[, , c(3, 1:2)], z = z, k = k[, , c(3, 1:2)], mean = mean, precision = Q, ref = "first")
 
   expect_equal(m_2[, , c(2, 1, 3)], m_first)
   expect_equal(m_last[, , c(3, 1:2)], m_first)
@@ -251,7 +251,7 @@ test_that("multivariate slice sampling works when dimensions are 1", {
   z <- matrix(1, nrow = 1, ncol = 3)
   Q <- array(1000, c(1, 1, 2))
 
-  m <- ss_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q, ref = "first")
+  m <- sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q, ref = "first")
   expect_true(all(abs(m - p) < 0.01))
 })
 

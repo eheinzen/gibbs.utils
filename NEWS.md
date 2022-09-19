@@ -5,6 +5,9 @@
   
 - `ss_binom_reg()` and `mh_binom_reg()` now have a unified interface: `sample_binom_reg()`, with slightly different naming conventions for
   extra arguments.
+  
+- `ss_multinom_reg()` was renamed to `sample_multinom_reg()` for consistency, with slightly different naming conventions for extra arguments,
+  and the additional argument `method=` for future development.
 
 # v1.4.3
 

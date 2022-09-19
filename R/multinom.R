@@ -1,8 +1,4 @@
-
-
-
-
-#' Slice sample a multinomial regression rate
+#' Sample a multinomial regression rate
 #'
 #' @param p the previous iteration of the logit-probability, as an array of dimension \code{r x i x j},
 #'   where \code{r} is the number of realizations, \code{i} is the number of (correlated)
@@ -22,15 +18,16 @@
 #'   elements of \code{p}.
 #'   If \code{2}, then \code{mean} and \code{precision} map to the first and third through j-th elements of \code{p}.
 #'   Etc.
-#' @inheritParams ss_pois_reg
+#' @inheritParams sample_pois_reg
 #' @details
 #'   The internals are defined in C++.
 #'
 #'   In the case that \code{n} is zero or \code{z} is zero, slice sampling is ignored in favor of a normal draw.
-#' @seealso \code{\link{ss_pois_reg}}, \code{\link{ss_binom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
-#' @name multinom_reg
+#' @seealso \code{\link{sample_pois_reg}}, \code{\link{sample_binom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
 #' @export
-ss_multinom_reg <- function(p, z, k, mean, precision, ref = c("first", "last"), ..., w = 1, nexpand = 10, ncontract = 100) {
+sample_multinom_reg <- function(p, z, k, mean, precision, method = c("slice"), ref = c("first", "last"), ..., width = 1, nexpand = 10, ncontract = 100) {
+  method <- match.arg(method)
+
   d <- dim(p)
   d2 <- replace(d, 3, d[3]-1L)
   if(length(d) != 3 || !identical(d, dim(k))) stop("'p' and 'k' must have the same (3D) dimensions")
@@ -82,7 +79,7 @@ ss_multinom_reg <- function(p, z, k, mean, precision, ref = c("first", "last"), 
       mean = subset_third(mean, j - (j > ref)),
       Q = subset_third(precision, j - (j > ref)),
       j = j - 1L,
-      w = w,
+      w = width,
       nexpand = nexpand,
       ncontract = ncontract
     )
