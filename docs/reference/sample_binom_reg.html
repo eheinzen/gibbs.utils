@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.0</span>
       </span>
     </div>
 
@@ -169,7 +169,8 @@
     <tr>
       <th>method</th>
       <td><p>The method to use to propose new values. <code>"normal"</code> proposes normal deviates from the current
-value. <code>"uniform"</code> proposes uniform deviates. <code>"quadratic taylor"</code> proposes using a second-order Taylor
+value. <code>"uniform"</code> proposes uniform deviates. <code>"gamma"</code> does moment-matching on the mean and variance
+to propose a conjugate gamma proposal. <code>"quadratic taylor"</code> proposes using a second-order Taylor
 approximation of the log-density at the current value, which amounts to a normal proposal with mean (usually) not equal
 to the current value.</p></td>
     </tr>
@@ -180,7 +181,8 @@ to the current value.</p></td>
     <tr>
       <th>width</th>
       <td><p>For <code>"normal"</code> proposals, the standard deviation(s) of proposals. For <code>"uniform"</code> proposals,
-the half-width of the uniform proposal interval. For <code>"slice"</code>, the width of each expansion (to the right and left each)</p></td>
+the half-width of the uniform proposal interval. For <code>"slice"</code>, the width of each expansion (to the right and left each).
+For <code>"gamma"</code> a scaling factor to increase the variance of the proposal.</p></td>
     </tr>
     <tr>
       <th>nexpand</th>
