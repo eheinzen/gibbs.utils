@@ -10,7 +10,7 @@ double one_m_binom_ratio(double p, double proposal, double k, double n, double m
 
 
 // [[Rcpp::export]]
-NumericVector qt_binom_approx(double around, double k, double n, double mean, double tau) {
+void qt_binom_approx(double around, double k, double n, double mean, double tau, double& outmean, double& outsd) {
   // don't calculate these more than once
   double ep = exp(around);
   double ep1 = 1.0 + ep;
@@ -18,26 +18,27 @@ NumericVector qt_binom_approx(double around, double k, double n, double mean, do
 
   // -H(x)
   double newtau = tau + n*ep / ep2;
+  outsd = 1.0/sqrt(newtau);
 
   // x - H^-1(x) g(x)
   double newmean = around + (k - n*ep/ep1 - tau*(around - mean))/newtau;
-
-  return NumericVector::create(newmean, 1.0/sqrt(newtau));
+  outmean = newmean;
 }
 
+void one_qt_binom_proposal_ratio(double p, double k, double n, double mean, double precision, double& outproposal, double& outratio) {
 
-NumericVector one_qt_binom_proposal_ratio(double p, double k, double n, double mean, double precision) {
+  double prop_mean, prop_sd;
+  qt_binom_approx(p, k, n, mean, precision, prop_mean, prop_sd);
+  double proposal = R::rnorm(prop_mean, prop_sd);
+  outproposal = proposal;
 
-  NumericVector prop_params = qt_binom_approx(p, k, n, mean, precision);
-  double proposal = R::rnorm(prop_params[0], prop_params[1]);
-
-  NumericVector orig_params = qt_binom_approx(proposal, k, n, mean, precision);
+  double orig_mean, orig_sd;
+  qt_binom_approx(proposal, k, n, mean, precision, orig_mean, orig_sd);
 
   double ratio = one_m_binom_ratio(p, proposal, k, n, mean, precision);
-  ratio -= R::dnorm(proposal, prop_params[0], prop_params[1], 1);
-  ratio += R::dnorm(p, orig_params[0], orig_params[1], 1);
-
-  return NumericVector::create(proposal, ratio);
+  ratio -= R::dnorm(proposal, prop_mean, prop_sd, 1);
+  ratio += R::dnorm(p, orig_mean, orig_sd, 1);
+  outratio = ratio;
 }
 
 
@@ -55,9 +56,7 @@ NumericVector mh_binom(bool qt, NumericVector p, NumericVector proposal, Numeric
 
     double ratio, prop;
     if(qt) { // 'proposal' is ignored
-      NumericVector prop_ratio = one_qt_binom_proposal_ratio(p[i], k[i], n[i], mean[i], precision[i]);
-      prop = prop_ratio[0];
-      ratio = prop_ratio[1];
+      one_qt_binom_proposal_ratio(p[i], k[i], n[i], mean[i], precision[i], prop, ratio);
     } else {
       prop = proposal[i];
       ratio = one_m_binom_ratio(p[i], prop, k[i], n[i], mean[i], precision[i]);
@@ -104,9 +103,7 @@ NumericVector mh_binom_mv(bool qt, NumericMatrix p, NumericMatrix proposal, Nume
 
       double ratio, prop;
       if(qt) { // 'proposal' is ignored
-        NumericVector prop_ratio = one_qt_binom_proposal_ratio(out(r, i), kk[i], nn[i], mmm, Q(i, i));
-        prop = prop_ratio[0];
-        ratio = prop_ratio[1];
+        one_qt_binom_proposal_ratio(out(r, i), kk[i], nn[i], mmm, Q(i, i), prop, ratio);
       } else {
         prop = proposal(r, i);
         ratio = one_m_binom_ratio(out(r, i), prop, kk[i], nn[i], mmm, Q(i, i));
