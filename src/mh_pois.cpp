@@ -9,7 +9,6 @@ double one_m_pois_ratio(double L, double proposal, double k, double mean, double
 }
 
 
-// [[Rcpp::export]]
 void qt_pois_approx(double around, double k, double mean, double tau, double& outmean, double& outsd) {
   // don't calculate this more than once
   double ep = exp(around);

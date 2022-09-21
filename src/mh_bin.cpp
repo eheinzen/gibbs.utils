@@ -9,7 +9,6 @@ double one_m_binom_ratio(double p, double proposal, double k, double n, double m
 }
 
 
-// [[Rcpp::export]]
 void qt_binom_approx(double around, double k, double n, double mean, double tau, double& outmean, double& outsd) {
   // don't calculate these more than once
   double ep = exp(around);
