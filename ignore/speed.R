@@ -213,3 +213,33 @@ microbenchmark::microbenchmark(
 )
 
 
+
+
+
+
+
+
+set.seed(20210119)
+L <- matrix(rnorm(50*151), nrow = 50, ncol = 151)
+k <- matrix(rpois(50*151, exp(L)), nrow = 50, ncol = 151)
+prec <- diag(rgamma(151, shape = 0.1, rate = 0.1))
+
+microbenchmark::microbenchmark(
+  five = {set.seed(99); sample_pois_reg(L, k, mean = 0, precision = prec, method = "quad")},
+  six = {set.seed(99); sample_pois_reg2(L, k, mean = 0, precision = prec, method = "quad")},
+  times = 10,
+  check = "equal"
+)
+
+
+
+
+
+
+
+
+
+
+
+
+

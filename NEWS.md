@@ -1,3 +1,9 @@
+# v2.1.0
+
+- Saved some time by using C++ pass-by-reference.
+
+- Added "gamma" proposal to `sample_pois_reg()`.
+
 # v2.0.0
 
 - `ss_pois_reg()` and `mh_pois_reg()` now have a unified interface: `sample_pois_reg()`, with slightly different naming conventions for

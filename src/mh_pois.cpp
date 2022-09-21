@@ -39,9 +39,35 @@ void one_qt_pois_proposal_ratio(double L, double k, double mean, double precisio
   outratio = ratio;
 }
 
+void gamma_pois_approx(double k, double mean, double tau, double& outalpha, double& outbeta) {
+  double invtau = 1.0/tau;
+  double m = exp(mean + 0.5*invtau);
+  double mm = m*m;
+  double v = (exp(invtau) - 1.0) * mm;
+  double alpha = mm / v + k;
+  double beta = m / v + 1.0;
+  outalpha = alpha;
+  outbeta = beta;
+}
+
+void one_gamma_pois_proposal_ratio(double L, double mult, double k, double mean, double precision, double& outproposal, double& outratio) {
+
+  double alpha, beta;
+  gamma_pois_approx(k, mean, precision, alpha, beta);
+  double proposal = R::rgamma(alpha/mult, mult/beta);
+  double lproposal = log(proposal);
+  outproposal = lproposal;
+
+  double ratio = one_m_pois_ratio(L, lproposal, k, mean, precision);
+  ratio -= (alpha - 1.0)*lproposal - beta*proposal;
+  ratio += (alpha - 1.0)*L - beta*exp(L);
+  outratio = ratio;
+}
+
+
 
 // [[Rcpp::export]]
-NumericVector mh_pois(bool qt, NumericVector L, NumericVector proposal, NumericVector k, LogicalVector k_na, NumericVector mean, NumericVector precision) {
+NumericVector mh_pois(int method, NumericVector L, NumericVector proposal, NumericVector k, LogicalVector k_na, NumericVector mean, NumericVector precision) {
   NumericVector out = clone(L);
   LogicalVector accept(L.size());
 
@@ -53,8 +79,10 @@ NumericVector mh_pois(bool qt, NumericVector L, NumericVector proposal, NumericV
     }
 
     double ratio, prop;
-    if(qt) { // 'proposal' is ignored
+    if(method == 1) { // 'proposal' is ignored
       one_qt_pois_proposal_ratio(L[i], k[i], mean[i], precision[i], prop, ratio);
+    } else if(method == 2) {
+      one_gamma_pois_proposal_ratio(L[i], proposal[i], k[i], mean[i], precision[i], prop, ratio);
     } else {
       prop = proposal[i];
       ratio = one_m_pois_ratio(L[i], prop, k[i], mean[i], precision[i]);
@@ -71,8 +99,8 @@ NumericVector mh_pois(bool qt, NumericVector L, NumericVector proposal, NumericV
 
 
 // [[Rcpp::export]]
-NumericVector mh_pois_mv(bool qt, NumericMatrix L, NumericMatrix proposal, NumericMatrix k, LogicalMatrix k_na, NumericMatrix mean, NumericMatrix Q,
-                          LogicalVector use_norm, NumericMatrix norm) {
+NumericVector mh_pois_mv(int method, NumericMatrix L, NumericMatrix proposal, NumericMatrix k, LogicalMatrix k_na, NumericMatrix mean, NumericMatrix Q,
+                         LogicalVector use_norm, NumericMatrix norm) {
   NumericMatrix out = clone(L);
   LogicalMatrix accept(L.nrow(), L.ncol());
 
@@ -100,8 +128,10 @@ NumericVector mh_pois_mv(bool qt, NumericMatrix L, NumericMatrix proposal, Numer
       }
 
       double ratio, prop;
-      if(qt) { // 'proposal' is ignored
+      if(method == 1) { // 'proposal' is ignored
         one_qt_pois_proposal_ratio(out(r, i), kk[i], mmm, Q(i, i), prop, ratio);
+      } else if(method == 2) {
+        one_gamma_pois_proposal_ratio(out(r, i), proposal(r, i), kk[i], mmm, Q(i, i), prop, ratio);
       } else {
         prop = proposal(r, i);
         ratio = one_m_pois_ratio(out(r, i), proposal(r, i), kk[i], mmm, Q(i, i));

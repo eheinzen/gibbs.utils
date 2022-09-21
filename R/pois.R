@@ -8,11 +8,13 @@
 #' @param nexpand The maximum number of expansions (to the right and left each)
 #' @param ncontract The maximum number of contractions. If this is exceeded, the original value is returned
 #' @param method The method to use to propose new values. \code{"normal"} proposes normal deviates from the current
-#'   value. \code{"uniform"} proposes uniform deviates. \code{"quadratic taylor"} proposes using a second-order Taylor
+#'   value. \code{"uniform"} proposes uniform deviates. \code{"gamma"} does moment-matching on the mean and variance
+#'   to propose a conjugate gamma proposal. \code{"quadratic taylor"} proposes using a second-order Taylor
 #'   approximation of the log-density at the current value, which amounts to a normal proposal with mean (usually) not equal
 #'   to the current value.
 #' @param width For \code{"normal"} proposals, the standard deviation(s) of proposals. For \code{"uniform"} proposals,
-#' the half-width of the uniform proposal interval. For \code{"slice"}, the width of each expansion (to the right and left each)
+#' the half-width of the uniform proposal interval. For \code{"slice"}, the width of each expansion (to the right and left each).
+#' For \code{"gamma"} a scaling factor to increase the variance of the proposal.
 #' @details
 #'   This function samples \code{L} conditional on \code{k}, \code{mean}, and \code{precision},
 #'   where \code{k ~ Pois(exp(L))} and \code{L ~ N(mean, precision)}.
@@ -30,7 +32,7 @@
 #' @seealso \url{https://en.wikipedia.org/wiki/Slice_sampling},
 #' \url{https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm}, \url{https://arxiv.org/pdf/1308.0657.pdf}
 #' @export
-sample_pois_reg <- function(L, k, mean, precision, method = c("slice", "normal", "uniform", "quadratic taylor", "mv quadratic taylor"), ...,
+sample_pois_reg <- function(L, k, mean, precision, method = c("slice", "normal", "uniform", "gamma", "quadratic taylor", "mv quadratic taylor"), ...,
                             width = 1, nexpand = 10, ncontract = 100) {
   method <- match.arg(method)
 
@@ -65,16 +67,22 @@ sample_pois_reg <- function(L, k, mean, precision, method = c("slice", "normal",
       out <- slice_sample_pois(L = L, k = k, k_na = is.na(k), mean = mean,
                                precision = precision, w = width, nexpand = nexpand, ncontract = ncontract)
     }
-  } else if(method %in% c("normal", "uniform")) {
+  } else if(method %in% c("normal", "uniform", "gamma")) {
     width <- check_one_or_all(width, length(L))
-    prop <- L + if(method == "normal") stats::rnorm(length(L), 0, width) else stats::runif(length(L), -width, width)
+    if(method %in% c("normal", "uniform")) {
+      prop <- L + if(method == "normal") stats::rnorm(length(L), 0, width) else stats::runif(length(L), -width, width)
+      m <- 0L
+    } else {
+      prop <- width
+      m <- 2L
+    }
 
     if(is.matrix(precision)) {
       dim(prop) <- dim(L)
-      out <- mh_pois_mv(qt = FALSE, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean,
+      out <- mh_pois_mv(method = 0L, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean,
                         Q = precision, use_norm = use_norm, norm = norm)
     } else {
-      out <- mh_pois(qt = FALSE, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean, precision = precision)
+      out <- mh_pois(method = 0L, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean, precision = precision)
     }
   } else if(method %in% c("quadratic taylor", "mv quadratic taylor")) {
     if(!missing(width)) warning("'width' is being ignored for this method.")
@@ -92,14 +100,14 @@ sample_pois_reg <- function(L, k, mean, precision, method = c("slice", "normal",
         attr(out, "accept") <- array(as.logical(tmp[, 1]), dim = dim(L))
 
       } else {
-        out <- mh_pois_mv(qt = TRUE, L = L, proposal = matrix(NA_real_), k = k, k_na = is.na(k), mean = mean,
+        out <- mh_pois_mv(method = 1L, L = L, proposal = matrix(NA_real_), k = k, k_na = is.na(k), mean = mean,
                           Q = precision, use_norm = use_norm, norm = norm)
       }
     } else {
       if(method == "mv quadratic taylor") {
         warning("'mv quadratic taylor' is being interpreted as 'quadratic taylor' because 'precision' is not a matrix.")
       }
-      out <- mh_pois(qt = TRUE, L = L, proposal = NA_real_, k = k, k_na = is.na(k), mean = mean, precision = precision)
+      out <- mh_pois(method = 1L, L = L, proposal = NA_real_, k = k, k_na = is.na(k), mean = mean, precision = precision)
     }
   }
 

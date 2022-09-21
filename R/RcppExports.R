@@ -5,10 +5,6 @@ impute_conj_mvnorm_mu_cpp <- function(y, mu, impute, Q, mu0, tau0) {
     .Call('_gibbs_utils_impute_conj_mvnorm_mu_cpp', PACKAGE = 'gibbs.utils', y, mu, impute, Q, mu0, tau0)
 }
 
-qt_binom_approx <- function(around, k, n, mean, tau) {
-    .Call('_gibbs_utils_qt_binom_approx', PACKAGE = 'gibbs.utils', around, k, n, mean, tau)
-}
-
 mh_binom <- function(qt, p, proposal, k, n, mean, precision) {
     .Call('_gibbs_utils_mh_binom', PACKAGE = 'gibbs.utils', qt, p, proposal, k, n, mean, precision)
 }
@@ -17,16 +13,12 @@ mh_binom_mv <- function(qt, p, proposal, k, n, mean, Q, use_norm, norm) {
     .Call('_gibbs_utils_mh_binom_mv', PACKAGE = 'gibbs.utils', qt, p, proposal, k, n, mean, Q, use_norm, norm)
 }
 
-qt_pois_approx <- function(around, k, mean, tau) {
-    .Call('_gibbs_utils_qt_pois_approx', PACKAGE = 'gibbs.utils', around, k, mean, tau)
+mh_pois <- function(method, L, proposal, k, k_na, mean, precision) {
+    .Call('_gibbs_utils_mh_pois', PACKAGE = 'gibbs.utils', method, L, proposal, k, k_na, mean, precision)
 }
 
-mh_pois <- function(qt, L, proposal, k, k_na, mean, precision) {
-    .Call('_gibbs_utils_mh_pois', PACKAGE = 'gibbs.utils', qt, L, proposal, k, k_na, mean, precision)
-}
-
-mh_pois_mv <- function(qt, L, proposal, k, k_na, mean, Q, use_norm, norm) {
-    .Call('_gibbs_utils_mh_pois_mv', PACKAGE = 'gibbs.utils', qt, L, proposal, k, k_na, mean, Q, use_norm, norm)
+mh_pois_mv <- function(method, L, proposal, k, k_na, mean, Q, use_norm, norm) {
+    .Call('_gibbs_utils_mh_pois_mv', PACKAGE = 'gibbs.utils', method, L, proposal, k, k_na, mean, Q, use_norm, norm)
 }
 
 one_binom_slice <- function(p, k, n, mean, precision, w, nexpand, ncontract) {

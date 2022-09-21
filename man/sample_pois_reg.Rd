@@ -9,7 +9,8 @@ sample_pois_reg(
   k,
   mean,
   precision,
-  method = c("slice", "normal", "uniform", "quadratic taylor", "mv quadratic taylor"),
+  method = c("slice", "normal", "uniform", "gamma", "quadratic taylor",
+    "mv quadratic taylor"),
   ...,
   width = 1,
   nexpand = 10,
@@ -26,14 +27,16 @@ sample_pois_reg(
 \item{precision}{the prior precision}
 
 \item{method}{The method to use to propose new values. \code{"normal"} proposes normal deviates from the current
-value. \code{"uniform"} proposes uniform deviates. \code{"quadratic taylor"} proposes using a second-order Taylor
+value. \code{"uniform"} proposes uniform deviates. \code{"gamma"} does moment-matching on the mean and variance
+to propose a conjugate gamma proposal. \code{"quadratic taylor"} proposes using a second-order Taylor
 approximation of the log-density at the current value, which amounts to a normal proposal with mean (usually) not equal
 to the current value.}
 
 \item{...}{Other arguments (not used)}
 
 \item{width}{For \code{"normal"} proposals, the standard deviation(s) of proposals. For \code{"uniform"} proposals,
-the half-width of the uniform proposal interval. For \code{"slice"}, the width of each expansion (to the right and left each)}
+the half-width of the uniform proposal interval. For \code{"slice"}, the width of each expansion (to the right and left each).
+For \code{"gamma"} a scaling factor to increase the variance of the proposal.}
 
 \item{nexpand}{The maximum number of expansions (to the right and left each)}
 
