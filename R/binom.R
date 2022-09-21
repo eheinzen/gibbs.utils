@@ -40,7 +40,7 @@ sample_binom_reg <- function(p, k, n, mean, precision, method = c("slice", "norm
 
     use_norm <- rowSums(n) == 0
     norm <- if(any(use_norm)) {
-      mean[use_norm, , drop = FALSE] + chol_mvrnorm(sum(use_norm), mu = 0, Precision = precision)
+      mean[use_norm, , drop = FALSE] + spam::rmvnorm.prec(sum(use_norm), Q = precision)
     } else matrix()
   } else {
     precision <- check_one_or_all(precision, length(p))

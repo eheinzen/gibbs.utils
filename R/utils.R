@@ -17,17 +17,9 @@ vec <- function(...) {
 #'
 #' @param x A matrix for \code{chol_inv} or a numeric vector for \code{expit}
 #' @param p A numeric vector
-#' @param n Number of samples to draw
-#' @param mu,Sigma,Precision parameters for a multivariate normal distribution. One of \code{Sigma} and
-#'   \code{Precision} must be supplied.
-#' @param A the "square root" by which we multiply the independent normals. Used only for speed.
 #' @param ... Other arguments (not in use at this time)
 #' @param verbose Logical, indicating whether to print some stuff.
 #' @param take.chol Should the cholesky be taken?
-#' @details
-#'   Unlike \code{MASS::\link[MASS]{mvrnorm}()}, \code{chol_mvrnorm()} uses the Cholesky decomposition
-#'   to draw random samples. This is usually faster; the largest gains are seen when \code{n} is small
-#'   (when \code{n} is large, the matrix multiplication becomes the limiting factor).
 #' @name utilities
 NULL
 
@@ -58,19 +50,6 @@ chol.gu_chol <- function(x, ..., verbose = FALSE) {
 #' @export
 chol_inv <- function(x, ...) {
   chol2inv(chol(x, ...))
-}
-
-#' @rdname utilities
-#' @export
-chol_mvrnorm <- function(n = 1, mu, Sigma, Precision,
-                         A = if(missing(Sigma)) backsolve(chol(Precision), diag(1, nrow(Precision))) else t(chol(Sigma))) {
-  ## the Cholesky of the inverse t(chol(Sigma)) is the inverse of the Cholesky backsolve(...), but don't get confused:
-  ## they might differ in their upper- vs. lower-triangularity.
-  ## What's important is that AA' = Sigma
-  p <- nrow(A)
-  mu <- check_one_or_all(mu, p)
-  out <- mu + A %*% matrix(rnorm(p*n), nrow = p)
-  if(n == 1) drop(out) else t(out)
 }
 
 #' @rdname utilities

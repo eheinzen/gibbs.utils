@@ -3,7 +3,6 @@
 S3method(chol,gu_chol)
 S3method(print,gibbs_utils_params)
 export(chol_inv)
-export(chol_mvrnorm)
 export(cond_mvnorm)
 export(conj_binom_p)
 export(conj_lm_beta)

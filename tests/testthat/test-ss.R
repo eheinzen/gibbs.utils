@@ -60,7 +60,7 @@ test_that("Poisson slice sampling works for NAs", {
   k <- matrix(c(rep_len(NA, 6), 1:6), byrow = TRUE, nrow = 4)
   tau <- diag(10, 3)
   set.seed(20211203)
-  norm <- chol_mvrnorm(2, 1, Precision = tau)
+  norm <- spam::rmvnorm.prec(2, rep(1, 3), Q = tau)
   set.seed(20211203)
   ss <- sample_pois_reg(L, k, m, tau, method = "slice")
   expect_equal(ss[1:2, ], norm)
@@ -136,7 +136,7 @@ test_that("binomial slice sampling works for n=0", {
   n <- 2*k
   tau <- diag(10, 3)
   set.seed(20211203)
-  norm <- chol_mvrnorm(2, 1, Precision = tau)
+  norm <- spam::rmvnorm.prec(2, rep(1, 3), Q = tau)
   set.seed(20211203)
   ss <- sample_binom_reg(p, k, n, m, tau, method = "slice")
   expect_equal(ss[1:2, ], norm)

@@ -6,7 +6,6 @@
 \alias{is.gu_chol}
 \alias{chol.gu_chol}
 \alias{chol_inv}
-\alias{chol_mvrnorm}
 \alias{logit}
 \alias{expit}
 \title{Other Utilities}
@@ -18,15 +17,6 @@ is.gu_chol(x)
 \method{chol}{gu_chol}(x, ..., verbose = FALSE)
 
 chol_inv(x, ...)
-
-chol_mvrnorm(
-  n = 1,
-  mu,
-  Sigma,
-  Precision,
-  A = if (missing(Sigma)) backsolve(chol(Precision), diag(1, nrow(Precision))) else
-    t(chol(Sigma))
-)
 
 logit(p)
 
@@ -41,20 +31,8 @@ expit(x)
 
 \item{verbose}{Logical, indicating whether to print some stuff.}
 
-\item{n}{Number of samples to draw}
-
-\item{mu, Sigma, Precision}{parameters for a multivariate normal distribution. One of \code{Sigma} and
-\code{Precision} must be supplied.}
-
-\item{A}{the "square root" by which we multiply the independent normals. Used only for speed.}
-
 \item{p}{A numeric vector}
 }
 \description{
 Other Utilities
-}
-\details{
-Unlike \code{MASS::\link[MASS]{mvrnorm}()}, \code{chol_mvrnorm()} uses the Cholesky decomposition
-  to draw random samples. This is usually faster; the largest gains are seen when \code{n} is small
-  (when \code{n} is large, the matrix multiplication becomes the limiting factor).
 }

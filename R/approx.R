@@ -28,16 +28,16 @@ mvqt_pois <- function(L, k, mean, Q) {
     sum((k * L - exp(L))[!is.na(k)]) - 0.5*as.vector(t(L - mean) %*% Q %*% (L - mean))
   }
 
-  prop_params <- mvqt_pois_approx(L, k, mean, Q);
-  proposal <- chol_mvrnorm(1, prop_params[[1]], Sigma = prop_params[[3]]);
+  prop_params <- mvqt_pois_approx(L, k, mean, Q)
+  proposal <- spam::rmvnorm.prec(1, mu = prop_params$mu, Q = prop_params$Q)[1, ]
 
-  orig_params <- mvqt_pois_approx(proposal, k, mean, Q);
+  orig_params <- mvqt_pois_approx(proposal, k, mean, Q)
 
   ratio <- pois_LL_mv(proposal, k, mean, Q)
-  ratio <- ratio - dmvnorm(proposal, prop_params[[1]], Q = prop_params[[2]], log = TRUE)
+  ratio <- ratio - dmvnorm(proposal, prop_params$mu, Q = prop_params$Q, log = TRUE)
 
   ratio <- ratio - pois_LL_mv(L, k, mean, Q)
-  ratio <- ratio + dmvnorm(L, orig_params[[1]], Q = orig_params[[2]], log = TRUE)
+  ratio <- ratio + dmvnorm(L, orig_params$mu, Q = orig_params$Q, log = TRUE)
   accept <- accept_reject(ratio)
   # print(exp(ratio))
   # list(if(accept) proposal else L, accept, exp(ratio), proposal,  prop_params, orig_params);
@@ -69,16 +69,16 @@ mvqt_binom <- function(p, k, n, mean, Q) {
     sum(k*p - n*log(1 + exp(p))) - 0.5*as.vector(t(p - mean) %*% Q %*% (p - mean))
   }
 
-  prop_params <- mvqt_binom_approx(p, k, n, mean, Q);
-  proposal <- chol_mvrnorm(1, prop_params[[1]], Sigma = prop_params[[3]]);
+  prop_params <- mvqt_binom_approx(p, k, n, mean, Q)
+  proposal <- spam::rmvnorm.prec(1, mu = prop_params$mu, Q = prop_params$Q)[1, ]
 
-  orig_params <- mvqt_binom_approx(proposal, k, n, mean, Q);
+  orig_params <- mvqt_binom_approx(proposal, k, n, mean, Q)
 
   ratio <- binom_LL_mv(proposal, k, n, mean, Q)
-  ratio <- ratio - dmvnorm(proposal, prop_params[[1]], Q = prop_params[[2]], log = TRUE)
+  ratio <- ratio - dmvnorm(proposal, prop_params$mu, Q = prop_params$Q, log = TRUE)
 
   ratio <- ratio - binom_LL_mv(p, k, n, mean, Q)
-  ratio <- ratio + dmvnorm(p, orig_params[[1]], Q = orig_params[[2]], log = TRUE)
+  ratio <- ratio + dmvnorm(p, orig_params$mu, Q = orig_params$Q, log = TRUE)
   accept <- accept_reject(ratio)
   # print(exp(ratio))
   # list(if(accept) proposal else p, accept, exp(ratio), proposal,  prop_params, orig_params);

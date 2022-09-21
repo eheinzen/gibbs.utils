@@ -1,3 +1,7 @@
+# v2.2.0
+
+- Removed `chol_mvrnorm()` and all its references. `spam::` functions are faster.
+
 # v2.1.0
 
 - Saved some time by using C++ pass-by-reference.
