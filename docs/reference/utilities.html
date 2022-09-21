@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0</span>
       </span>
     </div>
 
@@ -139,15 +139,6 @@
 
 <span class='fu'>chol_inv</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'>chol_mvrnorm</span><span class='op'>(</span>
-  n <span class='op'>=</span> <span class='fl'>1</span>,
-  <span class='va'>mu</span>,
-  <span class='va'>Sigma</span>,
-  <span class='va'>Precision</span>,
-  A <span class='op'>=</span> <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/missing.html'>missing</a></span><span class='op'>(</span><span class='va'>Sigma</span><span class='op'>)</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/backsolve.html'>backsolve</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/chol.html'>chol</a></span><span class='op'>(</span><span class='va'>Precision</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Precision</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='kw'>else</span>
-    <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/chol.html'>chol</a></span><span class='op'>(</span><span class='va'>Sigma</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span>
-
 <span class='fu'>logit</span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span>
 
 <span class='fu'>expit</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
@@ -172,29 +163,11 @@
       <td><p>Logical, indicating whether to print some stuff.</p></td>
     </tr>
     <tr>
-      <th>n</th>
-      <td><p>Number of samples to draw</p></td>
-    </tr>
-    <tr>
-      <th>mu, Sigma, Precision</th>
-      <td><p>parameters for a multivariate normal distribution. One of <code>Sigma</code> and
-<code>Precision</code> must be supplied.</p></td>
-    </tr>
-    <tr>
-      <th>A</th>
-      <td><p>the "square root" by which we multiply the independent normals. Used only for speed.</p></td>
-    </tr>
-    <tr>
       <th>p</th>
       <td><p>A numeric vector</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Unlike <code>MASS::<a href='https://rdrr.io/pkg/MASS/man/mvrnorm.html'>mvrnorm</a>()</code>, <code>chol_mvrnorm()</code> uses the Cholesky decomposition
-  to draw random samples. This is usually faster; the largest gains are seen when <code>n</code> is small
-  (when <code>n</code> is large, the matrix multiplication becomes the limiting factor).</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
