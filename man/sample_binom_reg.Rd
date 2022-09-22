@@ -30,9 +30,12 @@ sample_binom_reg(
 
 \item{method}{The method to use to propose new values. \code{"normal"} proposes normal deviates from the current
 value. \code{"uniform"} proposes uniform deviates. \code{"gamma"} does moment-matching on the mean and variance
-to propose a conjugate gamma proposal. \code{"quadratic taylor"} proposes using a second-order Taylor
+to propose a conjugate gamma proposal. \code{"mv gamma"} does the same, but ignores off-diagonal elements of the precision matrix
+in the proposal (for speed's sake; this may result in low acceptance rates when elements are highly correlated).
+ \code{"quadratic taylor"} proposes using a second-order Taylor
 approximation of the log-density at the current value, which amounts to a normal proposal with mean (usually) not equal
-to the current value.}
+to the current value. \code{"mv quadratic taylor"} does the same, but uses a multivariate normal approximation.
+Both \code{"mv gamma"} and \code{"mv quadratic taylor"} accept or reject an entire row at a time.}
 
 \item{...}{Other arguments (not used)}
 

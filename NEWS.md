@@ -1,3 +1,13 @@
+# v2.3.0
+
+- `sample_pois_reg()`:
+
+    - Fixed a bug where "gamma" didn't actually run the gamma proposal.
+
+    - Fixed the "gamma" metropolis step in cases when `mult != 1`.
+
+    - Added a "mv gamma" option.
+
 # v2.2.0
 
 - Removed `chol_mvrnorm()` and all its references. `spam::` functions are faster.

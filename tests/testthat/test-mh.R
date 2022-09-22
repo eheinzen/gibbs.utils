@@ -94,7 +94,10 @@ test_that("One-dimensional precision matrices give the same results", {
   one <- sample_pois_reg(0, 1, mean = -3, precision = 1, method = "gamma")
   set.seed(20210119)
   two <- sample_pois_reg(0, 1, mean = -3, precision = matrix(1), method = "gamma")
+  set.seed(20210119)
+  three <- sample_pois_reg(0, 1, mean = -3, precision = matrix(1), method = "mv gamma")
   expect_equal(one, two)
+  expect_equal(one, three)
 })
 
 
@@ -110,7 +113,7 @@ test_that("n == 0 gives the same results for all methods", {
   set.seed(20210119)
   four <- sample_binom_reg(p, k, n, mean = -3, precision = prec, method = "slice")
   set.seed(20210119)
-  five <- sample_binom_reg(p, k, n, mean = -3, precision = prec, method = "mv")
+  five <- sample_binom_reg(p, k, n, mean = -3, precision = prec, method = "mv quad")
   expect_equal(one, two)
   expect_equal(one, three)
 
@@ -162,18 +165,19 @@ test_that("k == NA gives the same results for all methods", {
   set.seed(20210119)
   four <- sample_pois_reg(L, k, mean = -3, precision = prec, method = "slice")
   set.seed(20210119)
-  five <- sample_pois_reg(L, k, mean = -3, precision = prec, method = "mv")
+  five <- sample_pois_reg(L, k, mean = -3, precision = prec, method = "mv quad")
   set.seed(20210119)
   six <- sample_pois_reg(L, k, mean = -3, precision = prec, method = "gamma")
+  set.seed(20210119)
+  seven <- sample_pois_reg(L, k, mean = -3, precision = prec, method = "mv gamma")
   expect_equal(one, two)
   expect_equal(one, three)
+  expect_equal(one, five)
   expect_equal(one, six)
+  expect_equal(one, seven)
 
   expect_true(all(attr(one, "accept")))
   attr(one, "accept") <- NULL
-  expect_true(all(attr(five, "accept")))
-  attr(five, "accept") <- NULL
-  expect_equal(one, five)
 
   expect_equal(one, four)
 })
