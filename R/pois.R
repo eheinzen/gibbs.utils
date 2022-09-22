@@ -57,6 +57,13 @@ sample_pois_reg <- function(L, k, mean, precision, method = c("slice", "normal",
       mean[use_norm, , drop = FALSE] + spam::rmvnorm.prec(sum(use_norm), Q = precision)
     } else matrix()
   } else {
+    if(method == "mv quadratic taylor") {
+      warning("'mv quadratic taylor' is being interpreted as 'quadratic taylor' because 'precision' is not a matrix.")
+      method <- "quadratic taylor"
+    } else if(method == "mv gamma") {
+      warning("'mv gamma' is being interpreted as 'gamma' because 'precision' is not a matrix.")
+      method <- "gamma"
+    }
     precision <- check_one_or_all(precision, length(L))
   }
 
@@ -93,41 +100,30 @@ sample_pois_reg <- function(L, k, mean, precision, method = c("slice", "normal",
       out <- mh_pois(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean, precision = precision)
     }
   } else if(method == "mv gamma") {
-    if(is.matrix(precision)) {
-      width <- check_one_or_all(width, length(L))
-      dim(width) <- dim(L)
-      use_norm[use_norm] <- seq_len(sum(use_norm))
-      tmp <- t(vapply(seq_len(nrow(L)), function(i) {
-        if(use_norm[i] > 0) {
-          return(c(1, norm[use_norm[i], ]))
-        }
-        mvgamma_pois(L[i, ], width[i, ], k[i, ], mean[i, ], precision)
-      }, numeric(ncol(L)+1)))
-      out <- tmp[, -1]
-      attr(out, "accept") <- array(as.logical(tmp[, 1]), dim = dim(L))
-    } else {
-      warning("'mv gamma' is being interpreted as 'gamma' because 'precision' is not a matrix.")
-      out <- mh_pois(method = 2L, L = L, proposal = width, k = k, k_na = is.na(k), mean = mean, precision = precision)
-    }
+    width <- check_one_or_all(width, length(L))
+    dim(width) <- dim(L)
+    use_norm[use_norm] <- seq_len(sum(use_norm))
+    tmp <- t(vapply(seq_len(nrow(L)), function(i) {
+      if(use_norm[i] > 0) {
+        return(c(1, norm[use_norm[i], ]))
+      }
+      mvgamma_pois(L[i, ], width[i, ], k[i, ], mean[i, ], precision)
+    }, numeric(ncol(L)+1)))
+    out <- tmp[, -1]
+    attr(out, "accept") <- array(as.logical(tmp[, 1]), dim = dim(L))
+
   } else if(method == "mv quadratic taylor") {
     if(!missing(width)) warning("'width' is being ignored for this method.")
-
-    if(is.matrix(precision)) {
-      use_norm[use_norm] <- seq_len(sum(use_norm))
-      tmp <- t(vapply(seq_len(nrow(L)), function(i) {
-        if(use_norm[i] > 0) {
-          return(c(1, norm[use_norm[i], ]))
-        }
-        mvqt_pois(L[i, ], k[i, ], mean[i, ], precision)
-      }, numeric(ncol(L)+1)))
-      out <- tmp[, -1]
-      attr(out, "accept") <- array(as.logical(tmp[, 1]), dim = dim(L))
-    } else {
-      if(method == "mv quadratic taylor") {
-        warning("'mv quadratic taylor' is being interpreted as 'quadratic taylor' because 'precision' is not a matrix.")
+    use_norm[use_norm] <- seq_len(sum(use_norm))
+    tmp <- t(vapply(seq_len(nrow(L)), function(i) {
+      if(use_norm[i] > 0) {
+        return(c(1, norm[use_norm[i], ]))
       }
-      out <- mh_pois(method = 1L, L = L, proposal = L, k = k, k_na = is.na(k), mean = mean, precision = precision)
-    }
+      mvqt_pois(L[i, ], k[i, ], mean[i, ], precision)
+    }, numeric(ncol(L)+1)))
+    out <- tmp[, -1]
+    attr(out, "accept") <- array(as.logical(tmp[, 1]), dim = dim(L))
+
   }
 
   dim(out) <- d # could be NULL
