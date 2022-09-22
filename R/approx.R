@@ -66,7 +66,7 @@ mvgamma_pois <- function(L, mult, k, mean, Q, accept_regardless) {
   alpha2 <- tmp$alpha / mult
   scale2 <- mult / tmp$beta
 
-  proposal <- rgamma(length(L), alpha2, scale = scale2)
+  proposal <- stats::rgamma(length(L), alpha2, scale = scale2)
   lproposal <- log(proposal)
 
   if(accept_regardless) {
