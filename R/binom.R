@@ -56,41 +56,40 @@ sample_binom_reg <- function(p, k, n, mean, precision, method = c("slice", "norm
       out <- slice_sample_binom(p = p, k = k, n = n, mean = mean,
                                 precision = precision, w = width, nexpand = nexpand, ncontract = ncontract)
     }
-  } else if(method %in% c("normal", "uniform")) {
-    width <- check_one_or_all(width, length(p))
-    prop <- p + if(method == "normal") stats::rnorm(length(p), 0, width) else stats::runif(length(p), -width, width)
-
+  } else if(method %in% c("normal", "uniform", "quadratic taylor")) {
+    if(method %in% c("normal", "uniform")) {
+      width <- check_one_or_all(width, length(p))
+      prop <- p + if(method == "normal") stats::rnorm(length(p), 0, width) else stats::runif(length(p), -width, width)
+      qt <- FALSE
+    } else if(method == "quadratic taylor") {
+      if(!missing(width)) warning("'width' is being ignored for this method.")
+      prop <- p # this is ignored
+      qt <- TRUE
+    }
     if(is.matrix(precision)) {
       dim(prop) <- dim(p)
-      out <- mh_binom_mv(qt = FALSE, p = p, proposal = prop, k = k, n = n, mean = mean,
+      out <- mh_binom_mv(qt = qt, p = p, proposal = prop, k = k, n = n, mean = mean,
                          Q = precision, use_norm = use_norm, norm = norm)
     } else {
-      out <- mh_binom(qt = FALSE, p = p, proposal = prop, k = k, n = n, mean = mean, precision = precision)
+      out <- mh_binom(qt = qt, p = p, proposal = prop, k = k, n = n, mean = mean, precision = precision)
     }
-  } else if(method %in% c("quadratic taylor", "mv quadratic taylor")) {
+  } else if(method == "mv quadratic taylor") {
     if(!missing(width)) warning("'width' is being ignored for this method.")
 
     if(is.matrix(precision)) {
-      if(method == "mv quadratic taylor") {
-        use_norm[use_norm] <- seq_len(sum(use_norm))
-        tmp <- t(vapply(seq_len(nrow(p)), function(i) {
-          if(use_norm[i] > 0) {
-            return(c(1, norm[use_norm[i], ]))
-          }
-          mvqt_binom(p[i, ], k[i, ], n[i, ], mean[i, ], precision)
-        }, numeric(ncol(p)+1)))
-        out <- tmp[, -1]
-        attr(out, "accept") <- array(as.logical(tmp[, 1]), dim = dim(p))
+      use_norm[use_norm] <- seq_len(sum(use_norm))
+      tmp <- t(vapply(seq_len(nrow(p)), function(i) {
+        if(use_norm[i] > 0) {
+          return(c(1, norm[use_norm[i], ]))
+        }
+        mvqt_binom(p[i, ], k[i, ], n[i, ], mean[i, ], precision)
+      }, numeric(ncol(p)+1)))
+      out <- tmp[, -1]
+      attr(out, "accept") <- array(as.logical(tmp[, 1]), dim = dim(p))
 
-      } else {
-        out <- mh_binom_mv(qt = TRUE, p = p, proposal = matrix(NA_real_), k = k, n = n, mean = mean,
-                           Q = precision, use_norm = use_norm, norm = norm)
-      }
     } else {
-      if(method == "mv quadratic taylor") {
-        warning("'mv quadratic taylor' is being interpreted as 'quadratic taylor' because 'precision' is not a matrix.")
-      }
-      out <- mh_binom(qt = TRUE, p = p, proposal = NA_real_, k = k, n = n, mean = mean, precision = precision)
+      warning("'mv quadratic taylor' is being interpreted as 'quadratic taylor' because 'precision' is not a matrix.")
+      out <- mh_binom(qt = TRUE, p = p, proposal = p, k = k, n = n, mean = mean, precision = precision)
     }
   }
 
