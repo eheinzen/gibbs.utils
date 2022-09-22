@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
       </span>
     </div>
 
@@ -135,12 +135,13 @@
   <span class='va'>k</span>,
   <span class='va'>mean</span>,
   <span class='va'>precision</span>,
-  method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"slice"</span>, <span class='st'>"normal"</span>, <span class='st'>"uniform"</span>, <span class='st'>"gamma"</span>, <span class='st'>"quadratic taylor"</span>,
+  method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"slice"</span>, <span class='st'>"normal"</span>, <span class='st'>"uniform"</span>, <span class='st'>"gamma"</span>, <span class='st'>"mv gamma"</span>, <span class='st'>"quadratic taylor"</span>,
     <span class='st'>"mv quadratic taylor"</span><span class='op'>)</span>,
   <span class='va'>...</span>,
   width <span class='op'>=</span> <span class='fl'>1</span>,
   nexpand <span class='op'>=</span> <span class='fl'>10</span>,
-  ncontract <span class='op'>=</span> <span class='fl'>100</span>
+  ncontract <span class='op'>=</span> <span class='fl'>100</span>,
+  accept_regardless <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -166,9 +167,12 @@
       <th>method</th>
       <td><p>The method to use to propose new values. <code>"normal"</code> proposes normal deviates from the current
 value. <code>"uniform"</code> proposes uniform deviates. <code>"gamma"</code> does moment-matching on the mean and variance
-to propose a conjugate gamma proposal. <code>"quadratic taylor"</code> proposes using a second-order Taylor
+to propose a conjugate gamma proposal. <code>"mv gamma"</code> does the same, but ignores off-diagonal elements of the precision matrix
+in the proposal (for speed's sake; this may result in low acceptance rates when elements are highly correlated).
+ <code>"quadratic taylor"</code> proposes using a second-order Taylor
 approximation of the log-density at the current value, which amounts to a normal proposal with mean (usually) not equal
-to the current value.</p></td>
+to the current value. <code>"mv quadratic taylor"</code> does the same, but uses a multivariate normal approximation.
+Both <code>"mv gamma"</code> and <code>"mv quadratic taylor"</code> accept or reject an entire row at a time.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -187,6 +191,11 @@ For <code>"gamma"</code> a scaling factor to increase the variance of the propos
     <tr>
       <th>ncontract</th>
       <td><p>The maximum number of contractions. If this is exceeded, the original value is returned</p></td>
+    </tr>
+    <tr>
+      <th>accept_regardless</th>
+      <td><p>Should proposals be accepted no matter what? Default <code>FALSE</code>. This is useful for testing, or for
+when the method is a gamma or quadratic approximation, which can be hard to accept if the initial starting point is low-density.</p></td>
     </tr>
     </table>
 
