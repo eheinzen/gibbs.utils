@@ -79,10 +79,10 @@ sample_pois_reg <- function(L, k, mean, precision, method = c("slice", "normal",
 
     if(is.matrix(precision)) {
       dim(prop) <- dim(L)
-      out <- mh_pois_mv(method = 0L, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean,
+      out <- mh_pois_mv(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean,
                         Q = precision, use_norm = use_norm, norm = norm)
     } else {
-      out <- mh_pois(method = 0L, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean, precision = precision)
+      out <- mh_pois(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean, precision = precision)
     }
   } else if(method %in% c("quadratic taylor", "mv quadratic taylor")) {
     if(!missing(width)) warning("'width' is being ignored for this method.")
