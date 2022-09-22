@@ -18,6 +18,8 @@
 #' @param width For \code{"normal"} proposals, the standard deviation(s) of proposals. For \code{"uniform"} proposals,
 #' the half-width of the uniform proposal interval. For \code{"slice"}, the width of each expansion (to the right and left each).
 #' For \code{"gamma"} a scaling factor to increase the variance of the proposal.
+#' @param accept_regardless Should proposals be accepted no matter what? Default \code{FALSE}. This is useful for testing, or for
+#'   when the method is a gamma or quadratic approximation, which can be hard to accept if the initial starting point is low-density.
 #' @details
 #'   This function samples \code{L} conditional on \code{k}, \code{mean}, and \code{precision},
 #'   where \code{k ~ Pois(exp(L))} and \code{L ~ N(mean, precision)}.
@@ -36,7 +38,7 @@
 #' \url{https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm}, \url{https://arxiv.org/pdf/1308.0657.pdf}
 #' @export
 sample_pois_reg <- function(L, k, mean, precision, method = c("slice", "normal", "uniform", "gamma", "mv gamma", "quadratic taylor", "mv quadratic taylor"), ...,
-                            width = 1, nexpand = 10, ncontract = 100) {
+                            width = 1, nexpand = 10, ncontract = 100, accept_regardless = FALSE) {
   method <- match.arg(method)
 
   if(length(L) != length(k)) stop("'L' and 'k' must have the same length")
@@ -95,9 +97,9 @@ sample_pois_reg <- function(L, k, mean, precision, method = c("slice", "normal",
     if(is.matrix(precision)) {
       dim(prop) <- dim(L)
       out <- mh_pois_mv(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean,
-                        Q = precision, use_norm = use_norm, norm = norm)
+                        Q = precision, use_norm = use_norm, norm = norm, accept_regardless = accept_regardless)
     } else {
-      out <- mh_pois(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean, precision = precision)
+      out <- mh_pois(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean, precision = precision, accept_regardless = accept_regardless)
     }
   } else if(method == "mv gamma") {
     width <- check_one_or_all(width, length(L))
@@ -107,7 +109,7 @@ sample_pois_reg <- function(L, k, mean, precision, method = c("slice", "normal",
       if(use_norm[i] > 0) {
         return(c(1, norm[use_norm[i], ]))
       }
-      mvgamma_pois(L[i, ], width[i, ], k[i, ], mean[i, ], precision)
+      mvgamma_pois(L[i, ], width[i, ], k[i, ], mean[i, ], precision, accept_regardless = accept_regardless)
     }, numeric(ncol(L)+1)))
     out <- tmp[, -1]
     attr(out, "accept") <- array(as.logical(tmp[, 1]), dim = dim(L))
@@ -119,7 +121,7 @@ sample_pois_reg <- function(L, k, mean, precision, method = c("slice", "normal",
       if(use_norm[i] > 0) {
         return(c(1, norm[use_norm[i], ]))
       }
-      mvqt_pois(L[i, ], k[i, ], mean[i, ], precision)
+      mvqt_pois(L[i, ], k[i, ], mean[i, ], precision, accept_regardless = accept_regardless)
     }, numeric(ncol(L)+1)))
     out <- tmp[, -1]
     attr(out, "accept") <- array(as.logical(tmp[, 1]), dim = dim(L))

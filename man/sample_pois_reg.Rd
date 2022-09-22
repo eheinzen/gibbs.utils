@@ -14,7 +14,8 @@ sample_pois_reg(
   ...,
   width = 1,
   nexpand = 10,
-  ncontract = 100
+  ncontract = 100,
+  accept_regardless = FALSE
 )
 }
 \arguments{
@@ -44,6 +45,9 @@ For \code{"gamma"} a scaling factor to increase the variance of the proposal.}
 \item{nexpand}{The maximum number of expansions (to the right and left each)}
 
 \item{ncontract}{The maximum number of contractions. If this is exceeded, the original value is returned}
+
+\item{accept_regardless}{Should proposals be accepted no matter what? Default \code{FALSE}. This is useful for testing, or for
+when the method is a gamma or quadratic approximation, which can be hard to accept if the initial starting point is low-density.}
 }
 \description{
 Sample a Poisson regression rate

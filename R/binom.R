@@ -20,7 +20,7 @@
 #'   The internals are defined in C++.
 #' @export
 sample_binom_reg <- function(p, k, n, mean, precision, method = c("slice", "normal", "uniform", "quadratic taylor", "mv quadratic taylor"), ...,
-                             width = 1, nexpand = 10, ncontract = 100) {
+                             width = 1, nexpand = 10, ncontract = 100, accept_regardless = FALSE) {
   method <- match.arg(method)
 
   if(length(p) != length(k) || length(p) != length(n)) stop("'p' and 'k' and 'n' must all have the same length")
@@ -73,9 +73,9 @@ sample_binom_reg <- function(p, k, n, mean, precision, method = c("slice", "norm
     if(is.matrix(precision)) {
       dim(prop) <- dim(p)
       out <- mh_binom_mv(qt = qt, p = p, proposal = prop, k = k, n = n, mean = mean,
-                         Q = precision, use_norm = use_norm, norm = norm)
+                         Q = precision, use_norm = use_norm, norm = norm, accept_regardless = accept_regardless)
     } else {
-      out <- mh_binom(qt = qt, p = p, proposal = prop, k = k, n = n, mean = mean, precision = precision)
+      out <- mh_binom(qt = qt, p = p, proposal = prop, k = k, n = n, mean = mean, precision = precision, accept_regardless = accept_regardless)
     }
   } else if(method == "mv quadratic taylor") {
     if(!missing(width)) warning("'width' is being ignored for this method.")
@@ -84,7 +84,7 @@ sample_binom_reg <- function(p, k, n, mean, precision, method = c("slice", "norm
       if(use_norm[i] > 0) {
         return(c(1, norm[use_norm[i], ]))
       }
-      mvqt_binom(p[i, ], k[i, ], n[i, ], mean[i, ], precision)
+      mvqt_binom(p[i, ], k[i, ], n[i, ], mean[i, ], precision, accept_regardless = accept_regardless)
     }, numeric(ncol(p)+1)))
     out <- tmp[, -1]
     attr(out, "accept") <- array(as.logical(tmp[, 1]), dim = dim(p))

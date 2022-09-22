@@ -8,6 +8,8 @@
 
     - Added a "mv gamma" option.
 
+- Added `accept_regardless=` argument to `sample_pois_reg()` and `sample_binom_reg()`
+
 # v2.2.0
 
 - Removed `chol_mvrnorm()` and all its references. `spam::` functions are faster.

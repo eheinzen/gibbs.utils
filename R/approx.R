@@ -22,7 +22,7 @@ mvqt_pois_approx <- function(around, k, mean, Q) {
 }
 
 
-mvqt_pois <- function(L, k, mean, Q) {
+mvqt_pois <- function(L, k, mean, Q, accept_regardless) {
 
   pois_LL_mv <- function(L, k, mean, Q) {
     sum((k * L - exp(L))[!is.na(k)]) - 0.5*as.vector(t(L - mean) %*% Q %*% (L - mean))
@@ -33,14 +33,15 @@ mvqt_pois <- function(L, k, mean, Q) {
 
   orig_params <- mvqt_pois_approx(proposal, k, mean, Q)
 
-  ratio <- pois_LL_mv(proposal, k, mean, Q)
-  ratio <- ratio - dmvnorm(proposal, prop_params$mu, Q = prop_params$Q, log = TRUE)
-
-  ratio <- ratio - pois_LL_mv(L, k, mean, Q)
-  ratio <- ratio + dmvnorm(L, orig_params$mu, Q = orig_params$Q, log = TRUE)
-  accept <- accept_reject(ratio)
-  # print(exp(ratio))
-  # list(if(accept) proposal else L, accept, exp(ratio), proposal,  prop_params, orig_params);
+  if(accept_regardless) {
+    accept <- TRUE
+  } else {
+    ratio <- pois_LL_mv(proposal, k, mean, Q)
+    ratio <- ratio - dmvnorm(proposal, prop_params$mu, Q = prop_params$Q, log = TRUE)
+    ratio <- ratio - pois_LL_mv(L, k, mean, Q)
+    ratio <- ratio + dmvnorm(L, orig_params$mu, Q = orig_params$Q, log = TRUE)
+    accept <- accept_reject(ratio)
+  }
   if(accept) c(1, proposal) else c(0, L)
 }
 
@@ -55,7 +56,7 @@ mvgamma_pois_approx <- function(k, mean, Q) {
   gu_params(alpha = alpha, beta = beta)
 }
 
-mvgamma_pois <- function(L, mult, k, mean, Q) {
+mvgamma_pois <- function(L, mult, k, mean, Q, accept_regardless) {
 
   pois_LL_mv <- function(L, k, mean, Q) {
     sum((k * L - exp(L))[!is.na(k)]) - 0.5*as.vector(t(L - mean) %*% Q %*% (L - mean))
@@ -68,11 +69,15 @@ mvgamma_pois <- function(L, mult, k, mean, Q) {
   proposal <- rgamma(length(L), alpha2, scale = scale2)
   lproposal <- log(proposal)
 
-  ratio <- pois_LL_mv(lproposal, k, mean, Q)
-  ratio <- ratio - sum((alpha2 - 1.0)*lproposal - proposal/scale2)
-  ratio <- ratio - pois_LL_mv(L, k, mean, Q)
-  ratio <- ratio + sum((alpha2 - 1.0)*L - exp(L)/scale2)
-  accept <- accept_reject(ratio)
+  if(accept_regardless) {
+    accept <- TRUE
+  } else {
+    ratio <- pois_LL_mv(lproposal, k, mean, Q)
+    ratio <- ratio - sum((alpha2 - 1.0)*lproposal - proposal/scale2)
+    ratio <- ratio - pois_LL_mv(L, k, mean, Q)
+    ratio <- ratio + sum((alpha2 - 1.0)*L - exp(L)/scale2)
+    accept <- accept_reject(ratio)
+  }
   if(accept) c(1, lproposal) else c(0, L)
 }
 
@@ -94,7 +99,7 @@ mvqt_binom_approx <- function(around, k, n, mean, Q) {
 }
 
 
-mvqt_binom <- function(p, k, n, mean, Q) {
+mvqt_binom <- function(p, k, n, mean, Q, accept_regardless) {
 
   binom_LL_mv <- function(p, k, n, mean, Q) {
     sum(k*p - n*log(1 + exp(p))) - 0.5*as.vector(t(p - mean) %*% Q %*% (p - mean))
@@ -105,14 +110,15 @@ mvqt_binom <- function(p, k, n, mean, Q) {
 
   orig_params <- mvqt_binom_approx(proposal, k, n, mean, Q)
 
-  ratio <- binom_LL_mv(proposal, k, n, mean, Q)
-  ratio <- ratio - dmvnorm(proposal, prop_params$mu, Q = prop_params$Q, log = TRUE)
-
-  ratio <- ratio - binom_LL_mv(p, k, n, mean, Q)
-  ratio <- ratio + dmvnorm(p, orig_params$mu, Q = orig_params$Q, log = TRUE)
-  accept <- accept_reject(ratio)
-  # print(exp(ratio))
-  # list(if(accept) proposal else p, accept, exp(ratio), proposal,  prop_params, orig_params);
+  if(accept_regardless) {
+    accept <- TRUE
+  } else {
+    ratio <- binom_LL_mv(proposal, k, n, mean, Q)
+    ratio <- ratio - dmvnorm(proposal, prop_params$mu, Q = prop_params$Q, log = TRUE)
+    ratio <- ratio - binom_LL_mv(p, k, n, mean, Q)
+    ratio <- ratio + dmvnorm(p, orig_params$mu, Q = orig_params$Q, log = TRUE)
+    accept <- accept_reject(ratio)
+  }
   if(accept) c(1, proposal) else c(0, p)
 }
 

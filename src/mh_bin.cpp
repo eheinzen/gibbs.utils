@@ -2,7 +2,8 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-double one_m_binom_ratio(double p, double proposal, double k, double n, double mean, double precision) {
+double one_m_binom_ratio(double p, double proposal, double k, double n, double mean, double precision, bool accept_regardless) {
+  if(accept_regardless) return 0.0;
   double ratio = binom_LL(proposal, k, n, mean, precision);
   ratio -= binom_LL(p, k, n, mean, precision);
   return ratio;
@@ -24,17 +25,21 @@ void qt_binom_approx(double around, double k, double n, double mean, double tau,
   outmean = newmean;
 }
 
-void one_qt_binom_proposal_ratio(double p, double k, double n, double mean, double precision, double& outproposal, double& outratio) {
+void one_qt_binom_proposal_ratio(double p, double k, double n, double mean, double precision, double& outproposal, double& outratio, bool accept_regardless) {
 
   double prop_mean, prop_sd;
   qt_binom_approx(p, k, n, mean, precision, prop_mean, prop_sd);
   double proposal = R::rnorm(prop_mean, prop_sd);
   outproposal = proposal;
+  if(accept_regardless) {
+    outratio = 0.0;
+    return;
+  }
 
   double orig_mean, orig_sd;
   qt_binom_approx(proposal, k, n, mean, precision, orig_mean, orig_sd);
 
-  double ratio = one_m_binom_ratio(p, proposal, k, n, mean, precision);
+  double ratio = one_m_binom_ratio(p, proposal, k, n, mean, precision, false);
   ratio -= R::dnorm(proposal, prop_mean, prop_sd, 1);
   ratio += R::dnorm(p, orig_mean, orig_sd, 1);
   outratio = ratio;
@@ -42,7 +47,8 @@ void one_qt_binom_proposal_ratio(double p, double k, double n, double mean, doub
 
 
 // [[Rcpp::export]]
-NumericVector mh_binom(bool qt, NumericVector p, NumericVector proposal, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision) {
+NumericVector mh_binom(bool qt, NumericVector p, NumericVector proposal, NumericVector k, NumericVector n,
+                       NumericVector mean, NumericVector precision, bool accept_regardless) {
   NumericVector out = clone(p);
   LogicalVector accept(p.size());
 
@@ -55,12 +61,12 @@ NumericVector mh_binom(bool qt, NumericVector p, NumericVector proposal, Numeric
 
     double ratio, prop;
     if(qt) { // 'proposal' is ignored
-      one_qt_binom_proposal_ratio(p[i], k[i], n[i], mean[i], precision[i], prop, ratio);
+      one_qt_binom_proposal_ratio(p[i], k[i], n[i], mean[i], precision[i], prop, ratio, accept_regardless);
     } else {
       prop = proposal[i];
-      ratio = one_m_binom_ratio(p[i], prop, k[i], n[i], mean[i], precision[i]);
+      ratio = one_m_binom_ratio(p[i], prop, k[i], n[i], mean[i], precision[i], accept_regardless);
     }
-    bool a = accept_reject(ratio);
+    bool a = accept_regardless || accept_reject(ratio);
     accept[i] = a;
     if(a) {
       out[i] = prop;
@@ -72,8 +78,8 @@ NumericVector mh_binom(bool qt, NumericVector p, NumericVector proposal, Numeric
 
 
 // [[Rcpp::export]]
-NumericVector mh_binom_mv(bool qt, NumericMatrix p, NumericMatrix proposal, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q,
-                         LogicalVector use_norm, NumericMatrix norm) {
+NumericVector mh_binom_mv(bool qt, NumericMatrix p, NumericMatrix proposal, NumericMatrix k, NumericMatrix n,
+                          NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm, bool accept_regardless) {
   NumericMatrix out = clone(p);
   LogicalMatrix accept(p.nrow(), p.ncol());
 
@@ -102,12 +108,12 @@ NumericVector mh_binom_mv(bool qt, NumericMatrix p, NumericMatrix proposal, Nume
 
       double ratio, prop;
       if(qt) { // 'proposal' is ignored
-        one_qt_binom_proposal_ratio(out(r, i), kk[i], nn[i], mmm, Q(i, i), prop, ratio);
+        one_qt_binom_proposal_ratio(out(r, i), kk[i], nn[i], mmm, Q(i, i), prop, ratio, accept_regardless);
       } else {
         prop = proposal(r, i);
-        ratio = one_m_binom_ratio(out(r, i), prop, kk[i], nn[i], mmm, Q(i, i));
+        ratio = one_m_binom_ratio(out(r, i), prop, kk[i], nn[i], mmm, Q(i, i), accept_regardless);
       }
-      bool a = accept_reject(ratio);
+      bool a = accept_regardless || accept_reject(ratio);
       accept(r, i) = a;
       if(a) {
         out(r, i) = prop;
