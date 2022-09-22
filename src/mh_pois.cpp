@@ -54,13 +54,14 @@ void one_gamma_pois_proposal_ratio(double L, double mult, double k, double mean,
 
   double alpha, beta;
   gamma_pois_approx(k, mean, precision, alpha, beta);
-  double proposal = R::rgamma(alpha/mult, mult/beta);
+  double alpha2 = alpha/mult, scale2 = mult/beta;
+  double proposal = R::rgamma(alpha2, scale2);
   double lproposal = log(proposal);
   outproposal = lproposal;
 
   double ratio = one_m_pois_ratio(L, lproposal, k, mean, precision);
-  ratio -= (alpha - 1.0)*lproposal - beta*proposal;
-  ratio += (alpha - 1.0)*L - beta*exp(L);
+  ratio -= (alpha2 - 1.0)*lproposal - proposal/scale2;
+  ratio += (alpha2 - 1.0)*L - exp(L)/scale2;
   outratio = ratio;
 }
 
