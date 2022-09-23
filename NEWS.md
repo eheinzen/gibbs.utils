@@ -1,3 +1,7 @@
+# v2.3.1
+
+- Some speed improvements for "mv quadratic taylor" and "mv gamma".
+
 # v2.3.0
 
 - `sample_pois_reg()`:

@@ -104,15 +104,18 @@ sample_pois_reg <- function(L, k, mean, precision, method = c("slice", "normal",
   } else if(method == "mv gamma") {
     width <- check_one_or_all(width, length(L))
     dim(width) <- dim(L)
-    use_norm[use_norm] <- seq_len(sum(use_norm))
-    tmp <- t(vapply(seq_len(nrow(L)), function(i) {
-      if(use_norm[i] > 0) {
-        return(c(1, norm[use_norm[i], ]))
-      }
-      mvgamma_pois(L[i, ], width[i, ], k[i, ], mean[i, ], precision, accept_regardless = accept_regardless)
-    }, numeric(ncol(L)+1)))
-    out <- tmp[, -1]
-    attr(out, "accept") <- array(as.logical(tmp[, 1]), dim = dim(L))
+    out <- L
+    out[use_norm, ] <- norm
+
+    not_norm <- !use_norm
+    if(any(not_norm)) {
+      tmp <- mvgamma_pois(L[not_norm, , drop = FALSE], width[not_norm, , drop = FALSE], k[not_norm, , drop = FALSE], mean[not_norm, , drop = FALSE],
+                          Q = precision, accept_regardless = accept_regardless)
+      out[not_norm, ] <- tmp$L
+      attr(out, "accept") <- array(replace(use_norm, not_norm, tmp$accept), dim = dim(L))
+    } else {
+      attr(out, "accept") <- array(use_norm, dim = dim(L))
+    }
 
   } else if(method == "mv quadratic taylor") {
     if(!missing(width)) warning("'width' is being ignored for this method.")
