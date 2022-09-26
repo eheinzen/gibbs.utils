@@ -19,7 +19,7 @@
 #'
 #'   The internals are defined in C++.
 #' @export
-sample_binom_reg <- function(p, k, n, mean, precision, method = c("slice", "normal", "uniform", "quadratic taylor", "mv quadratic taylor"), ...,
+sample_binom_reg <- function(p, k, n, mean, precision, method = c("slice", "normal", "uniform", "quadratic taylor", "mv quadratic taylor", "mv beta"), ...,
                              width = 1, nexpand = 10, ncontract = 100, accept_regardless = FALSE) {
   method <- match.arg(method)
 
@@ -46,6 +46,8 @@ sample_binom_reg <- function(p, k, n, mean, precision, method = c("slice", "norm
     if(method == "mv quadratic taylor") {
       warning("'mv quadratic taylor' is being interpreted as 'quadratic taylor' because 'precision' is not a matrix.")
       method <- "quadratic taylor"
+    } else if(method == "mv beta") {
+      stop("'mv beta' requires 'precision' to be a matrix")
     }
     precision <- check_one_or_all(precision, length(p))
   }
@@ -77,6 +79,22 @@ sample_binom_reg <- function(p, k, n, mean, precision, method = c("slice", "norm
     } else {
       out <- mh_binom(qt = qt, p = p, proposal = prop, k = k, n = n, mean = mean, precision = precision, accept_regardless = accept_regardless)
     }
+  } else if(method == "mv beta") {
+    width <- check_one_or_all(width, length(p))
+    dim(width) <- dim(p)
+    out <- p
+    out[use_norm, ] <- norm
+
+    not_norm <- !use_norm
+    if(any(not_norm)) {
+      tmp <- mvbeta_binom(p[not_norm, , drop = FALSE], width[not_norm, , drop = FALSE], k[not_norm, , drop = FALSE], n[not_norm, , drop = FALSE],
+                          mean[not_norm, , drop = FALSE], Q = precision, accept_regardless = accept_regardless)
+      out[not_norm, ] <- tmp$p
+      attr(out, "accept") <- array(replace(use_norm, not_norm, tmp$accept), dim = dim(p))
+    } else {
+      attr(out, "accept") <- array(use_norm, dim = dim(p))
+    }
+
   } else if(method == "mv quadratic taylor") {
     if(!missing(width)) warning("'width' is being ignored for this method.")
     use_norm[use_norm] <- seq_len(sum(use_norm))

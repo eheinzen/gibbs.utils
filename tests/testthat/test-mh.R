@@ -114,14 +114,16 @@ test_that("n == 0 gives the same results for all methods", {
   four <- sample_binom_reg(p, k, n, mean = -3, precision = prec, method = "slice")
   set.seed(20210119)
   five <- sample_binom_reg(p, k, n, mean = -3, precision = prec, method = "mv quad")
+  set.seed(20210119)
+  six <- sample_binom_reg(p, k, n, mean = -3, precision = prec, method = "mv beta")
   expect_equal(one, two)
   expect_equal(one, three)
+  expect_equal(one, five)
+  expect_equal(one, six)
+
 
   expect_true(all(attr(one, "accept")))
   attr(one, "accept") <- NULL
-  expect_true(all(attr(five, "accept")))
-  attr(five, "accept") <- NULL
-  expect_equal(one, five)
 
   expect_equal(one, four)
 })

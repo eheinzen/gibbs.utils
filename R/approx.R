@@ -127,3 +127,58 @@ mvqt_binom <- function(p, k, n, mean, Q, accept_regardless) {
   if(accept) c(1, proposal) else c(0, p)
 }
 
+
+mvbeta_binom_approx <- function(k, n, mean, Q) {
+  if(!is.matrix(k)) k <- matrix(k, nrow = 1)
+  if(!is.matrix(n)) n <- matrix(n, nrow = 1)
+  if(!is.matrix(mean)) mean <- matrix(mean, nrow = 1)
+  invtau <- matrix(1.0/diag(Q), nrow = nrow(k), ncol = ncol(k), byrow = TRUE)
+
+  # use the log-normal approximation for when p is small
+  m <- exp(mean + 0.5*invtau)
+  # if(any(m > 1)) ## this is already taken into account below
+  mm <- m*m
+  v <- (exp(invtau) - 1.0) * mm
+  if(any(v >= m*(1-m))) {
+    # I think this is equivalent to 3/2 < -mu * tau
+    stop("Cannot make the beta approximation")
+  }
+
+  tmp <- m*(1-m)/v - 1
+
+  alpha <- m*tmp + k
+  beta <- (1-m)*tmp + n
+  gu_params(alpha = alpha, beta = beta)
+}
+
+mvbeta_binom <- function(p, mult, k, n, mean, Q, accept_regardless) {
+
+  binom_LL_mv <- function(p, k, n) {
+    rowSums(k*p - n*log(1 + exp(p)))
+  }
+
+  tmp <- mvbeta_binom_approx(k, n, mean, Q)
+  alpha2 <- tmp$alpha / mult # this doesn't *exactly* multiply the variance by mult, but close enough when alpha+beta is large
+  beta2 <- tmp$beta / mult
+
+  proposal <- matrix(stats::rbeta(length(p), alpha2, beta2), nrow = nrow(p), ncol = ncol(p))
+  lproposal <- logit(proposal)
+
+  if(accept_regardless) {
+    accept <- rep_len(TRUE, nrow(p))
+  } else {
+    ep <- expit(p)
+    ratio <- binom_LL_mv(lproposal, k, n) - binom_LL_mv(p, k, n) +
+      -0.5*rowSums((lproposal + p - 2*mean) * ((lproposal - p) %*% Q))
+    ratio <- ratio - rowSums((alpha2 - 1)*log(proposal) + (beta2 - 1)*log(1 - proposal))
+    ratio <- ratio + rowSums((alpha2 - 1)*log(ep)       + (beta2 - 1)*log(1 - ep))
+    accept <- vapply(ratio, accept_reject, NA)
+  }
+
+  p[accept, ] <- lproposal[accept, ]
+  list(
+    p = p,
+    accept = accept
+  )
+}
+

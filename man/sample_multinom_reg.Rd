@@ -35,14 +35,22 @@ This is of dimension \code{i x j}.}
 \item{precision}{an array of dimension \code{i x i x (j-1)}.
 The \code{j}-dimension is assumed to be independent.}
 
-\item{method}{The method to use to propose new values. \code{"normal"} proposes normal deviates from the current
-value. \code{"uniform"} proposes uniform deviates. \code{"gamma"} does moment-matching on the mean and variance
-to propose a conjugate gamma proposal. \code{"mv gamma"} does the same, but ignores off-diagonal elements of the precision matrix
-in the proposal (for speed's sake; this may result in low acceptance rates when elements are highly correlated).
- \code{"quadratic taylor"} proposes using a second-order Taylor
-approximation of the log-density at the current value, which amounts to a normal proposal with mean (usually) not equal
-to the current value. \code{"mv quadratic taylor"} does the same, but uses a multivariate normal approximation.
-Both \code{"mv gamma"} and \code{"mv quadratic taylor"} accept or reject an entire row at a time.}
+\item{method}{The method to use to propose new values.
+\itemize{
+  \item{\code{"normal"} proposes normal deviates from the current value.}
+  \item{\code{"uniform"} proposes uniform deviates.}
+  \item{\code{"gamma"} (only for Poisson) does moment-matching on the mean and variance
+to propose a conjugate gamma proposal.}
+  \item{\code{"mv gamma"} (only for Poisson) does the same, but ignores off-diagonal elements of the precision matrix
+in the proposal (for speed's sake; this may result in low acceptance rates when elements are highly correlated).}
+  \item{\code{"mv beta"} (only for binomial, and still somewhat experimental) does moment matching on a mean and variance
+   approximated by the log-normal distribution (instead of logit-normal, for which there is no closed form)
+   to propose a conjugate beta proposal; here again we ignore off-diagonal elements of the precision matrix for the proposal.}
+  \item{\code{"quadratic taylor"} proposes using a second-order Taylor approximation of the log-density at the current value,
+   which amounts to a normal proposal with mean (usually) not equal to the current value.}
+   \item{\code{"mv quadratic taylor"} does the same, but uses a multivariate normal approximation.}
+}
+Note that \code{"mv gamma"}, \code{"mv beta"} and \code{"mv quadratic taylor"} accept or reject an entire row at a time.}
 
 \item{ref}{One of \code{"first"} or \code{"last"} or a numeric value, denoting which "column" (the third dimension)
  of \code{p} is the reference.
@@ -56,7 +64,7 @@ Etc.}
 
 \item{width}{For \code{"normal"} proposals, the standard deviation(s) of proposals. For \code{"uniform"} proposals,
 the half-width of the uniform proposal interval. For \code{"slice"}, the width of each expansion (to the right and left each).
-For \code{"gamma"} a scaling factor to increase the variance of the proposal.}
+For \code{"gamma"} and \code{"beta"} a scaling factor to increase the variance of the proposal.}
 
 \item{nexpand}{The maximum number of expansions (to the right and left each)}
 
