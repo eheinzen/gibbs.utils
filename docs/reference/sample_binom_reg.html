@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.0</span>
       </span>
     </div>
 
@@ -136,12 +136,13 @@
   <span class='va'>n</span>,
   <span class='va'>mean</span>,
   <span class='va'>precision</span>,
-  method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"slice"</span>, <span class='st'>"normal"</span>, <span class='st'>"uniform"</span>, <span class='st'>"quadratic taylor"</span>, <span class='st'>"mv quadratic taylor"</span><span class='op'>)</span>,
+  method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"slice"</span>, <span class='st'>"normal"</span>, <span class='st'>"uniform"</span>, <span class='st'>"quadratic taylor"</span>, <span class='st'>"mv quadratic taylor"</span>,
+    <span class='st'>"mv ind quadratic taylor"</span>, <span class='st'>"mv beta"</span><span class='op'>)</span>,
   <span class='va'>...</span>,
   width <span class='op'>=</span> <span class='fl'>1</span>,
   nexpand <span class='op'>=</span> <span class='fl'>10</span>,
   ncontract <span class='op'>=</span> <span class='fl'>100</span>,
-  accept_regardless <span class='op'>=</span> <span class='cn'>FALSE</span>
+  acceptance <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"MH"</span>, <span class='st'>"LL only"</span>, <span class='st'>"regardless"</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -169,14 +170,24 @@
     </tr>
     <tr>
       <th>method</th>
-      <td><p>The method to use to propose new values. <code>"normal"</code> proposes normal deviates from the current
-value. <code>"uniform"</code> proposes uniform deviates. <code>"gamma"</code> does moment-matching on the mean and variance
-to propose a conjugate gamma proposal. <code>"mv gamma"</code> does the same, but ignores off-diagonal elements of the precision matrix
-in the proposal (for speed's sake; this may result in low acceptance rates when elements are highly correlated).
- <code>"quadratic taylor"</code> proposes using a second-order Taylor
-approximation of the log-density at the current value, which amounts to a normal proposal with mean (usually) not equal
-to the current value. <code>"mv quadratic taylor"</code> does the same, but uses a multivariate normal approximation.
-Both <code>"mv gamma"</code> and <code>"mv quadratic taylor"</code> accept or reject an entire row at a time.</p></td>
+      <td><p>The method to use to propose new values.</p><ul>
+<li><p><code>"normal"</code> proposes normal deviates from the current value.</p></li>
+<li><p><code>"uniform"</code> proposes uniform deviates.</p></li>
+<li><p><code>"gamma"</code> (only for Poisson) does moment-matching on the mean and variance
+to propose a conjugate gamma proposal.</p></li>
+<li><p><code>"mv gamma"</code> (only for Poisson) does the same, but ignores off-diagonal elements of the precision matrix
+in the proposal (for speed's sake; this may result in low acceptance rates when elements are highly correlated).</p></li>
+<li><p><code>"mv beta"</code> (only for binomial, and still somewhat experimental) does moment matching on a mean and variance
+   approximated by the log-normal distribution (instead of logit-normal, for which there is no closed form)
+   to propose a conjugate beta proposal; here again we ignore off-diagonal elements of the precision matrix for the proposal.</p></li>
+<li><p><code>"quadratic taylor"</code> proposes using a second-order Taylor approximation of the log-density at the current value,
+   which amounts to a normal proposal with mean (usually) not equal to the current value.</p></li>
+<li><p><code>"mv quadratic taylor"</code> does the same, but uses a multivariate normal approximation.</p></li>
+<li><p><code>"mv ind quadratic taylor"</code> proposes using a similar Taylor approximation, but approximates the log-density around
+   the mean, instead of the current value. Furthermore, like <code>"mv beta"</code> and <code>"mv gamma"</code>, it ignores off-diagonal
+   elements of the precision matrix for the proposal, which again might yield low acceptance rates when elements are highly correlated.
+   Both of these simplifications yield a significant speed boost.</p></li>
+</ul><p>Note that <code>"mv gamma"</code>, <code>"mv beta"</code> and <code>"mv [ind ]quadratic taylor"</code> accept or reject an entire row at a time.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -186,7 +197,7 @@ Both <code>"mv gamma"</code> and <code>"mv quadratic taylor"</code> accept or re
       <th>width</th>
       <td><p>For <code>"normal"</code> proposals, the standard deviation(s) of proposals. For <code>"uniform"</code> proposals,
 the half-width of the uniform proposal interval. For <code>"slice"</code>, the width of each expansion (to the right and left each).
-For <code>"gamma"</code> a scaling factor to increase the variance of the proposal.</p></td>
+For <code>"gamma"</code>, <code>"beta"</code>, and <code>"mv ind quadratic taylor"</code> a scaling factor to increase the variance of the proposal.</p></td>
     </tr>
     <tr>
       <th>nexpand</th>
@@ -197,9 +208,10 @@ For <code>"gamma"</code> a scaling factor to increase the variance of the propos
       <td><p>The maximum number of contractions. If this is exceeded, the original value is returned</p></td>
     </tr>
     <tr>
-      <th>accept_regardless</th>
-      <td><p>Should proposals be accepted no matter what? Default <code>FALSE</code>. This is useful for testing, or for
-when the method is a gamma or quadratic approximation, which can be hard to accept if the initial starting point is low-density.</p></td>
+      <th>acceptance</th>
+      <td><p>What should be the criteria for acceptance? "MH" indicates the usual Metropolis-Hastings update. "LL only" ignores the proposal
+densities but considers the log-likelihoods. "regardless" accepts no matter what. This is useful for testing, or for
+when the method is a gamma, beta, or quadratic approximation, which can be hard to accept if the initial starting point is low-density.</p></td>
     </tr>
     </table>
 
