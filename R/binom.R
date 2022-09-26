@@ -21,8 +21,10 @@
 #' @export
 sample_binom_reg <- function(p, k, n, mean, precision,
                              method = c("slice", "normal", "uniform", "quadratic taylor", "mv quadratic taylor", "mv ind quadratic taylor", "mv beta"),
-                             ..., width = 1, nexpand = 10, ncontract = 100, accept_regardless = FALSE) {
+                             ..., width = 1, nexpand = 10, ncontract = 100, acceptance = c("MH", "LL only", "regardless")) {
   method <- match.arg(method)
+  acceptance <- match.arg(acceptance)
+  acceptance <- match(acceptance, c("MH", "LL only", "regardless")) - 1L
 
   if(length(p) != length(k) || length(p) != length(n)) stop("'p' and 'k' and 'n' must all have the same length")
   stopifnot(k <= n)
@@ -76,9 +78,9 @@ sample_binom_reg <- function(p, k, n, mean, precision,
     if(is.matrix(precision)) {
       dim(prop) <- dim(p)
       out <- mh_binom_mv(qt = qt, p = p, proposal = prop, k = k, n = n, mean = mean,
-                         Q = precision, use_norm = use_norm, norm = norm, accept_regardless = accept_regardless)
+                         Q = precision, use_norm = use_norm, norm = norm, acceptance = acceptance)
     } else {
-      out <- mh_binom(qt = qt, p = p, proposal = prop, k = k, n = n, mean = mean, precision = precision, accept_regardless = accept_regardless)
+      out <- mh_binom(qt = qt, p = p, proposal = prop, k = k, n = n, mean = mean, precision = precision, acceptance = acceptance)
     }
   } else if(method %in% c("mv beta", "mv ind quadratic taylor")) {
     width <- check_one_or_all(width, length(p))
@@ -90,7 +92,7 @@ sample_binom_reg <- function(p, k, n, mean, precision,
     if(any(not_norm)) {
       FUN <- if(method == "mv beta") mvbeta_binom else mviqt_binom
       tmp <- FUN(p[not_norm, , drop = FALSE], width[not_norm, , drop = FALSE], k[not_norm, , drop = FALSE], n[not_norm, , drop = FALSE],
-                 mean[not_norm, , drop = FALSE], Q = precision, accept_regardless = accept_regardless)
+                 mean[not_norm, , drop = FALSE], Q = precision, acceptance = acceptance)
       out[not_norm, ] <- tmp$p
       attr(out, "accept") <- array(replace(use_norm, not_norm, tmp$accept), dim = dim(p))
     } else {
@@ -104,7 +106,7 @@ sample_binom_reg <- function(p, k, n, mean, precision,
       if(use_norm[i] > 0) {
         return(c(1, norm[use_norm[i], ]))
       }
-      mvqt_binom(p[i, ], k[i, ], n[i, ], mean[i, ], precision, accept_regardless = accept_regardless)
+      mvqt_binom(p[i, ], k[i, ], n[i, ], mean[i, ], precision, acceptance = acceptance)
     }, numeric(ncol(p)+1)))
     out <- tmp[, -1]
     attr(out, "accept") <- array(as.logical(tmp[, 1]), dim = dim(p))

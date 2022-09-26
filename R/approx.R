@@ -22,7 +22,7 @@ mvqt_pois_approx <- function(around, k, mean, Q) {
 }
 
 
-mvqt_pois <- function(L, k, mean, Q, accept_regardless) {
+mvqt_pois <- function(L, k, mean, Q, acceptance) {
 
   pois_LL_mv <- function(L, k) {
     sum((k * L - exp(L))[!is.na(k)])
@@ -31,14 +31,16 @@ mvqt_pois <- function(L, k, mean, Q, accept_regardless) {
   prop_params <- mvqt_pois_approx(L, k, mean, Q)
   proposal <- spam::rmvnorm.prec(1, mu = prop_params$mu, Q = prop_params$Q)[1, ]
 
-  orig_params <- mvqt_pois_approx(proposal, k, mean, Q)
 
-  if(accept_regardless) {
+  if(acceptance == 2) {
     accept <- TRUE
   } else {
     ratio <- pois_LL_mv(proposal, k) - pois_LL_mv(L, k) + dmvnorm_diff(proposal, L, mean, Q, log = TRUE)
-    ratio <- ratio - dmvnorm(proposal, prop_params$mu, Q = prop_params$Q, log = TRUE)
-    ratio <- ratio + dmvnorm(L, orig_params$mu, Q = orig_params$Q, log = TRUE)
+    if(acceptance == 0) {
+      orig_params <- mvqt_pois_approx(proposal, k, mean, Q)
+      ratio <- ratio - dmvnorm(proposal, prop_params$mu, Q = prop_params$Q, log = TRUE)
+      ratio <- ratio + dmvnorm(L, orig_params$mu, Q = orig_params$Q, log = TRUE)
+    }
     accept <- accept_reject(ratio)
   }
   if(accept) c(1, proposal) else c(0, L)
@@ -63,7 +65,7 @@ mviqt_pois_approx <- function(around, k, mean, Q) {
 }
 
 
-mviqt_pois <- function(L, mult, k, mean, Q, accept_regardless) {
+mviqt_pois <- function(L, mult, k, mean, Q, acceptance) {
 
   pois_LL_mv <- function(L, k) {
     rowSums(k * L - exp(L), na.rm = TRUE)
@@ -72,12 +74,14 @@ mviqt_pois <- function(L, mult, k, mean, Q, accept_regardless) {
   tmp <- mviqt_pois_approx(around = mean, k, mean, Q) # !!! the only way we don't need to recompute params is because we approximate around the mean
   tau2 <- tmp$tau / mult
   proposal <- matrix(stats::rnorm(length(L), tmp$mu, 1/sqrt(tau2)), nrow = nrow(L), ncol = ncol(L))
-  if(accept_regardless) {
+  if(acceptance == 2) {
     accept <- rep_len(TRUE, nrow(L))
   } else {
     ratio <- pois_LL_mv(proposal, k) - pois_LL_mv(L, k) +
       -0.5*rowSums((proposal + L - 2*mean) * ((proposal - L) %*% Q))
-    ratio <- ratio - -0.5*rowSums((proposal + L - 2*tmp$mu) * (proposal - L) * tau2)
+    if(acceptance == 0) {
+      ratio <- ratio - -0.5*rowSums((proposal + L - 2*tmp$mu) * (proposal - L) * tau2)
+    }
     accept <- vapply(ratio, accept_reject, NA)
   }
 
@@ -101,7 +105,7 @@ mvgamma_pois_approx <- function(k, mean, Q) {
   gu_params(alpha = alpha, beta = beta)
 }
 
-mvgamma_pois <- function(L, mult, k, mean, Q, accept_regardless) {
+mvgamma_pois <- function(L, mult, k, mean, Q, acceptance) {
 
   pois_LL_mv <- function(L, k) {
     rowSums(k * L - exp(L), na.rm = TRUE)
@@ -114,13 +118,15 @@ mvgamma_pois <- function(L, mult, k, mean, Q, accept_regardless) {
   proposal <- matrix(stats::rgamma(length(L), alpha2, scale = scale2), nrow = nrow(L), ncol = ncol(L))
   lproposal <- log(proposal)
 
-  if(accept_regardless) {
+  if(acceptance == 2) {
     accept <- rep_len(TRUE, nrow(L))
   } else {
     ratio <- pois_LL_mv(lproposal, k) - pois_LL_mv(L, k) +
       -0.5*rowSums((lproposal + L - 2*mean) * ((lproposal - L) %*% Q))
-    ratio <- ratio - rowSums((alpha2 - 1.0)*lproposal - proposal/scale2)
-    ratio <- ratio + rowSums((alpha2 - 1.0)*L - exp(L)/scale2)
+    if(acceptance == 0) {
+      ratio <- ratio - rowSums((alpha2 - 1.0)*lproposal - proposal/scale2)
+      ratio <- ratio + rowSums((alpha2 - 1.0)*L - exp(L)/scale2)
+    }
     accept <- vapply(ratio, accept_reject, NA)
   }
 
@@ -149,7 +155,7 @@ mvqt_binom_approx <- function(around, k, n, mean, Q) {
 }
 
 
-mvqt_binom <- function(p, k, n, mean, Q, accept_regardless) {
+mvqt_binom <- function(p, k, n, mean, Q, acceptance) {
 
   binom_LL_mv <- function(p, k, n) {
     sum(k*p - n*log(1 + exp(p)))
@@ -158,14 +164,15 @@ mvqt_binom <- function(p, k, n, mean, Q, accept_regardless) {
   prop_params <- mvqt_binom_approx(p, k, n, mean, Q)
   proposal <- spam::rmvnorm.prec(1, mu = prop_params$mu, Q = prop_params$Q)[1, ]
 
-  orig_params <- mvqt_binom_approx(proposal, k, n, mean, Q)
-
-  if(accept_regardless) {
+  if(acceptance == 2) {
     accept <- TRUE
   } else {
     ratio <- binom_LL_mv(proposal, k, n) - binom_LL_mv(p, k, n) + dmvnorm_diff(proposal, p, mean, Q, log = TRUE)
-    ratio <- ratio - dmvnorm(proposal, prop_params$mu, Q = prop_params$Q, log = TRUE)
-    ratio <- ratio + dmvnorm(p, orig_params$mu, Q = orig_params$Q, log = TRUE)
+    if(acceptance == 0) {
+      orig_params <- mvqt_binom_approx(proposal, k, n, mean, Q)
+      ratio <- ratio - dmvnorm(proposal, prop_params$mu, Q = prop_params$Q, log = TRUE)
+      ratio <- ratio + dmvnorm(p, orig_params$mu, Q = orig_params$Q, log = TRUE)
+    }
     accept <- accept_reject(ratio)
   }
   if(accept) c(1, proposal) else c(0, p)
@@ -194,7 +201,7 @@ mviqt_binom_approx <- function(around, k, n, mean, Q) {
 }
 
 
-mviqt_binom <- function(p, mult, k, n, mean, Q, accept_regardless) {
+mviqt_binom <- function(p, mult, k, n, mean, Q, acceptance) {
 
   binom_LL_mv <- function(p, k, n) {
     rowSums(k*p - n*log(1 + exp(p)))
@@ -204,12 +211,14 @@ mviqt_binom <- function(p, mult, k, n, mean, Q, accept_regardless) {
   tau2 <- tmp$tau / mult
   proposal <- matrix(stats::rnorm(length(p), tmp$mu, 1/sqrt(tau2)), nrow = nrow(p), ncol = ncol(p))
 
-  if(accept_regardless) {
+  if(acceptance == 2) {
     accept <- rep_len(TRUE, nrow(p))
   } else {
     ratio <- binom_LL_mv(proposal, k, n) - binom_LL_mv(p, k, n) +
       -0.5*rowSums((proposal + p - 2*mean) * ((proposal - p) %*% Q))
-    ratio <- ratio - -0.5*rowSums((proposal + p - 2*tmp$mu) * (proposal - p) * tau2)
+    if(acceptance == 0) {
+      ratio <- ratio - -0.5*rowSums((proposal + p - 2*tmp$mu) * (proposal - p) * tau2)
+    }
     accept <- vapply(ratio, accept_reject, NA)
   }
 
@@ -243,7 +252,7 @@ mvbeta_binom_approx <- function(k, n, mean, Q) {
   gu_params(alpha = alpha, beta = beta)
 }
 
-mvbeta_binom <- function(p, mult, k, n, mean, Q, accept_regardless) {
+mvbeta_binom <- function(p, mult, k, n, mean, Q, acceptance) {
 
   binom_LL_mv <- function(p, k, n) {
     rowSums(k*p - n*log(1 + exp(p)))
@@ -256,14 +265,16 @@ mvbeta_binom <- function(p, mult, k, n, mean, Q, accept_regardless) {
   proposal <- matrix(stats::rbeta(length(p), alpha2, beta2), nrow = nrow(p), ncol = ncol(p))
   lproposal <- logit(proposal)
 
-  if(accept_regardless) {
+  if(acceptance == 2) {
     accept <- rep_len(TRUE, nrow(p))
   } else {
     ep <- expit(p)
     ratio <- binom_LL_mv(lproposal, k, n) - binom_LL_mv(p, k, n) +
       -0.5*rowSums((lproposal + p - 2*mean) * ((lproposal - p) %*% Q))
-    ratio <- ratio - rowSums((alpha2 - 1)*log(proposal) + (beta2 - 1)*log(1 - proposal))
-    ratio <- ratio + rowSums((alpha2 - 1)*log(ep)       + (beta2 - 1)*log(1 - ep))
+    if(acceptance == 0) {
+      ratio <- ratio - rowSums((alpha2 - 1)*log(proposal) + (beta2 - 1)*log(1 - proposal))
+      ratio <- ratio + rowSums((alpha2 - 1)*log(ep)       + (beta2 - 1)*log(1 - ep))
+    }
     accept <- vapply(ratio, accept_reject, NA)
   }
 

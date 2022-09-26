@@ -1,3 +1,11 @@
+# v2.4.0
+
+- Added "mv beta" to `sample_binom_reg()`.
+
+- Added "mv ind quadratic taylor" to `sample_binom_reg()` and `sample_pois_reg()`.
+
+- Changed the `accept_regardless=` argument to `acceptance=`, where one option ("LL only") is to accept ignoring the proposal density.
+
 # v2.3.1
 
 - Some speed improvements for "mv quadratic taylor" and "mv gamma".

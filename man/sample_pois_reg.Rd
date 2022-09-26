@@ -10,12 +10,12 @@ sample_pois_reg(
   mean,
   precision,
   method = c("slice", "normal", "uniform", "gamma", "mv gamma", "quadratic taylor",
-    "mv quadratic taylor"),
+    "mv quadratic taylor", "mv ind quadratic taylor"),
   ...,
   width = 1,
   nexpand = 10,
   ncontract = 100,
-  accept_regardless = FALSE
+  acceptance = c("MH", "LL only", "regardless")
 )
 }
 \arguments{
@@ -58,7 +58,8 @@ For \code{"gamma"}, \code{"beta"}, and \code{"mv ind quadratic taylor"} a scalin
 
 \item{ncontract}{The maximum number of contractions. If this is exceeded, the original value is returned}
 
-\item{accept_regardless}{Should proposals be accepted no matter what? Default \code{FALSE}. This is useful for testing, or for
+\item{acceptance}{What should be the criteria for acceptance? "MH" indicates the usual Metropolis-Hastings update. "LL only" ignores the proposal
+densities but considers the log-likelihoods. "regardless" accepts no matter what. This is useful for testing, or for
 when the method is a gamma, beta, or quadratic approximation, which can be hard to accept if the initial starting point is low-density.}
 }
 \description{

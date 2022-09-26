@@ -30,7 +30,8 @@
 #' @param width For \code{"normal"} proposals, the standard deviation(s) of proposals. For \code{"uniform"} proposals,
 #' the half-width of the uniform proposal interval. For \code{"slice"}, the width of each expansion (to the right and left each).
 #' For \code{"gamma"}, \code{"beta"}, and \code{"mv ind quadratic taylor"} a scaling factor to increase the variance of the proposal.
-#' @param accept_regardless Should proposals be accepted no matter what? Default \code{FALSE}. This is useful for testing, or for
+#' @param acceptance What should be the criteria for acceptance? "MH" indicates the usual Metropolis-Hastings update. "LL only" ignores the proposal
+#'   densities but considers the log-likelihoods. "regardless" accepts no matter what. This is useful for testing, or for
 #'   when the method is a gamma, beta, or quadratic approximation, which can be hard to accept if the initial starting point is low-density.
 #' @details
 #'   This function samples \code{L} conditional on \code{k}, \code{mean}, and \code{precision},
@@ -51,9 +52,10 @@
 #' @export
 sample_pois_reg <- function(L, k, mean, precision,
                             method = c("slice", "normal", "uniform", "gamma", "mv gamma", "quadratic taylor", "mv quadratic taylor", "mv ind quadratic taylor"),
-                            ...,
-                            width = 1, nexpand = 10, ncontract = 100, accept_regardless = FALSE) {
+                            ..., width = 1, nexpand = 10, ncontract = 100, acceptance = c("MH", "LL only", "regardless")) {
   method <- match.arg(method)
+  acceptance <- match.arg(acceptance)
+  acceptance <- match(acceptance, c("MH", "LL only", "regardless")) - 1L
 
   if(length(L) != length(k)) stop("'L' and 'k' must have the same length")
   mean <- check_one_or_all(mean, length(L))
@@ -113,9 +115,9 @@ sample_pois_reg <- function(L, k, mean, precision,
     if(is.matrix(precision)) {
       dim(prop) <- dim(L)
       out <- mh_pois_mv(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean,
-                        Q = precision, use_norm = use_norm, norm = norm, accept_regardless = accept_regardless)
+                        Q = precision, use_norm = use_norm, norm = norm, acceptance = acceptance)
     } else {
-      out <- mh_pois(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean, precision = precision, accept_regardless = accept_regardless)
+      out <- mh_pois(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean, precision = precision, acceptance = acceptance)
     }
   } else if(method %in% c("mv gamma", "mv ind quadratic taylor")) {
     width <- check_one_or_all(width, length(L))
@@ -127,7 +129,7 @@ sample_pois_reg <- function(L, k, mean, precision,
     if(any(not_norm)) {
       FUN <- if(method == "mv gamma") mvgamma_pois else mviqt_pois
       tmp <- FUN(L[not_norm, , drop = FALSE], width[not_norm, , drop = FALSE], k[not_norm, , drop = FALSE], mean[not_norm, , drop = FALSE],
-                 Q = precision, accept_regardless = accept_regardless)
+                 Q = precision, acceptance = acceptance)
       out[not_norm, ] <- tmp$L
       attr(out, "accept") <- array(replace(use_norm, not_norm, tmp$accept), dim = dim(L))
     } else {
@@ -141,7 +143,7 @@ sample_pois_reg <- function(L, k, mean, precision,
       if(use_norm[i] > 0) {
         return(c(1, norm[use_norm[i], ]))
       }
-      mvqt_pois(L[i, ], k[i, ], mean[i, ], precision, accept_regardless = accept_regardless)
+      mvqt_pois(L[i, ], k[i, ], mean[i, ], precision, acceptance = acceptance)
     }, numeric(ncol(L)+1)))
     out <- tmp[, -1]
     attr(out, "accept") <- array(as.logical(tmp[, 1]), dim = dim(L))

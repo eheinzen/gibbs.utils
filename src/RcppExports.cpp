@@ -27,8 +27,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // mh_binom
-NumericVector mh_binom(bool qt, NumericVector p, NumericVector proposal, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision, bool accept_regardless);
-RcppExport SEXP _gibbs_utils_mh_binom(SEXP qtSEXP, SEXP pSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP precisionSEXP, SEXP accept_regardlessSEXP) {
+NumericVector mh_binom(bool qt, NumericVector p, NumericVector proposal, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision, int acceptance);
+RcppExport SEXP _gibbs_utils_mh_binom(SEXP qtSEXP, SEXP pSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP precisionSEXP, SEXP acceptanceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -39,14 +39,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type n(nSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type precision(precisionSEXP);
-    Rcpp::traits::input_parameter< bool >::type accept_regardless(accept_regardlessSEXP);
-    rcpp_result_gen = Rcpp::wrap(mh_binom(qt, p, proposal, k, n, mean, precision, accept_regardless));
+    Rcpp::traits::input_parameter< int >::type acceptance(acceptanceSEXP);
+    rcpp_result_gen = Rcpp::wrap(mh_binom(qt, p, proposal, k, n, mean, precision, acceptance));
     return rcpp_result_gen;
 END_RCPP
 }
 // mh_binom_mv
-NumericVector mh_binom_mv(bool qt, NumericMatrix p, NumericMatrix proposal, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm, bool accept_regardless);
-RcppExport SEXP _gibbs_utils_mh_binom_mv(SEXP qtSEXP, SEXP pSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP use_normSEXP, SEXP normSEXP, SEXP accept_regardlessSEXP) {
+NumericVector mh_binom_mv(bool qt, NumericMatrix p, NumericMatrix proposal, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm, int acceptance);
+RcppExport SEXP _gibbs_utils_mh_binom_mv(SEXP qtSEXP, SEXP pSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP use_normSEXP, SEXP normSEXP, SEXP acceptanceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -59,14 +59,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
     Rcpp::traits::input_parameter< LogicalVector >::type use_norm(use_normSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type norm(normSEXP);
-    Rcpp::traits::input_parameter< bool >::type accept_regardless(accept_regardlessSEXP);
-    rcpp_result_gen = Rcpp::wrap(mh_binom_mv(qt, p, proposal, k, n, mean, Q, use_norm, norm, accept_regardless));
+    Rcpp::traits::input_parameter< int >::type acceptance(acceptanceSEXP);
+    rcpp_result_gen = Rcpp::wrap(mh_binom_mv(qt, p, proposal, k, n, mean, Q, use_norm, norm, acceptance));
     return rcpp_result_gen;
 END_RCPP
 }
 // mh_pois
-NumericVector mh_pois(int method, NumericVector L, NumericVector proposal, NumericVector k, LogicalVector k_na, NumericVector mean, NumericVector precision, bool accept_regardless);
-RcppExport SEXP _gibbs_utils_mh_pois(SEXP methodSEXP, SEXP LSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP k_naSEXP, SEXP meanSEXP, SEXP precisionSEXP, SEXP accept_regardlessSEXP) {
+NumericVector mh_pois(int method, NumericVector L, NumericVector proposal, NumericVector k, LogicalVector k_na, NumericVector mean, NumericVector precision, int acceptance);
+RcppExport SEXP _gibbs_utils_mh_pois(SEXP methodSEXP, SEXP LSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP k_naSEXP, SEXP meanSEXP, SEXP precisionSEXP, SEXP acceptanceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -77,14 +77,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< LogicalVector >::type k_na(k_naSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type precision(precisionSEXP);
-    Rcpp::traits::input_parameter< bool >::type accept_regardless(accept_regardlessSEXP);
-    rcpp_result_gen = Rcpp::wrap(mh_pois(method, L, proposal, k, k_na, mean, precision, accept_regardless));
+    Rcpp::traits::input_parameter< int >::type acceptance(acceptanceSEXP);
+    rcpp_result_gen = Rcpp::wrap(mh_pois(method, L, proposal, k, k_na, mean, precision, acceptance));
     return rcpp_result_gen;
 END_RCPP
 }
 // mh_pois_mv
-NumericVector mh_pois_mv(int method, NumericMatrix L, NumericMatrix proposal, NumericMatrix k, LogicalMatrix k_na, NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm, bool accept_regardless);
-RcppExport SEXP _gibbs_utils_mh_pois_mv(SEXP methodSEXP, SEXP LSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP k_naSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP use_normSEXP, SEXP normSEXP, SEXP accept_regardlessSEXP) {
+NumericVector mh_pois_mv(int method, NumericMatrix L, NumericMatrix proposal, NumericMatrix k, LogicalMatrix k_na, NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm, int acceptance);
+RcppExport SEXP _gibbs_utils_mh_pois_mv(SEXP methodSEXP, SEXP LSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP k_naSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP use_normSEXP, SEXP normSEXP, SEXP acceptanceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -97,8 +97,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
     Rcpp::traits::input_parameter< LogicalVector >::type use_norm(use_normSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type norm(normSEXP);
-    Rcpp::traits::input_parameter< bool >::type accept_regardless(accept_regardlessSEXP);
-    rcpp_result_gen = Rcpp::wrap(mh_pois_mv(method, L, proposal, k, k_na, mean, Q, use_norm, norm, accept_regardless));
+    Rcpp::traits::input_parameter< int >::type acceptance(acceptanceSEXP);
+    rcpp_result_gen = Rcpp::wrap(mh_pois_mv(method, L, proposal, k, k_na, mean, Q, use_norm, norm, acceptance));
     return rcpp_result_gen;
 END_RCPP
 }
