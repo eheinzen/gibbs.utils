@@ -49,7 +49,9 @@
 #' @seealso \url{https://en.wikipedia.org/wiki/Slice_sampling},
 #' \url{https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm}, \url{https://arxiv.org/pdf/1308.0657.pdf}
 #' @export
-sample_pois_reg <- function(L, k, mean, precision, method = c("slice", "normal", "uniform", "gamma", "mv gamma", "quadratic taylor", "mv quadratic taylor"), ...,
+sample_pois_reg <- function(L, k, mean, precision,
+                            method = c("slice", "normal", "uniform", "gamma", "mv gamma", "quadratic taylor", "mv quadratic taylor", "mv ind quadratic taylor"),
+                            ...,
                             width = 1, nexpand = 10, ncontract = 100, accept_regardless = FALSE) {
   method <- match.arg(method)
 
@@ -77,6 +79,8 @@ sample_pois_reg <- function(L, k, mean, precision, method = c("slice", "normal",
     } else if(method == "mv gamma") {
       warning("'mv gamma' is being interpreted as 'gamma' because 'precision' is not a matrix.")
       method <- "gamma"
+    } else if(method == "mv ind quadratic taylor") {
+      stop(paste0("'", method, "' requires 'precision' to be a matrix"))
     }
     precision <- check_one_or_all(precision, length(L))
   }
@@ -113,7 +117,7 @@ sample_pois_reg <- function(L, k, mean, precision, method = c("slice", "normal",
     } else {
       out <- mh_pois(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean, precision = precision, accept_regardless = accept_regardless)
     }
-  } else if(method == "mv gamma") {
+  } else if(method %in% c("mv gamma", "mv ind quadratic taylor")) {
     width <- check_one_or_all(width, length(L))
     dim(width) <- dim(L)
     out <- L
@@ -121,8 +125,9 @@ sample_pois_reg <- function(L, k, mean, precision, method = c("slice", "normal",
 
     not_norm <- !use_norm
     if(any(not_norm)) {
-      tmp <- mvgamma_pois(L[not_norm, , drop = FALSE], width[not_norm, , drop = FALSE], k[not_norm, , drop = FALSE], mean[not_norm, , drop = FALSE],
-                          Q = precision, accept_regardless = accept_regardless)
+      FUN <- if(method == "mv gamma") mvgamma_pois else mviqt_pois
+      tmp <- FUN(L[not_norm, , drop = FALSE], width[not_norm, , drop = FALSE], k[not_norm, , drop = FALSE], mean[not_norm, , drop = FALSE],
+                 Q = precision, accept_regardless = accept_regardless)
       out[not_norm, ] <- tmp$L
       attr(out, "accept") <- array(replace(use_norm, not_norm, tmp$accept), dim = dim(L))
     } else {

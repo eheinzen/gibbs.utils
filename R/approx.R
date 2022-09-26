@@ -45,6 +45,50 @@ mvqt_pois <- function(L, k, mean, Q, accept_regardless) {
 }
 
 
+mviqt_pois_approx <- function(around, k, mean, Q) {
+  if(!is.matrix(k)) k <- matrix(k, nrow = 1)
+  if(!is.matrix(mean)) mean <- matrix(mean, nrow = 1)
+
+  tau <- matrix(diag(Q), nrow = nrow(k), ncol = ncol(k), byrow = TRUE)
+
+  ep <- exp(around)
+
+  # -H(x)
+  newtau <- tau + replace(ep, is.na(k), 0)
+  newtau.inv <- 1/newtau
+  # x - H^-1(x) g(x)
+  newmean <- around + newtau.inv * (replace(k - ep, is.na(k), 0) - tau*(around - mean))
+
+  gu_params(mu = newmean, tau = newtau)
+}
+
+
+mviqt_pois <- function(L, mult, k, mean, Q, accept_regardless) {
+
+  pois_LL_mv <- function(L, k) {
+    rowSums(k * L - exp(L), na.rm = TRUE)
+  }
+
+  tmp <- mviqt_pois_approx(around = mean, k, mean, Q) # !!! the only way we don't need to recompute params is because we approximate around the mean
+  tau2 <- tmp$tau / mult
+  proposal <- matrix(stats::rnorm(length(L), tmp$mu, 1/sqrt(tau2)), nrow = nrow(L), ncol = ncol(L))
+  if(accept_regardless) {
+    accept <- rep_len(TRUE, nrow(L))
+  } else {
+    ratio <- pois_LL_mv(proposal, k) - pois_LL_mv(L, k) +
+      -0.5*rowSums((proposal + L - 2*mean) * ((proposal - L) %*% Q))
+    ratio <- ratio - -0.5*rowSums((proposal + L - 2*tmp$mu) * (proposal - L) * tau2)
+    accept <- vapply(ratio, accept_reject, NA)
+  }
+
+  L[accept, ] <- proposal[accept, ]
+  list(
+    L = L,
+    accept = accept
+  )
+}
+
+
 mvgamma_pois_approx <- function(k, mean, Q) {
   if(!is.matrix(k)) k <- matrix(k, nrow = 1)
   if(!is.matrix(mean)) mean <- matrix(mean, nrow = 1)
@@ -163,7 +207,6 @@ mviqt_binom <- function(p, mult, k, n, mean, Q, accept_regardless) {
   if(accept_regardless) {
     accept <- rep_len(TRUE, nrow(p))
   } else {
-    ep <- expit(p)
     ratio <- binom_LL_mv(proposal, k, n) - binom_LL_mv(p, k, n) +
       -0.5*rowSums((proposal + p - 2*mean) * ((proposal - p) %*% Q))
     ratio <- ratio - -0.5*rowSums((proposal + p - 2*tmp$mu) * (proposal - p) * tau2)
@@ -230,4 +273,3 @@ mvbeta_binom <- function(p, mult, k, n, mean, Q, accept_regardless) {
     accept = accept
   )
 }
-
