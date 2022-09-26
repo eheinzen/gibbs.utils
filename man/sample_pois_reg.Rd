@@ -41,21 +41,25 @@ in the proposal (for speed's sake; this may result in low acceptance rates when 
   \item{\code{"quadratic taylor"} proposes using a second-order Taylor approximation of the log-density at the current value,
    which amounts to a normal proposal with mean (usually) not equal to the current value.}
    \item{\code{"mv quadratic taylor"} does the same, but uses a multivariate normal approximation.}
+   \item{\code{"mv ind quadratic taylor"} proposes using a similar Taylor approximation, but approximates the log-density around
+   the mean, instead of the current value. Furthermore, like \code{"mv beta"} and \code{"mv gamma"}, it ignores off-diagonal
+   elements of the precision matrix for the proposal, which again might yield low acceptance rates when elements are highly correlated.
+   Both of these simplifications yield a significant speed boost.}
 }
-Note that \code{"mv gamma"}, \code{"mv beta"} and \code{"mv quadratic taylor"} accept or reject an entire row at a time.}
+Note that \code{"mv gamma"}, \code{"mv beta"} and \code{"mv [ind ]quadratic taylor"} accept or reject an entire row at a time.}
 
 \item{...}{Other arguments (not used)}
 
 \item{width}{For \code{"normal"} proposals, the standard deviation(s) of proposals. For \code{"uniform"} proposals,
 the half-width of the uniform proposal interval. For \code{"slice"}, the width of each expansion (to the right and left each).
-For \code{"gamma"} and \code{"beta"} a scaling factor to increase the variance of the proposal.}
+For \code{"gamma"}, \code{"beta"}, and \code{"mv ind quadratic taylor"} a scaling factor to increase the variance of the proposal.}
 
 \item{nexpand}{The maximum number of expansions (to the right and left each)}
 
 \item{ncontract}{The maximum number of contractions. If this is exceeded, the original value is returned}
 
 \item{accept_regardless}{Should proposals be accepted no matter what? Default \code{FALSE}. This is useful for testing, or for
-when the method is a gamma or quadratic approximation, which can be hard to accept if the initial starting point is low-density.}
+when the method is a gamma, beta, or quadratic approximation, which can be hard to accept if the initial starting point is low-density.}
 }
 \description{
 Sample a Poisson regression rate

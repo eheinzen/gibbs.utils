@@ -128,6 +128,55 @@ mvqt_binom <- function(p, k, n, mean, Q, accept_regardless) {
 }
 
 
+
+mviqt_binom_approx <- function(around, k, n, mean, Q) {
+  if(!is.matrix(k)) k <- matrix(k, nrow = 1)
+  if(!is.matrix(n)) n <- matrix(n, nrow = 1)
+  if(!is.matrix(mean)) mean <- matrix(mean, nrow = 1)
+
+  tau <- matrix(diag(Q), nrow = nrow(k), ncol = ncol(k), byrow = TRUE)
+
+  ep <- exp(around)
+  ep1 <- 1 + ep
+  ep2 <- ep1*ep1
+
+  # -H(x)
+  newtau <- tau + n*ep / ep2
+  newtau.inv <- 1/newtau
+  # x - H^-1(x) g(x)
+  newmean <- around + newtau.inv * (k - tau*(around - mean) - n*ep/ep1)
+
+  gu_params(mu = newmean, tau = newtau)
+}
+
+
+mviqt_binom <- function(p, mult, k, n, mean, Q, accept_regardless) {
+
+  binom_LL_mv <- function(p, k, n) {
+    rowSums(k*p - n*log(1 + exp(p)))
+  }
+
+  tmp <- mviqt_binom_approx(around = mean, k, n, mean, Q) # !!! the only way we don't need to recompute params is because we approximate around the mean
+  tau2 <- tmp$tau / mult
+  proposal <- matrix(stats::rnorm(length(p), tmp$mu, 1/sqrt(tau2)), nrow = nrow(p), ncol = ncol(p))
+
+  if(accept_regardless) {
+    accept <- rep_len(TRUE, nrow(p))
+  } else {
+    ep <- expit(p)
+    ratio <- binom_LL_mv(proposal, k, n) - binom_LL_mv(p, k, n) +
+      -0.5*rowSums((proposal + p - 2*mean) * ((proposal - p) %*% Q))
+    ratio <- ratio - -0.5*rowSums((proposal + p - 2*tmp$mu) * (proposal - p) * tau2)
+    accept <- vapply(ratio, accept_reject, NA)
+  }
+
+  p[accept, ] <- proposal[accept, ]
+  list(
+    p = p,
+    accept = accept
+  )
+}
+
 mvbeta_binom_approx <- function(k, n, mean, Q) {
   if(!is.matrix(k)) k <- matrix(k, nrow = 1)
   if(!is.matrix(n)) n <- matrix(n, nrow = 1)

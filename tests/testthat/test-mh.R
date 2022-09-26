@@ -116,10 +116,13 @@ test_that("n == 0 gives the same results for all methods", {
   five <- sample_binom_reg(p, k, n, mean = -3, precision = prec, method = "mv quad")
   set.seed(20210119)
   six <- sample_binom_reg(p, k, n, mean = -3, precision = prec, method = "mv beta")
+  set.seed(20210119)
+  seven <- sample_binom_reg(p, k, n, mean = -3, precision = prec, method = "mv ind quad")
   expect_equal(one, two)
   expect_equal(one, three)
   expect_equal(one, five)
   expect_equal(one, six)
+  expect_equal(one, seven)
 
 
   expect_true(all(attr(one, "accept")))
