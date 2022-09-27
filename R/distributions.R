@@ -4,7 +4,8 @@
 #' @param x,y vector of quantiles
 #' @param mu the mean
 #' @param sd the standard deviation
-#' @param Q the precision matrix
+#' @param tau,Q the precision (matrix)
+#' @param byrow Should the densities be summed (FALSE, the default) or returned separately by row (TRUE).
 #' @param V,U the precision matrices for the matrix-normal distribution
 #' @param detQ,detU,detV Pre-computed log-determinants
 #' @param log Should the log-density be returned?
@@ -36,24 +37,75 @@ dmvnorm <- function(x, mu, Q, detQ = determinant(Q, logarithm = TRUE)$modulus, l
 
 #' @rdname distributions
 #' @export
-dmvnorm_diff <- function(x, y, mu, Q, log = TRUE) {
+dmvlnorm <- function(x, mu, Q, detQ = determinant(Q, logarithm = TRUE)$modulus, log = TRUE) {
+  if(!is.matrix(x)) {
+    x <- matrix(x, nrow = 1)
+    mu <- matrix(mu, nrow = 1)
+  }
+  stopifnot(identical(dim(x), dim(mu)))
+  p <- ncol(x)
+  n <- nrow(x)
+
+  lx <- log(x)
+  xmu <- lx - mu
+  num <- n/2 * as.numeric(detQ)
+  # tr(xmu Q xmu^T) = tr(xmu^T xmu Q) = vec(xmu)^T vec(xmu Q)
+  num <- num + sum(-0.5*xmu * (xmu %*% Q) - lx)
+
+  den <- n*p/2 * log(2*pi)
+  if(log) num - den else exp(num - den)
+}
+
+#' @rdname distributions
+#' @export
+dmvnorm_diff <- function(x, y, mu, Q, log = TRUE, byrow = FALSE) {
   if(!is.matrix(x)) {
     x <- matrix(x, nrow = 1)
     y <- matrix(y, nrow = 1)
     mu <- matrix(mu, nrow = 1)
   }
-  stopifnot(identical(dim(x), dim(mu)), identical(dim(y), dim(mu)))
-  p <- ncol(x)
-  n <- nrow(x)
-
   # tr((x - mu) Q (x - mu)^T - (y - mu) Q (y - mu)^T)
   # tr(XQX^T - YQY^T - 2(X - Y)Q mu^T)
   # tr((X - Y)Q(X^T + Y^T - 2 mu^T))
   # tr((X + Y - 2 mu)^T (X - Y) Q)
-  num <- -0.5*sum((x + y - 2*mu) * ((x - y) %*% Q))
+  FUN <- if(byrow) rowSums else sum
+  num <- -0.5*FUN((x + y - 2*mu) * ((x - y) %*% Q))
   if(log) num else exp(num)
 }
 
+
+#' @rdname distributions
+#' @export
+dmvlnorm_diff <- function(x, y, mu, Q, log = TRUE, byrow = FALSE) {
+  if(!is.matrix(x)) {
+    x <- matrix(x, nrow = 1)
+    y <- matrix(y, nrow = 1)
+    mu <- matrix(mu, nrow = 1)
+  }
+  lx <- log(x)
+  ly <- log(y)
+  FUN <- if(byrow) rowSums else sum
+  num <- FUN(-0.5*(lx + ly - 2*mu) * ((lx - ly) %*% Q) - (lx - ly))
+  if(log) num else exp(num)
+}
+
+#' @rdname distributions
+#' @export
+dnorm_diff <- function(x, y, mu, tau, log = TRUE, byrow = FALSE) {
+  FUN <- if(byrow) identity else sum
+  num <- -0.5*FUN((x + y - 2*mu) * (x - y) * tau)
+  if(log) num else exp(num)
+}
+
+#' @rdname distributions
+#' @export
+dlnorm_diff <- function(x, y, mu, tau, log = TRUE, byrow = FALSE) {
+  FUN <- if(byrow) identity else sum
+  lx <- log(x)
+  ly <- log(y)
+  num <- -0.5*FUN((lx + ly - 2*mu + 2/tau) * (lx - ly) * tau)
+  if(log) num else exp(num)
+}
 
 #' @rdname distributions
 #' @export
@@ -83,15 +135,6 @@ dmatnorm <- function(x, mu, V, U = NULL, detV = determinant(V, logarithm = TRUE)
 #' @rdname distributions
 #' @export
 dmatnorm_diff <- function(x, y, mu, V, U = NULL, log = TRUE) {
-  stopifnot(identical(dim(x), dim(mu)), identical(dim(y), dim(mu)))
-  p <- ncol(x)
-  n <- nrow(x)
-  stopifnot(p == dim(V))
-  if(!is.null(U)) {
-    stopifnot(n == dim(U))
-  }
-
-
   xyV <- (x - y) %*% V
   UxV <- if(is.null(U)) xyV else U %*% xyV
   num <- -0.5*sum((x + y - 2*mu) * UxV)

@@ -3,7 +3,11 @@
 \name{distributions}
 \alias{distributions}
 \alias{dmvnorm}
+\alias{dmvlnorm}
 \alias{dmvnorm_diff}
+\alias{dmvlnorm_diff}
+\alias{dnorm_diff}
+\alias{dlnorm_diff}
 \alias{dmatnorm}
 \alias{dmatnorm_diff}
 \alias{dlogitnorm}
@@ -11,7 +15,15 @@
 \usage{
 dmvnorm(x, mu, Q, detQ = determinant(Q, logarithm = TRUE)$modulus, log = TRUE)
 
-dmvnorm_diff(x, y, mu, Q, log = TRUE)
+dmvlnorm(x, mu, Q, detQ = determinant(Q, logarithm = TRUE)$modulus, log = TRUE)
+
+dmvnorm_diff(x, y, mu, Q, log = TRUE, byrow = FALSE)
+
+dmvlnorm_diff(x, y, mu, Q, log = TRUE, byrow = FALSE)
+
+dnorm_diff(x, y, mu, tau, log = TRUE, byrow = FALSE)
+
+dlnorm_diff(x, y, mu, tau, log = TRUE, byrow = FALSE)
 
 dmatnorm(
   x,
@@ -32,11 +44,13 @@ dlogitnorm(x, mu, sd, log = FALSE)
 
 \item{mu}{the mean}
 
-\item{Q}{the precision matrix}
-
 \item{detQ, detU, detV}{Pre-computed log-determinants}
 
 \item{log}{Should the log-density be returned?}
+
+\item{byrow}{Should the densities be summed (FALSE, the default) or returned separately by row (TRUE).}
+
+\item{tau, Q}{the precision (matrix)}
 
 \item{V, U}{the precision matrices for the matrix-normal distribution}
 

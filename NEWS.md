@@ -1,3 +1,9 @@
+# v2.5.0
+
+- Added `dmvlnorm()`, `dmvlnorm_diff()`, `dnorm_diff()`, `dlnorm_diff()`.
+
+- Added an argument `byrow=` to `dmvnorm_diff()`.
+
 # v2.4.0
 
 - Added "mv beta" to `sample_binom_reg()`.

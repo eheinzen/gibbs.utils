@@ -3,6 +3,28 @@ test_that("dmvnorm", {
     dmvnorm(1:5, 0:4, diag(1/(100:104)), log = TRUE),
     sum(dnorm(1:5, 0:4, sqrt(100:104), log = TRUE))
   )
+})
+
+test_that("dmvlnorm", {
+  expect_equal(
+    dmvlnorm(1:5, 0:4, diag(1/(100:104)), log = TRUE),
+    sum(dlnorm(1:5, 0:4, sqrt(100:104), log = TRUE))
+  )
+})
+
+
+test_that("dmatnorm", {
+  expect_equal(
+    dmatnorm(matrix(1:10, nrow = 5), matrix(0:9, nrow = 5), V = diag(1, 2), U = diag(1/(100:104)), log = TRUE),
+    sum(dnorm(1:10, 0:9, sqrt(c(100:104, 100:104)), log = TRUE))
+  )
+  expect_equal(
+    dmatnorm(matrix(1:10, nrow = 5), matrix(0:9, nrow = 5), V = diag(c(1, 1/2)), U = diag(1/(100:104)), log = TRUE),
+    sum(dnorm(1:10, 0:9, sqrt(c(100:104, 2*(100:104))), log = TRUE))
+  )
+})
+
+test_that("*_diff", {
 
   Q <- matrix(c(1, -0.5, -0.5, 1.25), 2, 2)
   set.seed(88)
@@ -14,18 +36,26 @@ test_that("dmvnorm", {
     dmvnorm_diff(x, y, mu, Q, log = TRUE)
   )
 
-
-})
-
-test_that("dmatnorm", {
   expect_equal(
-    dmatnorm(matrix(1:10, nrow = 5), matrix(0:9, nrow = 5), V = diag(1, 2), U = diag(1/(100:104)), log = TRUE),
-    sum(dnorm(1:10, 0:9, sqrt(c(100:104, 100:104)), log = TRUE))
+    dmvlnorm(exp(x), mu, Q, log = TRUE) - dmvlnorm(exp(y), mu, Q, log = TRUE),
+    dmvlnorm_diff(exp(x), exp(y), mu, Q, log = TRUE)
   )
+
+  tau <- 1
+  set.seed(99)
+  x <- exp(rnorm(10))
+  y <- exp(rnorm(10))
+  mu <- rnorm(10)
   expect_equal(
-    dmatnorm(matrix(1:10, nrow = 5), matrix(0:9, nrow = 5), V = diag(c(1, 1/2)), U = diag(1/(100:104)), log = TRUE),
-    sum(dnorm(1:10, 0:9, sqrt(c(100:104, 2*(100:104))), log = TRUE))
+    dlnorm(x, meanlog = mu, sdlog = 1/sqrt(tau), log = TRUE) - dlnorm(y, meanlog = mu, sdlog = 1/sqrt(tau), log = TRUE),
+    dlnorm_diff(x, y, mu, tau, log = TRUE, byrow = TRUE)
   )
+
+  expect_equal(
+    dnorm(log(x), mu, sd = 1/sqrt(tau), log = TRUE) - dnorm(log(y), mu, sd = 1/sqrt(tau), log = TRUE),
+    dnorm_diff(log(x), log(y), mu, tau, log = TRUE, byrow = TRUE)
+  )
+
 
   V <- matrix(c(1, -0.5, -0.5, 1.25), 2, 2)
   U <- diag(1/(100:104))
@@ -36,6 +66,5 @@ test_that("dmatnorm", {
     dmatnorm(x, mu = mu, V = V, U = U, log = TRUE) - dmatnorm(y, mu = mu, V = V, U = U, log = TRUE),
     dmatnorm_diff(x, y, mu, V = V, U = U, log = TRUE)
   )
-
 
 })
