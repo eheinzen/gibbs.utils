@@ -62,6 +62,7 @@ void one_gamma_pois_proposal_ratio(double L, double mult, double k, double mean,
   outproposal = lproposal;
 
   double ratio = one_m_pois_ratio(L, lproposal, k, mean, precision, acceptance);
+  ratio -= lproposal - L;
   if(acceptance == 0) {
     ratio -= (alpha2 - 1.0)*lproposal - proposal/scale2;
     ratio += (alpha2 - 1.0)*L - exp(L)/scale2;

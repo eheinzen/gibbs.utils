@@ -4,6 +4,8 @@
 
 - Added an argument `byrow=` to `dmvnorm_diff()`.
 
+- Critical bug fix for "[mv ]gamma" in `sample_pois_reg()` and "mv beta" in `sample_binom_reg()`.
+
 # v2.4.0
 
 - Added "mv beta" to `sample_binom_reg()`.

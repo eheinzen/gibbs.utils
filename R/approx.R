@@ -77,8 +77,7 @@ mviqt_pois <- function(L, mult, k, mean, Q, acceptance) {
   if(acceptance == 2) {
     accept <- rep_len(TRUE, nrow(L))
   } else {
-    ratio <- pois_LL_mv(proposal, k) - pois_LL_mv(L, k) +
-      -0.5*rowSums((proposal + L - 2*mean) * ((proposal - L) %*% Q))
+    ratio <- pois_LL_mv(proposal, k) - pois_LL_mv(L, k) + dmvnorm_diff(proposal, L, mu = mean, Q = Q, log = TRUE, byrow = TRUE)
     if(acceptance == 0) {
       ratio <- ratio - -0.5*rowSums((proposal + L - 2*tmp$mu) * (proposal - L) * tau2)
     }
@@ -115,14 +114,14 @@ mvgamma_pois <- function(L, mult, k, mean, Q, acceptance) {
   alpha2 <- tmp$alpha / mult
   scale2 <- mult / tmp$beta
 
-  proposal <- matrix(stats::rgamma(length(L), alpha2, scale = scale2), nrow = nrow(L), ncol = ncol(L))
+  proposal <- matrix(stats::rgamma(length(L), shape = alpha2, scale = scale2), nrow = nrow(L), ncol = ncol(L))
   lproposal <- log(proposal)
 
   if(acceptance == 2) {
     accept <- rep_len(TRUE, nrow(L))
   } else {
-    ratio <- pois_LL_mv(lproposal, k) - pois_LL_mv(L, k) +
-      -0.5*rowSums((lproposal + L - 2*mean) * ((lproposal - L) %*% Q))
+    eL <- exp(L)
+    ratio <- pois_LL_mv(lproposal, k) - pois_LL_mv(L, k) + dmvlnorm_diff(proposal, eL, mu = mean, Q = Q, log = TRUE, byrow = TRUE)
     if(acceptance == 0) {
       ratio <- ratio - rowSums((alpha2 - 1.0)*lproposal - proposal/scale2)
       ratio <- ratio + rowSums((alpha2 - 1.0)*L - exp(L)/scale2)
@@ -214,8 +213,7 @@ mviqt_binom <- function(p, mult, k, n, mean, Q, acceptance) {
   if(acceptance == 2) {
     accept <- rep_len(TRUE, nrow(p))
   } else {
-    ratio <- binom_LL_mv(proposal, k, n) - binom_LL_mv(p, k, n) +
-      -0.5*rowSums((proposal + p - 2*mean) * ((proposal - p) %*% Q))
+    ratio <- binom_LL_mv(proposal, k, n) - binom_LL_mv(p, k, n) + dmvnorm_diff(proposal, p, mu = mean, Q = Q, log = TRUE, byrow = TRUE)
     if(acceptance == 0) {
       ratio <- ratio - -0.5*rowSums((proposal + p - 2*tmp$mu) * (proposal - p) * tau2)
     }
@@ -269,8 +267,8 @@ mvbeta_binom <- function(p, mult, k, n, mean, Q, acceptance) {
     accept <- rep_len(TRUE, nrow(p))
   } else {
     ep <- expit(p)
-    ratio <- binom_LL_mv(lproposal, k, n) - binom_LL_mv(p, k, n) +
-      -0.5*rowSums((lproposal + p - 2*mean) * ((lproposal - p) %*% Q))
+    ratio <- binom_LL_mv(lproposal, k, n) - binom_LL_mv(p, k, n) + dmvnorm_diff(lproposal, p, mu = mean, Q = Q, log = TRUE, byrow = TRUE)
+    ratio <- ratio - log(proposal*(1 - proposal)) + log(ep*(1 - ep))
     if(acceptance == 0) {
       ratio <- ratio - rowSums((alpha2 - 1)*log(proposal) + (beta2 - 1)*log(1 - proposal))
       ratio <- ratio + rowSums((alpha2 - 1)*log(ep)       + (beta2 - 1)*log(1 - ep))
