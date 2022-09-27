@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.5.0</span>
       </span>
     </div>
 
@@ -132,7 +132,15 @@
 
     <pre class="usage"><span class='fu'>dmvnorm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, detQ <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/det.html'>determinant</a></span><span class='op'>(</span><span class='va'>Q</span>, logarithm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>$</span><span class='va'>modulus</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
-<span class='fu'>dmvnorm_diff</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>dmvlnorm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, detQ <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/det.html'>determinant</a></span><span class='op'>(</span><span class='va'>Q</span>, logarithm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>$</span><span class='va'>modulus</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+
+<span class='fu'>dmvnorm_diff</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span>, byrow <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+
+<span class='fu'>dmvlnorm_diff</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span>, byrow <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+
+<span class='fu'>dnorm_diff</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>tau</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span>, byrow <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+
+<span class='fu'>dlnorm_diff</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>tau</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span>, byrow <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
 <span class='fu'>dmatnorm</span><span class='op'>(</span>
   <span class='va'>x</span>,
@@ -160,16 +168,20 @@
       <td><p>the mean</p></td>
     </tr>
     <tr>
-      <th>Q</th>
-      <td><p>the precision matrix</p></td>
-    </tr>
-    <tr>
       <th>detQ, detU, detV</th>
       <td><p>Pre-computed log-determinants</p></td>
     </tr>
     <tr>
       <th>log</th>
       <td><p>Should the log-density be returned?</p></td>
+    </tr>
+    <tr>
+      <th>byrow</th>
+      <td><p>Should the densities be summed (FALSE, the default) or returned separately by row (TRUE).</p></td>
+    </tr>
+    <tr>
+      <th>tau, Q</th>
+      <td><p>the precision (matrix)</p></td>
     </tr>
     <tr>
       <th>V, U</th>
