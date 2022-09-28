@@ -4,9 +4,7 @@ using namespace Rcpp;
 
 double one_m_binom_ratio(double p, double proposal, double k, double n, double mean, double precision, int acceptance) {
   if(acceptance == 2) return 0.0;
-  double ratio = binom_LL(proposal, k, n, mean, precision);
-  ratio -= binom_LL(p, k, n, mean, precision);
-  return ratio;
+  return binom_LL(proposal, k, n, mean, precision) - binom_LL(p, k, n, mean, precision);
 }
 
 

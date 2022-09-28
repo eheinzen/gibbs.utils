@@ -4,9 +4,7 @@ using namespace Rcpp;
 
 double one_m_pois_ratio(double L, double proposal, double k, double mean, double precision, int acceptance) {
   if(acceptance == 2) return 0.0;
-  double ratio = pois_LL(proposal, k, mean, precision);
-  ratio -= pois_LL(L, k, mean, precision);
-  return ratio;
+  return pois_LL(proposal, k, mean, precision) - pois_LL(L, k, mean, precision);
 }
 
 
