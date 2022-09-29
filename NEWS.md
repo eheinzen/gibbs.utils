@@ -1,3 +1,7 @@
+# v3.0.0
+
+- Added `truncate=` argument to `sample_pois_reg()`, to truncate the Poisson likelihood.
+
 # v2.5.0
 
 - Added `dmvlnorm()`, `dmvlnorm_diff()`, `dnorm_diff()`, `dlnorm_diff()`.
