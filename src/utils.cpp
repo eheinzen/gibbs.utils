@@ -11,8 +11,13 @@ bool accept_reject(double ratio) {
 double binom_LL(double p, double k, double n, double mean, double precision) {
   return k*p - n*log(1.0 + exp(p)) - 0.5*precision*(p - mean)*(p - mean);
 }
-double pois_LL(double L, double k, double mean, double precision) {
-  return k*L - exp(L) - 0.5*precision*(L - mean)*(L - mean);
+double pois_LL(double L, double k, double mean, double precision, double trunc_at, bool lower) {
+  double eL = exp(L);
+  double out = k*L - eL - 0.5*precision*(L - mean)*(L - mean);
+  if(trunc_at >= 0.0) {
+    out -= R::ppois(trunc_at, eL, lower, 1);
+  }
+  return out;
 }
 double multinom_LL(NumericVector p_j, LogicalVector z_j, double k, double n, double mean, double precision, int j) {
   double mm = 0;

@@ -2,9 +2,9 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-double one_m_pois_ratio(double L, double proposal, double k, double mean, double precision, int acceptance) {
+double one_m_pois_ratio(double L, double proposal, double k, double mean, double precision, double trunc_at, bool lower, int acceptance) {
   if(acceptance == 2) return 0.0;
-  return pois_LL(proposal, k, mean, precision) - pois_LL(L, k, mean, precision);
+  return pois_LL(proposal, k, mean, precision, trunc_at, lower) - pois_LL(L, k, mean, precision, trunc_at, lower);
 }
 
 
@@ -29,7 +29,7 @@ void one_qt_pois_proposal_ratio(double L, double k, double mean, double precisio
   double proposal = R::rnorm(prop_mean, prop_sd);
   outproposal = proposal;
 
-  double ratio = one_m_pois_ratio(L, proposal, k, mean, precision, acceptance);
+  double ratio = one_m_pois_ratio(L, proposal, k, mean, precision, -1, true, acceptance);
   if(acceptance == 0) {
     double orig_mean, orig_sd;
     qt_pois_approx(proposal, k, mean, precision, orig_mean, orig_sd);
@@ -59,8 +59,7 @@ void one_gamma_pois_proposal_ratio(double L, double mult, double k, double mean,
   double lproposal = log(proposal);
   outproposal = lproposal;
 
-  double ratio = one_m_pois_ratio(L, lproposal, k, mean, precision, acceptance);
-  ratio -= lproposal - L;
+  double ratio = one_m_pois_ratio(L, lproposal, k, mean, precision, -1, true, acceptance) - (lproposal - L);
   if(acceptance == 0) {
     ratio -= (alpha2 - 1.0)*lproposal - proposal/scale2;
     ratio += (alpha2 - 1.0)*L - exp(L)/scale2;
@@ -72,7 +71,7 @@ void one_gamma_pois_proposal_ratio(double L, double mult, double k, double mean,
 
 // [[Rcpp::export]]
 NumericVector mh_pois(int method, NumericVector L, NumericVector proposal, NumericVector k, LogicalVector k_na,
-                      NumericVector mean, NumericVector precision, int acceptance) {
+                      NumericVector mean, NumericVector precision, NumericVector trunc_at, LogicalVector lower, int acceptance) {
   NumericVector out = clone(L);
   LogicalVector accept(L.size());
 
@@ -85,12 +84,14 @@ NumericVector mh_pois(int method, NumericVector L, NumericVector proposal, Numer
 
     double ratio, prop;
     if(method == 1) { // 'proposal' is ignored
+      if(k_na[i]) stop("Something went wrong");
       one_qt_pois_proposal_ratio(L[i], k[i], mean[i], precision[i], prop, ratio, acceptance);
     } else if(method == 2) {
+      if(k_na[i]) stop("Something went wrong");
       one_gamma_pois_proposal_ratio(L[i], proposal[i], k[i], mean[i], precision[i], prop, ratio, acceptance);
     } else {
       prop = proposal[i];
-      ratio = one_m_pois_ratio(L[i], prop, k[i], mean[i], precision[i], acceptance);
+      ratio = one_m_pois_ratio(L[i], prop, k[i], mean[i], precision[i], trunc_at[i], lower[i], acceptance);
     }
     bool a = accept_reject(ratio);
     accept[i] = a;
@@ -105,7 +106,8 @@ NumericVector mh_pois(int method, NumericVector L, NumericVector proposal, Numer
 
 // [[Rcpp::export]]
 NumericVector mh_pois_mv(int method, NumericMatrix L, NumericMatrix proposal, NumericMatrix k, LogicalMatrix k_na,
-                         NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm, int acceptance) {
+                         NumericMatrix mean, NumericMatrix Q, NumericMatrix trunc_at, LogicalMatrix lower,
+                         LogicalVector use_norm, NumericMatrix norm, int acceptance) {
   NumericMatrix out = clone(L);
   LogicalMatrix accept(L.nrow(), L.ncol());
 
@@ -122,6 +124,8 @@ NumericVector mh_pois_mv(int method, NumericMatrix L, NumericMatrix proposal, Nu
     NumericVector kk = k(r, _);
     LogicalVector kk_na = k_na(r, _);
     NumericVector mm = mean(r, _);
+    NumericVector aa = trunc_at(r, _);
+    LogicalVector bb = lower(r, _);
     for(int i = 0; i < L.ncol(); i++) {
       // safe not to replace out(r, i) because it's not used in this calculation
       double mmm = cond_mv_mean(out(r, _), mm, Q, i);
@@ -134,12 +138,14 @@ NumericVector mh_pois_mv(int method, NumericMatrix L, NumericMatrix proposal, Nu
 
       double ratio, prop;
       if(method == 1) { // 'proposal' is ignored
+        if(kk_na[i]) stop("Something went wrong");
         one_qt_pois_proposal_ratio(out(r, i), kk[i], mmm, Q(i, i), prop, ratio, acceptance);
       } else if(method == 2) {
+        if(kk_na[i]) stop("Something went wrong");
         one_gamma_pois_proposal_ratio(out(r, i), proposal(r, i), kk[i], mmm, Q(i, i), prop, ratio, acceptance);
       } else {
         prop = proposal(r, i);
-        ratio = one_m_pois_ratio(out(r, i), proposal(r, i), kk[i], mmm, Q(i, i), acceptance);
+        ratio = one_m_pois_ratio(out(r, i), proposal(r, i), kk[i], mmm, Q(i, i), aa[i], bb[i], acceptance);
       }
       bool a = accept_reject(ratio);
       accept(r, i) = a;

@@ -42,6 +42,47 @@ abind::abind(out, out2, out3, out4, out5, out6, out7, along = 0L) %>%
 
 
 
+# -------------------------------------------------------------------------
+
+
+y <- matrix(3)
+m <- matrix(0)
+Q <- diag(1, 1)
+out0 <- out <- out2 <- out3 <- out4 <- out5 <- out6 <- matrix(0, 10000, 1)
+for(i in seq_len(10000-1)) {
+  out0[i+1, ] <- sample_pois_reg(out0[i, , drop = FALSE], y, m, Q, method = "slice")
+  out[i+1, ] <- sample_pois_reg(out[i, , drop = FALSE], y, m, Q, method = "slice", truncate = list(at = 0, allow = "above"))
+  out2[i+1, ] <- sample_pois_reg(out2[i, , drop = FALSE], y, m, Q, method = "normal", truncate = list(at = 0, allow = "above"))
+  out3[i+1, ] <- sample_pois_reg(out3[i, , drop = FALSE], y, m, Q, method = "unif", truncate = list(at = 0, allow = "above"))
+  out4[i+1, ] <- sample_pois_reg(out4[i, , drop = FALSE], y, m, Q, method = "slice", truncate = list(at = 3, allow = "below"))
+  out5[i+1, ] <- sample_pois_reg(out5[i, , drop = FALSE], y, m, Q, method = "normal", truncate = list(at = 3, allow = "below"))
+  out6[i+1, ] <- sample_pois_reg(out6[i, , drop = FALSE], y, m, Q, method = "unif", truncate = list(at = 3, allow = "below"))
+}
+
+abind::abind(out0, out, out2, out3, along = 0L) %>%
+  reshape2::melt(c("method", "i", "x")) %>%
+  filter(i > 1000) %>%
+  ggplot(aes(x = value, color = factor(method))) +
+  facet_wrap(~ x, scales = "free") +
+  geom_density()
+
+
+abind::abind(out0, out4, out5, out6, along = 0L) %>%
+  reshape2::melt(c("method", "i", "x")) %>%
+  filter(i > 1000) %>%
+  ggplot(aes(x = value, color = factor(method))) +
+  facet_wrap(~ x, scales = "free") +
+  geom_density()
+
+
+
+
+
+
+
+
+# -------------------------------------------------------------------------
+
 
 
 k <- matrix(1)

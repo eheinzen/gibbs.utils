@@ -15,6 +15,7 @@ sample_pois_reg(
   width = 1,
   nexpand = 10,
   ncontract = 100,
+  truncate = NULL,
   acceptance = c("MH", "LL only", "regardless")
 )
 }
@@ -57,6 +58,10 @@ For \code{"gamma"}, \code{"beta"}, and \code{"mv ind quadratic taylor"} a scalin
 \item{nexpand}{The maximum number of expansions (to the right and left each)}
 
 \item{ncontract}{The maximum number of contractions. If this is exceeded, the original value is returned}
+
+\item{truncate}{Either \code{NULL} for no truncation (default), or else a list with components \code{at} to indicate the value, and \code{allow}
+to indicate whether values "above" (strict) or "below" (inclusive) are allowed. For convenience, negative values of \code{at} are
+interpreted as no truncation.}
 
 \item{acceptance}{What should be the criteria for acceptance? "MH" indicates the usual Metropolis-Hastings update. "LL only" ignores the proposal
 densities but considers the log-likelihoods. "regardless" accepts no matter what. This is useful for testing, or for

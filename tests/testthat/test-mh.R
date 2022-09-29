@@ -175,6 +175,8 @@ test_that("k == NA gives the same results for all methods", {
   six <- sample_pois_reg(L, k, mean = -3, precision = prec, method = "gamma")
   set.seed(20210119)
   seven <- sample_pois_reg(L, k, mean = -3, precision = prec, method = "mv gamma")
+  set.seed(20210119)
+  eight <- sample_pois_reg(L, k, mean = -3, precision = prec, method = "slice", truncate = list(at = 4, allow = "below"))
   expect_equal(one, two)
   expect_equal(one, three)
   expect_equal(one, five)
@@ -185,6 +187,8 @@ test_that("k == NA gives the same results for all methods", {
   attr(one, "accept") <- NULL
 
   expect_equal(one, four)
+  expect_equal(four, eight)
+
 })
 
 test_that("Some k == NA gives the same results for some methods", {
@@ -198,6 +202,8 @@ test_that("Some k == NA gives the same results for some methods", {
   four <- sample_pois_reg(L, k, mean = 2, precision = prec, method = "slice")
   set.seed(20210120)
   six <- sample_pois_reg(L, k, mean = 2, precision = prec, method = "gamma")
+  set.seed(20210120)
+  eight <- sample_pois_reg(L, k, mean = 2, precision = prec, method = "slice", truncate = list(at = c(-1, 10), allow = "below"))
 
   expect_true(attr(three, "accept")[1, 1])
   expect_true(attr(six, "accept")[1, 1])

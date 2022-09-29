@@ -30,6 +30,9 @@
 #' @param width For \code{"normal"} proposals, the standard deviation(s) of proposals. For \code{"uniform"} proposals,
 #' the half-width of the uniform proposal interval. For \code{"slice"}, the width of each expansion (to the right and left each).
 #' For \code{"gamma"}, \code{"beta"}, and \code{"mv ind quadratic taylor"} a scaling factor to increase the variance of the proposal.
+#' @param truncate Either \code{NULL} for no truncation (default), or else a list with components \code{at} to indicate the value, and \code{allow}
+#'   to indicate whether values "above" (strict) or "below" (inclusive) are allowed. For convenience, negative values of \code{at} are
+#'   interpreted as no truncation.
 #' @param acceptance What should be the criteria for acceptance? "MH" indicates the usual Metropolis-Hastings update. "LL only" ignores the proposal
 #'   densities but considers the log-likelihoods. "regardless" accepts no matter what. This is useful for testing, or for
 #'   when the method is a gamma, beta, or quadratic approximation, which can be hard to accept if the initial starting point is low-density.
@@ -52,7 +55,7 @@
 #' @export
 sample_pois_reg <- function(L, k, mean, precision,
                             method = c("slice", "normal", "uniform", "gamma", "mv gamma", "quadratic taylor", "mv quadratic taylor", "mv ind quadratic taylor"),
-                            ..., width = 1, nexpand = 10, ncontract = 100, acceptance = c("MH", "LL only", "regardless")) {
+                            ..., width = 1, nexpand = 10, ncontract = 100, truncate = NULL, acceptance = c("MH", "LL only", "regardless")) {
   method <- match.arg(method)
   acceptance <- match.arg(acceptance)
   acceptance <- match(acceptance, c("MH", "LL only", "regardless")) - 1L
@@ -61,6 +64,17 @@ sample_pois_reg <- function(L, k, mean, precision,
   mean <- check_one_or_all(mean, length(L))
   d <- dim(L)
 
+  if(!is.null(truncate)) {
+    if(!(method %in% c("slice", "normal", "uniform"))) stop("Truncation is only supported with method = 'slice', 'normal', or 'uniform'")
+    lower.tail <- truncate$allow == "below"
+    at <- truncate$at
+  } else {
+    lower.tail <- TRUE
+    at <- -1
+  }
+  lower.tail <- check_one_or_all(lower.tail, length(L))
+  at <- check_one_or_all(at, length(L))
+
   if(is.matrix(precision)) {
     tmp <- is.matrix(L) + is.matrix(k)
     if(!(tmp %in% c(0, 2))) stop("Both of 'L' and 'k' must be matrices, or neither must be.")
@@ -68,12 +82,13 @@ sample_pois_reg <- function(L, k, mean, precision,
       L <- matrix(L, nrow = 1)
       k <- matrix(k, nrow = 1)
     }
-    dim(mean) <- dim(L)
+    dim(lower.tail) <- dim(at) <- dim(mean) <- dim(L)
 
-    use_norm <- rowSums(!is.na(k)) == 0
+    use_norm <- rowSums(!is.na(k)) == 0 & rowSums(at >= 0) == 0
     norm <- if(any(use_norm)) {
       mean[use_norm, , drop = FALSE] + spam::rmvnorm.prec(sum(use_norm), Q = precision)
     } else matrix()
+
   } else {
     if(method == "mv quadratic taylor") {
       warning("'mv quadratic taylor' is being interpreted as 'quadratic taylor' because 'precision' is not a matrix.")
@@ -91,11 +106,13 @@ sample_pois_reg <- function(L, k, mean, precision,
     if(is.matrix(precision)) {
       out <- slice_sample_pois_mv(L = L, k = k, k_na = is.na(k), mean = mean,
                                   Q = precision, use_norm = use_norm, norm = norm,
+                                  trunc_at = at, lower = lower.tail,
                                   w = width, nexpand = nexpand, ncontract = ncontract)
     } else {
       precision <- check_one_or_all(precision, length(L))
-      out <- slice_sample_pois(L = L, k = k, k_na = is.na(k), mean = mean,
-                               precision = precision, w = width, nexpand = nexpand, ncontract = ncontract)
+      out <- slice_sample_pois(L = L, k = k, k_na = is.na(k), mean = mean, precision = precision,
+                               trunc_at = at, lower = lower.tail,
+                               w = width, nexpand = nexpand, ncontract = ncontract)
     }
   } else if(method %in% c("normal", "uniform", "gamma", "quadratic taylor")) {
     if(method %in% c("normal", "uniform")) {
@@ -114,10 +131,11 @@ sample_pois_reg <- function(L, k, mean, precision,
 
     if(is.matrix(precision)) {
       dim(prop) <- dim(L)
-      out <- mh_pois_mv(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean,
-                        Q = precision, use_norm = use_norm, norm = norm, acceptance = acceptance)
+      out <- mh_pois_mv(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean, Q = precision,
+                        trunc_at = at, lower = lower.tail, use_norm = use_norm, norm = norm, acceptance = acceptance)
     } else {
-      out <- mh_pois(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean, precision = precision, acceptance = acceptance)
+      out <- mh_pois(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean, precision = precision,
+                     trunc_at = at, lower = lower.tail, acceptance = acceptance)
     }
   } else if(method %in% c("mv gamma", "mv ind quadratic taylor")) {
     width <- check_one_or_all(width, length(L))
