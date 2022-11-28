@@ -1,3 +1,7 @@
+# v4.0.0
+
+- Overhauled `sample_multinom_reg()`. Where possible, backwards compatibility was maintained, but results will differ because of random seeds and whatnot.
+
 # v3.0.0
 
 - Added `truncate=` argument to `sample_pois_reg()`, to truncate the Poisson likelihood.

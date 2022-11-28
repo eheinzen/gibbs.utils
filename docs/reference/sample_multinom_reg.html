@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">4.0.0</span>
       </span>
     </div>
 
@@ -152,25 +152,27 @@
       <td><p>the previous iteration of the logit-probability, as an array of dimension <code>r x i x j</code>,
 where <code>r</code> is the number of realizations, <code>i</code> is the number of (correlated)
 betas (that is, the dimension of <code>precision</code>), and <code>j</code> is the number of
-classes to split between. It is expected that <code>p[, , ref] == 0</code></p></td>
+classes to split between. It is expected that <code>p[, , ref] == 0</code>. This can also be "flattened" to a
+matrix of dimension <code>r x (i x j)</code>.</p></td>
     </tr>
     <tr>
       <th>z</th>
-      <td><p>a matrix of zeros and ones. The zeros determine so-called "structural zeros": outcomes
-which are not possible. This is assumed not to change over the first dimension (<code>r</code>) of <code>p</code>.
-This is of dimension <code>i x j</code>.</p></td>
+      <td><p>a matrix (or array) of zeros and ones. The zeros determine so-called "structural zeros": outcomes
+which are not possible. If two-dimensional, it is assumed not to change over the first dimension (<code>r</code>) of <code>p</code>.
+This is of dimension <code>i x j</code> or <code>r x i x j</code>.</p></td>
     </tr>
     <tr>
       <th>k</th>
-      <td><p>the realized value from the binomial distribution; the same size as <code>p</code> (<code>r x i x j</code>).</p></td>
+      <td><p>the realized value from the binomial distribution; the same size as <code>p</code>.</p></td>
     </tr>
     <tr>
       <th>mean</th>
-      <td><p>the prior mean for <code>p</code>. Must be either a scalar or an array of size <code>r x i x (j-1)</code></p></td>
+      <td><p>the prior mean for <code>p</code>. Must be either a scalar or an array of size <code>r x i x (j-1)</code> (when <code>p</code> is 3-D) or
+a "flattened" matrix of the same size.</p></td>
     </tr>
     <tr>
       <th>precision</th>
-      <td><p>an array of dimension <code>i x i x (j-1)</code>.
+      <td><p>an array of dimension <code>i x i x (j-1)</code> or a "flattened" matrix of the same size.
 The <code>j</code>-dimension is assumed to be independent.</p></td>
     </tr>
     <tr>
