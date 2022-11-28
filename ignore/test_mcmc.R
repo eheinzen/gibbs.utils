@@ -105,3 +105,35 @@ abind::abind(out, out2, out4, out5, out7, along = 0L) %>%
   facet_wrap(~ x, scales = "free") +
   geom_density()
 
+
+# -------------------------------------------------------------------------
+
+tmp <- cbind(0, matrix(c(0, 0, 0.7, 0.7), nrow = 2))
+p <- array(rep(tmp, each = 4), dim = c(4, 2, 3))
+mean <- round(p)
+set.seed(99)
+n <- rpois(4*2, 1200)
+k <- t(sapply(n, function(x) rmultinom(1, size = x, prob = c(0.25, 0.25, 0.5))))
+dim(k) <- c(4, 2, 3)
+stopifnot(rowSums(k, dims = 2) == n)
+
+z <- matrix(1, nrow = 2, ncol = 3)
+Q <- array(0, c(2, 2, 3))
+for(j in 1:3) Q[, , j] <- matrix(c(2, 1, 1, 2), 2)
+mean <- mean[, , -1]
+Q <- Q[, , -1]
+out <- out2 <- array(0, c(10000, dim(p)))
+for(i in seq_len(10000-1)) {
+  out[i+1, , , ] <-  sample_multinom_reg(p = out[i, , , ], z = z, k = k, mean = mean, precision = Q)
+  out2[i+1, , , ] <-  sample_multinom_reg2(p = out2[i, , , ], z = z, k = k, mean = mean, precision = Q)
+}
+
+stopifnot(out[, , , 1] == 0, out2[, , , 1] == 0)
+
+library(tidyverse)
+abind::abind(out, out2, along = 0L) %>%
+  reshape2::melt(c("method", "iter", "r", "i", "j")) %>%
+  filter(iter > 1000, j != 1) %>%
+  ggplot(aes(x = value, color = factor(method))) +
+  facet_wrap(~ r + i + j, scales = "free") +
+  geom_density()

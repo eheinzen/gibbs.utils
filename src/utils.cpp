@@ -19,23 +19,23 @@ double pois_LL(double L, double k, double mean, double precision, double trunc_a
   }
   return out;
 }
-double multinom_LL(NumericVector p_j, LogicalVector z_j, double k, double n, double mean, double precision, int j) {
+double multinom_LL(NumericVector p_ij, LogicalVector z_ij, IntegerVector which_i, double k, double n, double mean, double precision, int ij) {
   double mm = 0;
-  if(z_j[j]) {
-    // we still get the right log-likelihood if we include this when z_j[j] is false,
+  if(z_ij[ij]) {
+    // we still get the right log-likelihood if we include this when z_ij[ij] is false,
     // but the exp() costs time
     double nn = 0;
-    for(int jj = 0; jj < p_j.size(); jj++) {
-      if(z_j[jj]) {
-        nn += exp(p_j[jj]);
+    int i = which_i[ij];
+    for(int jj = 0; jj < p_ij.size(); jj++) {
+      if(z_ij[jj] && which_i[jj] == i) {
+        nn += exp(p_ij[jj]);
       }
     }
-    mm = k*p_j[j] - n*log(nn);
+    mm = k*p_ij[ij] - n*log(nn);
   }
-  mm -= 0.5*precision*(p_j[j] - mean)*(p_j[j] - mean);
+  mm -= 0.5*precision*(p_ij[ij] - mean)*(p_ij[ij] - mean);
   return mm;
 }
-
 
 
 NumericVector replace_it(NumericVector x, int i, double value) {

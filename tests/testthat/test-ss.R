@@ -149,7 +149,7 @@ test_that("multivariate slice sampling works for multinomial", {
   p <- array(rep(tmp, each = 400), dim = c(400, 2, 3))
   mean <- round(p)
   set.seed(99)
-  n <- rpois(400*2, 1200)
+  n <- rpois(400*2, 2000)
   k <- t(sapply(n, function(x) rmultinom(1, size = x, prob = c(0.25, 0.25, 0.5))))
   dim(k) <- c(400, 2, 3)
   stopifnot(rowSums(k, dims = 2) == n)
@@ -165,7 +165,7 @@ test_that("multivariate slice sampling works for multinomial", {
   expect_true(all(abs(m - c(0, 0, log(2))) < 0.01))
 
   z <- cbind(1, c(0, 1), c(1, 1))
-  expect_error(sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q))
+  expect_error(sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q), "z == 0 but k > 0")
 
   k[, 1, 2] <- 0
   m <- apply(ss <- sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q), 2:3, mean)
@@ -256,6 +256,47 @@ test_that("multivariate slice sampling works when dimensions are 1", {
 })
 
 
+
+test_that("different dimensions works for multinomial", {
+  tmp <- cbind(0, matrix(c(0, 0, 0.7, 0.7), nrow = 2))
+  p <- array(rep(tmp, each = 400), dim = c(400, 2, 3))
+  mean <- round(p)
+  set.seed(99)
+  n <- rpois(400*2, 1200)
+  k <- t(sapply(n, function(x) rmultinom(1, size = x, prob = c(0.25, 0.25, 0.5))))
+  dim(k) <- c(400, 2, 3)
+  stopifnot(rowSums(k, dims = 2) == n)
+
+  z <- matrix(1, nrow = 2, ncol = 3)
+  Q <- array(0, c(2, 2, 3))
+  for(j in 1:3) Q[, , j] <- matrix(c(2, 0, 0, 2), 2)
+  mean <- mean[, , -1]
+  Q <- Q[, , -1]
+  k[, 2, 3] <- 0
+  z <- cbind(1, c(1, 1), c(1, 0))
+  set.seed(20221128)
+  regular <- sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q)
+
+  dim(p) <- c(400, 6)
+  expect_error(sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q), "dimensions of 'k' must match")
+  dim(k) <- c(400, 6)
+  expect_error(sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q), "dimensions of 'mean'")
+  dim(mean) <- c(400, 4)
+  expect_error(sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q), "dimensions of 'precision'")
+  Q <- matrix(0, 4, 4)
+  Q[1:2, 1:2] <- matrix(c(2, 0, 0, 2), 2)
+  Q[3:4, 3:4] <- matrix(c(2, 0, 0, 2), 2)
+  set.seed(20221128)
+  twoD <- sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q)
+
+  dim(twoD) <- c(400, 2, 3)
+  expect_equal(twoD, regular)
+
+  dim(twoD) <- c(400, 6)
+  set.seed(20221128)
+  slim <- sample_multinom_reg(p = p[, -6], z = z, k = k[, -6], mean = mean[, -4], precision = Q[-4, -4])
+  expect_equal(twoD[1, -6], slim[1, ])
+})
 
 
 

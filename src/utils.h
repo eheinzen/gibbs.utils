@@ -5,8 +5,8 @@
 #include <Rcpp.h>
 double binom_LL(double p, double k, double n, double mean, double precision);
 double pois_LL(double L, double k, double mean, double precision, double trunc_at, bool lower);
-double multinom_LL(Rcpp::NumericVector p_j, Rcpp::LogicalVector z_j, double k, double n,
-                      double mean, double precision, int j);
+double multinom_LL(Rcpp::NumericVector p_ij, Rcpp::LogicalVector z_ij, Rcpp::IntegerVector which_i,
+                   double k, double n, double mean, double precision, int ij);
 
 
 Rcpp::NumericVector replace_it(Rcpp::NumericVector x, int i, double value);

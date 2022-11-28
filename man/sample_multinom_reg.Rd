@@ -22,17 +22,19 @@ sample_multinom_reg(
 \item{p}{the previous iteration of the logit-probability, as an array of dimension \code{r x i x j},
 where \code{r} is the number of realizations, \code{i} is the number of (correlated)
 betas (that is, the dimension of \code{precision}), and \code{j} is the number of
-classes to split between. It is expected that \code{p[, , ref] == 0}}
+classes to split between. It is expected that \code{p[, , ref] == 0}. This can also be "flattened" to a
+matrix of dimension \code{r x (i x j)}.}
 
-\item{z}{a matrix of zeros and ones. The zeros determine so-called "structural zeros": outcomes
-which are not possible. This is assumed not to change over the first dimension (\code{r}) of \code{p}.
-This is of dimension \code{i x j}.}
+\item{z}{a matrix (or array) of zeros and ones. The zeros determine so-called "structural zeros": outcomes
+which are not possible. If two-dimensional, it is assumed not to change over the first dimension (\code{r}) of \code{p}.
+This is of dimension \code{i x j} or \code{r x i x j}.}
 
-\item{k}{the realized value from the binomial distribution; the same size as \code{p} (\code{r x i x j}).}
+\item{k}{the realized value from the binomial distribution; the same size as \code{p}.}
 
-\item{mean}{the prior mean for \code{p}. Must be either a scalar or an array of size \code{r x i x (j-1)}}
+\item{mean}{the prior mean for \code{p}. Must be either a scalar or an array of size \code{r x i x (j-1)} (when \code{p} is 3-D) or
+a "flattened" matrix of the same size.}
 
-\item{precision}{an array of dimension \code{i x i x (j-1)}.
+\item{precision}{an array of dimension \code{i x i x (j-1)} or a "flattened" matrix of the same size.
 The \code{j}-dimension is assumed to be independent.}
 
 \item{method}{The method to use to propose new values.

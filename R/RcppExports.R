@@ -33,16 +33,12 @@ slice_sample_binom_mv <- function(p, k, n, mean, Q, use_norm, norm, w, nexpand, 
     .Call('_gibbs_utils_slice_sample_binom_mv', PACKAGE = 'gibbs.utils', p, k, n, mean, Q, use_norm, norm, w, nexpand, ncontract)
 }
 
-one_multinom_slice <- function(p_j, z_j, k, n, mean, precision, j, w, nexpand, ncontract) {
-    .Call('_gibbs_utils_one_multinom_slice', PACKAGE = 'gibbs.utils', p_j, z_j, k, n, mean, precision, j, w, nexpand, ncontract)
+one_multinom_slice <- function(p_ij, z_ij, which_i, k, n, mean, precision, ij, w, nexpand, ncontract) {
+    .Call('_gibbs_utils_one_multinom_slice', PACKAGE = 'gibbs.utils', p_ij, z_ij, which_i, k, n, mean, precision, ij, w, nexpand, ncontract)
 }
 
-slice_sample_multinom_mv <- function(p_j, z, k, n, p_i, mean, Q, j, w, nexpand, ncontract) {
-    .Call('_gibbs_utils_slice_sample_multinom_mv', PACKAGE = 'gibbs.utils', p_j, z, k, n, p_i, mean, Q, j, w, nexpand, ncontract)
-}
-
-slice_sample_multinom_mv_zlist <- function(p_j, z, k, n, p_i, mean, Q, j, w, nexpand, ncontract) {
-    .Call('_gibbs_utils_slice_sample_multinom_mv_zlist', PACKAGE = 'gibbs.utils', p_j, z, k, n, p_i, mean, Q, j, w, nexpand, ncontract)
+slice_sample_multinom_mv <- function(p_ij, z_ij, which_i, is_ref, k_ij, n_ij, mean, Q, w, nexpand, ncontract) {
+    .Call('_gibbs_utils_slice_sample_multinom_mv', PACKAGE = 'gibbs.utils', p_ij, z_ij, which_i, is_ref, k_ij, n_ij, mean, Q, w, nexpand, ncontract)
 }
 
 one_pois_slice <- function(L, k, mean, precision, trunc_at, lower, w, nexpand, ncontract) {
