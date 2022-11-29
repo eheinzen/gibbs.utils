@@ -13,6 +13,7 @@ sample_multinom_reg(
   method = c("slice"),
   ref = c("first", "last"),
   ...,
+  zmax = NULL,
   width = 1,
   nexpand = 10,
   ncontract = 100
@@ -67,6 +68,8 @@ If \code{2}, then \code{mean} and \code{precision} map to the first and third th
 Etc.}
 
 \item{...}{Other arguments (not used)}
+
+\item{zmax}{For advanced use: a matrix, usually computed from the last two dimensions of \code{z}.}
 
 \item{width}{For \code{"normal"} proposals, the standard deviation(s) of proposals. For \code{"uniform"} proposals,
 the half-width of the uniform proposal interval. For \code{"slice"}, the width of each expansion (to the right and left each).

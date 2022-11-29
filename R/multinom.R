@@ -8,6 +8,7 @@
 #' @param z a matrix (or array) of zeros and ones. The zeros determine so-called "structural zeros": outcomes
 #'   which are not possible. If two-dimensional, it is assumed not to change over the first dimension (\code{r}) of \code{p}.
 #'   This is of dimension \code{i x j} or \code{r x i x j}.
+#' @param zmax For advanced use: a matrix, usually computed from the last two dimensions of \code{z}.
 #' @param k the realized value from the binomial distribution; the same size as \code{p}.
 #' @param mean the prior mean for \code{p}. Must be either a scalar or an array of size \code{r x i x (j-1)} (when \code{p} is 3-D) or
 #'   a "flattened" matrix of the same size.
@@ -27,19 +28,25 @@
 #'   In the case that \code{n} is zero or \code{z} is zero, slice sampling is ignored in favor of a normal draw.
 #' @seealso \code{\link{sample_pois_reg}}, \code{\link{sample_binom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
 #' @export
-sample_multinom_reg <- function(p, z, k, mean, precision, method = c("slice"), ref = c("first", "last"), ..., width = 1, nexpand = 10, ncontract = 100) {
+sample_multinom_reg <- function(p, z, k, mean, precision, method = c("slice"), ref = c("first", "last"), ...,
+                                zmax = NULL, width = 1, nexpand = 10, ncontract = 100) {
   method <- match.arg(method)
 
   nr <- nrow(p)
   z <- TRUE & z
   if(length(dim(z)) == 3) {
-    zmax <- apply(z, 2:3, max)
+    tmpzmax <- apply(z, 2:3, max)
     if(nrow(z) != nr) stop(glue::glue("The first dimension of 'z' ({nrow(z)}) must match the first dimension of 'p' ({nr})"))
     dim(z) <- c(nr, prod(dim(z)[2:3]))
   } else {
-    zmax <- z
+    tmpzmax <- z
     z <- matrix(z, nrow = nr, ncol = length(z), byrow = TRUE)
   }
+  if(is.null(zmax)) {
+    zmax <- tmpzmax
+  } else if(!all(zmax >= tmpzmax)) {
+    stop("'zmax' has fewer nonzero entries than 'z'")
+  } else zmax <- TRUE & zmax
 
   if(is.character(ref)) {
     ref <- match.arg(ref)
@@ -80,7 +87,7 @@ sample_multinom_reg <- function(p, z, k, mean, precision, method = c("slice"), r
     if(d[2] == sum(zmax)) {
       zmax.vec <- as.vector(zmax)
       is_ref <- is_ref[zmax.vec]
-      z <- z[, zmax.vec]
+      z <- z[, zmax.vec, drop = FALSE]
       which_i <- which_i[zmax.vec]
     } else {
       if(!identical(d[2], length(zmax))) stop(glue::glue("The second dimension of 'p' ({d[2]}) must match 'z' ({nrow(zmax)} x {ncol(zmax)})"))

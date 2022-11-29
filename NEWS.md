@@ -1,3 +1,7 @@
+# v4.1.0
+
+- Added the `zmax=` argument to `sample_multinom_reg()`, for advanced usage.
+
 # v4.0.0
 
 - Overhauled `sample_multinom_reg()`. Where possible, backwards compatibility was maintained, but results will differ because of random seeds and whatnot.
