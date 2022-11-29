@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">4.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">4.1.0</span>
       </span>
     </div>
 
@@ -139,6 +139,7 @@
   method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"slice"</span><span class='op'>)</span>,
   ref <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"first"</span>, <span class='st'>"last"</span><span class='op'>)</span>,
   <span class='va'>...</span>,
+  zmax <span class='op'>=</span> <span class='cn'>NULL</span>,
   width <span class='op'>=</span> <span class='fl'>1</span>,
   nexpand <span class='op'>=</span> <span class='fl'>10</span>,
   ncontract <span class='op'>=</span> <span class='fl'>100</span>
@@ -209,6 +210,10 @@ Etc.</p></td>
     <tr>
       <th>...</th>
       <td><p>Other arguments (not used)</p></td>
+    </tr>
+    <tr>
+      <th>zmax</th>
+      <td><p>For advanced use: a matrix, usually computed from the last two dimensions of <code>z</code>.</p></td>
     </tr>
     <tr>
       <th>width</th>
