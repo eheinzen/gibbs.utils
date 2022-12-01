@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">4.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">4.2.0</span>
       </span>
     </div>
 
@@ -190,11 +190,11 @@
 
 <span class='fu'>conj_norm_tau</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>mu</span>, a0 <span class='op'>=</span> <span class='fl'>0.001</span>, b0 <span class='op'>=</span> <span class='fl'>0.001</span>, params.only <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>conj_mvnorm_Q</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>V0</span>, <span class='va'>v0</span>, V0_inv <span class='op'>=</span> <span class='fu'><a href='utilities.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>V0</span><span class='op'>)</span>, params.only <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>conj_mvnorm_Q</span><span class='op'>(</span><span class='va'>y</span>, mu <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>V0</span>, <span class='va'>v0</span>, V0_inv <span class='op'>=</span> <span class='fu'><a href='utilities.html'>chol_inv</a></span><span class='op'>(</span><span class='va'>V0</span><span class='op'>)</span>, params.only <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
 <span class='fu'>conj_matnorm_V</span><span class='op'>(</span>
   <span class='va'>y</span>,
-  <span class='va'>mu</span>,
+  mu <span class='op'>=</span> <span class='cn'>NULL</span>,
   U <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>V0</span>,
   <span class='va'>v0</span>,
