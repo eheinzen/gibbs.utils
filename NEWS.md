@@ -1,3 +1,7 @@
+# v4.2.0
+
+- Added support for `mu=NULL` in `conj_matnorm_V()` and `conj_mvnorm_Q()`.
+
 # v4.1.0
 
 - Added the `zmax=` argument to `sample_multinom_reg()`, for advanced usage.

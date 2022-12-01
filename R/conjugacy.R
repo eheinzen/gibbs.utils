@@ -263,15 +263,19 @@ conj_norm_tau <- function(y, mu, a0 = 0.001, b0 = 0.001, params.only = FALSE) {
 
 #' @rdname conjugacy
 #' @export
-conj_mvnorm_Q <- function(y, mu, V0, v0, V0_inv = chol_inv(V0), params.only = FALSE) {
+conj_mvnorm_Q <- function(y, mu = NULL, V0, v0, V0_inv = chol_inv(V0), params.only = FALSE) {
   if(!is.matrix(y)) y <- matrix(y, nrow = 1)
   p <- ncol(y)
   n <- nrow(y)
-  if(!is.matrix(mu) && length(mu) == p) {
-    mu <- matrix(mu, nrow = n, ncol = p, byrow = TRUE)
-  }
-  stopifnot(identical(dim(y), dim(mu)))
-  V2.inv <- V0_inv + t(y - mu) %*% (y - mu)
+  if(is.null(mu)) {
+    ymu <- y
+  } else if(!is.matrix(mu) && length(mu) %in% c(1, p)) {
+    ymu <- y - matrix(mu, nrow = n, ncol = p, byrow = TRUE)
+  } else if(is.matrix(mu)) {
+    stopifnot(identical(dim(y), dim(mu)))
+    ymu <- y - mu
+  } else stop("'mu' must be a matrix of the same dimension as y or a vector with length 1 or ncol(y)")
+  V2.inv <- V0_inv + t(ymu) %*% (ymu)
   V2 <- chol_inv(V2.inv)
   if(params.only) return(gu_params(V = V2, V.inv = V2.inv, v = n + v0))
   rWishart(
@@ -283,14 +287,18 @@ conj_mvnorm_Q <- function(y, mu, V0, v0, V0_inv = chol_inv(V0), params.only = FA
 
 #' @rdname conjugacy
 #' @export
-conj_matnorm_V <- function(y, mu, U = NULL, V0, v0, ..., ytUy = t(ymu) %*% U %*% ymu, V0_inv = chol_inv(V0), params.only = FALSE) {
-  if(!is.matrix(y) || !is.matrix(mu)) stop("'y' and 'mu' must be matrices")
+conj_matnorm_V <- function(y, mu = NULL, U = NULL, V0, v0, ..., ytUy = t(ymu) %*% U %*% ymu, V0_inv = chol_inv(V0), params.only = FALSE) {
+  if(!is.matrix(y)) stop("'y' must be a matrix")
   if((missing(U) || is.null(U)) && missing(ytUy)) {
     return(conj_mvnorm_Q(y = y, mu = mu, v0 = v0, V0_inv = V0_inv, params.only = params.only))
   }
-  n <- nrow(mu)
-  stopifnot(identical(dim(y), dim(mu)))
-  ymu <- y - mu
+  n <- nrow(y)
+  if(is.null(mu)) {
+    ymu <- y
+  } else {
+    stopifnot(identical(dim(y), dim(mu)))
+    ymu <- y - mu
+  }
   V2.inv <- V0_inv + ytUy
   V2 <- chol_inv(V2.inv)
   if(params.only) return(gu_params(V = V2, V.inv = V2.inv, v = n + v0))

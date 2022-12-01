@@ -74,11 +74,11 @@ conj_matlm_beta(
 
 conj_norm_tau(y, mu, a0 = 0.001, b0 = 0.001, params.only = FALSE)
 
-conj_mvnorm_Q(y, mu, V0, v0, V0_inv = chol_inv(V0), params.only = FALSE)
+conj_mvnorm_Q(y, mu = NULL, V0, v0, V0_inv = chol_inv(V0), params.only = FALSE)
 
 conj_matnorm_V(
   y,
-  mu,
+  mu = NULL,
   U = NULL,
   V0,
   v0,

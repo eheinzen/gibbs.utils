@@ -184,4 +184,26 @@ test_that("newQ.chol= works", {
 
 
 
+test_that("mu = NULL works for conj_matnorm_V", {
+  set.seed(99)
+  y <- matrix(rnorm(3*10), nrow = 10)
+  mu0 <- matrix(0, nrow = 10, ncol = 3)
+  V0 <- diag(1, 3)
+  v0 <- 5
+
+  out <- conj_matnorm_V(y = y, mu0 = mu0, v0 = v0, V0 = V0, params.only = TRUE)
+  out2 <- conj_matnorm_V(y = y, mu0 = NULL, v0 = v0, V0 = V0, params.only = TRUE)
+  out3 <- conj_matnorm_V(y = y, mu0 = mu0, U = diag(1, 10), v0 = v0, V0 = V0, params.only = TRUE)
+  out4 <- conj_matnorm_V(y = y, mu0 = NULL, U = diag(1, 10), v0 = v0, V0 = V0, params.only = TRUE)
+
+  expect_equal(out, out2)
+  expect_equal(out, out3)
+  expect_equal(out, out4)
+
+  U <- diag(1:10)
+  out <- conj_matnorm_V(y = y, mu0 = mu0, U = U, v0 = v0, V0 = V0, params.only = TRUE)
+  out2 <- conj_matnorm_V(y = y, mu0 = mu0, U = U, v0 = v0, V0 = V0, params.only = TRUE)
+  expect_equal(out, out2)
+})
+
 
