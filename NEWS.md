@@ -1,3 +1,7 @@
+# v4.2.1
+
+- Sped up `conj_matlm_beta()` (by about 4x) and `conj_matnorm_mu()` (very slightly) by only matrix multiplying once when `diag=TRUE`.
+
 # v4.2.0
 
 - Added support for `mu=NULL` in `conj_matnorm_V()` and `conj_mvnorm_Q()`.

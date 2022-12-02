@@ -235,11 +235,31 @@ microbenchmark::microbenchmark(
 
 
 
+set.seed(20221202)
+N <- 650000
+M <- 5
+K <- 60
+Y <- matrix(rnorm(N*M), N)
+mean <- matrix(rnorm(N*M), N)
+sigma <- diag(1:5)
+X <- matrix(rbinom(N*K, 1, prob = 0.1), N)
+Xt <- t(X)
+XtX <- Xt %*% X
+mu0 <- matrix(0, K, M)
+prec0 <- diag(10, K*M)
 
+microbenchmark::microbenchmark(
+  five = {set.seed(99); conj_matlm_beta(Y, V = sigma, mu0 = mu0, Q0 = prec0, XtU = Xt, XtUX = XtX, diag = TRUE)},
+  six = {set.seed(99); conj_matlm_beta2(Y, V = sigma, mu0 = mu0, Q0 = prec0, XtU = Xt, XtUX = XtX, diag = TRUE)},
+  times = 5,
+  check = "equal"
+)
 
-
-
-
-
-
-
+mu0 <- matrix(0, 10*K, M)
+prec0 <- diag(10, 10*K*M)
+microbenchmark::microbenchmark(
+  five = {set.seed(99); conj_matnorm_mu(Y[seq_len(10*K), ], V = sigma, mu0 = mu0, Q0 = prec0, diag = TRUE)},
+  six = {set.seed(99); conj_matnorm_mu2(Y[seq_len(10*K), ], V = sigma, mu0 = mu0, Q0 = prec0, diag = TRUE)},
+  times = 100,
+  check = "equal"
+)
