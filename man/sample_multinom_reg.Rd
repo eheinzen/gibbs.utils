@@ -13,6 +13,7 @@ sample_multinom_reg(
   method = c("slice"),
   ref = c("first", "last"),
   ...,
+  diag = all(precision[upper.tri(precision)] == 0),
   zmax = NULL,
   width = 1,
   nexpand = 10,
@@ -68,6 +69,8 @@ If \code{2}, then \code{mean} and \code{precision} map to the first and third th
 Etc.}
 
 \item{...}{Other arguments (not used)}
+
+\item{diag}{Logical, denoting whether the precision matrix is diagonal, for a small speed boost.}
 
 \item{zmax}{For advanced use: a matrix, usually computed from the last two dimensions of \code{z}.}
 

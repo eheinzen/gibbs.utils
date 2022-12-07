@@ -21,6 +21,7 @@
 #'   elements of \code{p}.
 #'   If \code{2}, then \code{mean} and \code{precision} map to the first and third through j-th elements of \code{p}.
 #'   Etc.
+#' @param diag Logical, denoting whether the precision matrix is diagonal, for a small speed boost.
 #' @inheritParams sample_pois_reg
 #' @details
 #'   The internals are defined in C++.
