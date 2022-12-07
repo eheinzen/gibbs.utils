@@ -184,8 +184,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // slice_sample_multinom_mv
-NumericMatrix slice_sample_multinom_mv(NumericMatrix p_ij, LogicalMatrix z_ij, IntegerVector which_i, LogicalVector is_ref, NumericMatrix k_ij, NumericMatrix n_ij, NumericMatrix mean, NumericMatrix Q, double w, int nexpand, int ncontract);
-RcppExport SEXP _gibbs_utils_slice_sample_multinom_mv(SEXP p_ijSEXP, SEXP z_ijSEXP, SEXP which_iSEXP, SEXP is_refSEXP, SEXP k_ijSEXP, SEXP n_ijSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
+NumericMatrix slice_sample_multinom_mv(NumericMatrix p_ij, LogicalMatrix z_ij, IntegerVector which_i, LogicalVector is_ref, NumericMatrix k_ij, NumericMatrix n_ij, NumericMatrix mean, NumericMatrix Q, bool diag, double w, int nexpand, int ncontract);
+RcppExport SEXP _gibbs_utils_slice_sample_multinom_mv(SEXP p_ijSEXP, SEXP z_ijSEXP, SEXP which_iSEXP, SEXP is_refSEXP, SEXP k_ijSEXP, SEXP n_ijSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP diagSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -197,10 +197,11 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericMatrix >::type n_ij(n_ijSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type mean(meanSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
+    Rcpp::traits::input_parameter< bool >::type diag(diagSEXP);
     Rcpp::traits::input_parameter< double >::type w(wSEXP);
     Rcpp::traits::input_parameter< int >::type nexpand(nexpandSEXP);
     Rcpp::traits::input_parameter< int >::type ncontract(ncontractSEXP);
-    rcpp_result_gen = Rcpp::wrap(slice_sample_multinom_mv(p_ij, z_ij, which_i, is_ref, k_ij, n_ij, mean, Q, w, nexpand, ncontract));
+    rcpp_result_gen = Rcpp::wrap(slice_sample_multinom_mv(p_ij, z_ij, which_i, is_ref, k_ij, n_ij, mean, Q, diag, w, nexpand, ncontract));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -287,7 +288,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gibbs_utils_slice_sample_binom", (DL_FUNC) &_gibbs_utils_slice_sample_binom, 8},
     {"_gibbs_utils_slice_sample_binom_mv", (DL_FUNC) &_gibbs_utils_slice_sample_binom_mv, 10},
     {"_gibbs_utils_one_multinom_slice", (DL_FUNC) &_gibbs_utils_one_multinom_slice, 11},
-    {"_gibbs_utils_slice_sample_multinom_mv", (DL_FUNC) &_gibbs_utils_slice_sample_multinom_mv, 11},
+    {"_gibbs_utils_slice_sample_multinom_mv", (DL_FUNC) &_gibbs_utils_slice_sample_multinom_mv, 12},
     {"_gibbs_utils_one_pois_slice", (DL_FUNC) &_gibbs_utils_one_pois_slice, 9},
     {"_gibbs_utils_slice_sample_pois", (DL_FUNC) &_gibbs_utils_slice_sample_pois, 10},
     {"_gibbs_utils_slice_sample_pois_mv", (DL_FUNC) &_gibbs_utils_slice_sample_pois_mv, 12},

@@ -300,6 +300,37 @@ test_that("different dimensions works for multinomial", {
 
 
 
+test_that("diag=TRUE works for multinomial", {
+  tmp <- cbind(0, matrix(c(0, 0, 0.7, 0.7), nrow = 2))
+  p <- array(rep(tmp, each = 400), dim = c(400, 2, 3))
+  mean <- round(p)
+  set.seed(99)
+  n <- rpois(400*2, 1200)
+  k <- t(sapply(n, function(x) rmultinom(1, size = x, prob = c(0.25, 0.25, 0.5))))
+  dim(k) <- c(400, 2, 3)
+  stopifnot(rowSums(k, dims = 2) == n)
+
+  z <- matrix(1, nrow = 2, ncol = 3)
+  Q <- array(0, c(2, 2, 3))
+  for(j in 1:3) Q[, , j] <- matrix(c(2, 0, 0, 2), 2)
+  mean <- mean[, , -1]
+  Q <- Q[, , -1]
+  k[, 2, 3] <- 0
+  z <- cbind(1, c(1, 1), c(1, 0))
+  set.seed(20221128)
+  regular <- sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q, diag = FALSE)
+  set.seed(20221128)
+  diagtrue <- sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q, diag = TRUE)
+  set.seed(20221128)
+  nothing <- sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q)
+
+  expect_equal(regular, diagtrue)
+  expect_equal(regular, nothing)
+
+})
+
+
+
 
 
 

@@ -37,8 +37,8 @@ one_multinom_slice <- function(p_ij, z_ij, which_i, k, n, mean, precision, ij, w
     .Call('_gibbs_utils_one_multinom_slice', PACKAGE = 'gibbs.utils', p_ij, z_ij, which_i, k, n, mean, precision, ij, w, nexpand, ncontract)
 }
 
-slice_sample_multinom_mv <- function(p_ij, z_ij, which_i, is_ref, k_ij, n_ij, mean, Q, w, nexpand, ncontract) {
-    .Call('_gibbs_utils_slice_sample_multinom_mv', PACKAGE = 'gibbs.utils', p_ij, z_ij, which_i, is_ref, k_ij, n_ij, mean, Q, w, nexpand, ncontract)
+slice_sample_multinom_mv <- function(p_ij, z_ij, which_i, is_ref, k_ij, n_ij, mean, Q, diag, w, nexpand, ncontract) {
+    .Call('_gibbs_utils_slice_sample_multinom_mv', PACKAGE = 'gibbs.utils', p_ij, z_ij, which_i, is_ref, k_ij, n_ij, mean, Q, diag, w, nexpand, ncontract)
 }
 
 one_pois_slice <- function(L, k, mean, precision, trunc_at, lower, w, nexpand, ncontract) {

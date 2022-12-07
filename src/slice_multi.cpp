@@ -46,7 +46,7 @@ double cond_mv_mean_multinom(NumericVector x, IntegerVector refidx, NumericVecto
 }
 
 // [[Rcpp::export]]
-NumericMatrix slice_sample_multinom_mv(NumericMatrix p_ij, LogicalMatrix z_ij, IntegerVector which_i, LogicalVector is_ref, NumericMatrix k_ij, NumericMatrix n_ij, NumericMatrix mean, NumericMatrix Q, double w, int nexpand, int ncontract) {
+NumericMatrix slice_sample_multinom_mv(NumericMatrix p_ij, LogicalMatrix z_ij, IntegerVector which_i, LogicalVector is_ref, NumericMatrix k_ij, NumericMatrix n_ij, NumericMatrix mean, NumericMatrix Q, bool diag, double w, int nexpand, int ncontract) {
   NumericMatrix out = clone(p_ij);
   IntegerVector refidx(is_ref.size());
   int ridx = 0;
@@ -69,7 +69,12 @@ NumericMatrix slice_sample_multinom_mv(NumericMatrix p_ij, LogicalMatrix z_ij, I
       }
 
       // safe not to replace out(r, i) because it's not used in this calculation
-      double mmm = cond_mv_mean_multinom(out(r, _), refidx, mm, Q, ij);
+      double mmm;
+      if(diag) {
+        mmm = mm[refidx[ij]];
+      } else {
+        mmm = cond_mv_mean_multinom(out(r, _), refidx, mm, Q, ij);
+      }
       out(r, ij) = one_multinom_slice(out(r, _), z_ij(r, _), which_i, kk[ij], nn[ij], mmm, Q(refidx[ij], refidx[ij]), ij, w, nexpand, ncontract);
     }
   }

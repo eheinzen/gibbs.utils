@@ -29,6 +29,7 @@
 #' @seealso \code{\link{sample_pois_reg}}, \code{\link{sample_binom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
 #' @export
 sample_multinom_reg <- function(p, z, k, mean, precision, method = c("slice"), ref = c("first", "last"), ...,
+                                diag = all(precision[upper.tri(precision)] == 0),
                                 zmax = NULL, width = 1, nexpand = 10, ncontract = 100) {
   method <- match.arg(method)
 
@@ -131,6 +132,7 @@ sample_multinom_reg <- function(p, z, k, mean, precision, method = c("slice"), r
     is_ref = is_ref,
     mean = mean,
     Q = precision,
+    diag = diag,
     w = width,
     nexpand = nexpand,
     ncontract = ncontract

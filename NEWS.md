@@ -1,3 +1,8 @@
+# v4.3.0
+
+- Added the `diag=` argument to `sample_multinom_reg()`, for when the precision matrix is diagonal,
+  yielding a speedup (because it can skip calculating the conditional mean).
+
 # v4.2.1
 
 - Sped up `conj_matlm_beta()` (by about 4x) and `conj_matnorm_mu()` (very slightly) by only matrix multiplying once when `diag=TRUE`.
