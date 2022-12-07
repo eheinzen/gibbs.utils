@@ -1,3 +1,9 @@
+# v4.4.0
+
+- Added the `times_flat_ar1()` function, whose details will undoubtedly come in another release.
+
+- Documented the `diag=` argument from v4.3.0.
+
 # v4.3.0
 
 - Added the `diag=` argument to `sample_multinom_reg()`, for when the precision matrix is diagonal,
