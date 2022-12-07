@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Statistical Distributions — distributions • gibbs.utils</title>
+<title>Effecient multiplication in the AR(1) setting — times_flat_ar1 • gibbs.utils</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Statistical Distributions — distributions" />
-<meta property="og:description" content="Statistical Distributions" />
+<meta property="og:title" content="Effecient multiplication in the AR(1) setting — times_flat_ar1" />
+<meta property="og:description" content="Effecient multiplication in the AR(1) setting" />
 
 
 
@@ -121,82 +121,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Statistical Distributions</h1>
+    <h1>Effecient multiplication in the AR(1) setting</h1>
     
-    <div class="hidden name"><code>distributions.Rd</code></div>
+    <div class="hidden name"><code>times_flat_ar1.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Statistical Distributions</p>
+    <p>Effecient multiplication in the AR(1) setting</p>
     </div>
 
-    <pre class="usage"><span class='fu'>dmvnorm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, detQ <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/det.html'>determinant</a></span><span class='op'>(</span><span class='va'>Q</span>, logarithm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>$</span><span class='va'>modulus</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-
-<span class='fu'>dmvlnorm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, detQ <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/det.html'>determinant</a></span><span class='op'>(</span><span class='va'>Q</span>, logarithm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>$</span><span class='va'>modulus</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-
-<span class='fu'>dmvnorm_diff</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span>, byrow <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-
-<span class='fu'>dmvlnorm_diff</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span>, byrow <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-
-<span class='fu'>dnorm_diff</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>tau</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span>, byrow <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-
-<span class='fu'>dlnorm_diff</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>tau</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span>, byrow <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-
-<span class='fu'>dmatnorm</span><span class='op'>(</span>
-  <span class='va'>x</span>,
-  <span class='va'>mu</span>,
-  <span class='va'>V</span>,
-  U <span class='op'>=</span> <span class='cn'>NULL</span>,
-  detV <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/det.html'>determinant</a></span><span class='op'>(</span><span class='va'>V</span>, logarithm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>$</span><span class='va'>modulus</span>,
-  detU <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/det.html'>determinant</a></span><span class='op'>(</span><span class='va'>U</span>, logarithm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>$</span><span class='va'>modulus</span>,
-  log <span class='op'>=</span> <span class='cn'>TRUE</span>
-<span class='op'>)</span>
-
-<span class='fu'>dmatnorm_diff</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>V</span>, U <span class='op'>=</span> <span class='cn'>NULL</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-
-<span class='fu'>dlogitnorm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mu</span>, <span class='va'>sd</span>, log <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>times_flat_ar1</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>Pflat</span>, Xt <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x, y</th>
-      <td><p>vector of quantiles</p></td>
+      <th>X, Xt</th>
+      <td><p>A matrix and its transpose</p></td>
     </tr>
     <tr>
-      <th>mu</th>
-      <td><p>the mean</p></td>
-    </tr>
-    <tr>
-      <th>detQ, detU, detV</th>
-      <td><p>Pre-computed log-determinants</p></td>
-    </tr>
-    <tr>
-      <th>log</th>
-      <td><p>Should the log-density be returned?</p></td>
-    </tr>
-    <tr>
-      <th>byrow</th>
-      <td><p>Should the densities be summed (FALSE, the default) or returned separately by row (TRUE).</p></td>
-    </tr>
-    <tr>
-      <th>tau, Q</th>
-      <td><p>the precision (matrix)</p></td>
-    </tr>
-    <tr>
-      <th>V, U</th>
-      <td><p>the precision matrices for the matrix-normal distribution</p></td>
-    </tr>
-    <tr>
-      <th>sd</th>
-      <td><p>the standard deviation</p></td>
+      <th>Pflat</th>
+      <td><p>a flattened version of an AR(1) matrix. More details on this in a future version</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>dmvnorm_diff(x, y, mu, Q)</code> is equivalent to (but usually twice as fast as)
-  <code>dmvnorm(x, mu, Q) - dmvnorm(y, mu, Q)</code>. Likewise <code>dmatnorm_diff</code>.</p>
+    <p>The result of <code>t(X) %*% P</code>.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
