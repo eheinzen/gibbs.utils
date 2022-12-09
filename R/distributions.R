@@ -158,7 +158,7 @@ dlogitnorm <- function(x, mu, sd, log = FALSE) {
 rdirich <- function(n, alpha) {
   K <- if(is.matrix(alpha)) ncol(alpha) else length(alpha)
   alpha <- matrix(alpha, nrow = n, ncol = K, byrow = TRUE)
-  gam <- rgamma(length(alpha), alpha, rate = 1)
+  gam <- stats::rgamma(length(alpha), alpha, rate = 1)
   dim(gam) <- dim(alpha)
   gam / rowSums(gam)
 }
