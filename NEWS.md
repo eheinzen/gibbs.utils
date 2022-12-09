@@ -1,3 +1,7 @@
+# v4.5.0
+
+- Added `rdirich()` to generate random Dirichlet vectors.
+
 # v4.4.0
 
 - Added the `times_flat_ar1()` function, whose details will undoubtedly come in another release.

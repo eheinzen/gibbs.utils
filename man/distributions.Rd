@@ -11,6 +11,7 @@
 \alias{dmatnorm}
 \alias{dmatnorm_diff}
 \alias{dlogitnorm}
+\alias{rdirich}
 \title{Statistical Distributions}
 \usage{
 dmvnorm(x, mu, Q, detQ = determinant(Q, logarithm = TRUE)$modulus, log = TRUE)
@@ -38,6 +39,8 @@ dmatnorm(
 dmatnorm_diff(x, y, mu, V, U = NULL, log = TRUE)
 
 dlogitnorm(x, mu, sd, log = FALSE)
+
+rdirich(n, alpha)
 }
 \arguments{
 \item{x, y}{vector of quantiles}
@@ -55,6 +58,10 @@ dlogitnorm(x, mu, sd, log = FALSE)
 \item{V, U}{the precision matrices for the matrix-normal distribution}
 
 \item{sd}{the standard deviation}
+
+\item{n}{Number of deviates to produce.}
+
+\item{alpha}{the Dirichlet parameter vector or matrix.}
 }
 \description{
 Statistical Distributions

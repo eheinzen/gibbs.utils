@@ -9,6 +9,8 @@
 #' @param V,U the precision matrices for the matrix-normal distribution
 #' @param detQ,detU,detV Pre-computed log-determinants
 #' @param log Should the log-density be returned?
+#' @param n Number of deviates to produce.
+#' @param alpha the Dirichlet parameter vector or matrix.
 #' @details
 #'   \code{dmvnorm_diff(x, y, mu, Q)} is equivalent to (but usually twice as fast as)
 #'   \code{dmvnorm(x, mu, Q) - dmvnorm(y, mu, Q)}. Likewise \code{dmatnorm_diff}.
@@ -150,3 +152,13 @@ dlogitnorm <- function(x, mu, sd, log = FALSE) {
   if(!log) exp(out) else out
 }
 
+
+#' @rdname distributions
+#' @export
+rdirich <- function(n, alpha) {
+  K <- if(is.matrix(alpha)) ncol(alpha) else length(alpha)
+  alpha <- matrix(alpha, nrow = n, ncol = K, byrow = TRUE)
+  gam <- rgamma(length(alpha), alpha, rate = 1)
+  dim(gam) <- dim(alpha)
+  gam / rowSums(gam)
+}
