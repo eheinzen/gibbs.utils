@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">4.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">4.5.0</span>
       </span>
     </div>
 
@@ -154,7 +154,9 @@
 
 <span class='fu'>dmatnorm_diff</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>V</span>, U <span class='op'>=</span> <span class='cn'>NULL</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
-<span class='fu'>dlogitnorm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mu</span>, <span class='va'>sd</span>, log <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+<span class='fu'>dlogitnorm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mu</span>, <span class='va'>sd</span>, log <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+
+<span class='fu'>rdirich</span><span class='op'>(</span><span class='va'>n</span>, <span class='va'>alpha</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -190,6 +192,14 @@
     <tr>
       <th>sd</th>
       <td><p>the standard deviation</p></td>
+    </tr>
+    <tr>
+      <th>n</th>
+      <td><p>Number of deviates to produce.</p></td>
+    </tr>
+    <tr>
+      <th>alpha</th>
+      <td><p>the Dirichlet parameter vector or matrix.</p></td>
     </tr>
     </table>
 
