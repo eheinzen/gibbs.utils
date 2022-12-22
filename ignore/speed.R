@@ -289,3 +289,27 @@ microbenchmark::microbenchmark(
 )
 
 
+
+
+
+R <- 100
+I <- 22
+J <- 23
+mean <- p <- array(0, dim = c(R, I, J))
+set.seed(121)
+k <- array(rpois(R*I*J, 10), dim = c(R, I, J))
+z <- array(1, dim = c(R, I, J))
+Q <- array(0, c(I, I, J))
+for(j in 1:J) Q[, , j] <- diag(2, I)
+mean <- mean[, , -1]
+Q <- Q[, , -1]
+
+microbenchmark::microbenchmark(
+  regular = {set.seed(124); sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q)},
+  two = {set.seed(124); sample_multinom_reg2(p = p, z = z, k = k, mean = mean, precision = Q)},
+  three = {set.seed(124); sample_multinom_reg3(p = p, z = z, k = k, mean = mean, precision = Q)},
+  four = {set.seed(124); sample_multinom_reg4(p = p, z = z, k = k, mean = mean, precision = Q)},
+  five = {set.seed(124); sample_multinom_reg5(p = p, z = z, k = k, mean = mean, precision = Q)},
+  check = "equal",
+  times = 5
+)

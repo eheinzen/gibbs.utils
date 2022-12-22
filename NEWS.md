@@ -1,3 +1,7 @@
+# v4.5.1
+
+- Sped up `sample_multinom_reg()` by 7x by reworking some C++ internals.
+
 # v4.5.0
 
 - Added `rdirich()` to generate random Dirichlet vectors.

@@ -3,33 +3,32 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-double one_multinom_slice(NumericVector p_ij, LogicalVector z_ij, IntegerVector which_i, double k, double n, double mean, double precision, int ij, double w, int nexpand, int ncontract) {
-  if(n == 0.0 || !z_ij[ij]) {
+double one_multinom_slice(double p_ij, double sum_exp_p, bool z_ij, double k, double n, double mean, double precision, double w, int nexpand, int ncontract) {
+  if(n == 0.0 || !z_ij) {
     return R::rnorm(mean, 1/sqrt(precision));
   }
-  double y0 = multinom_LL(p_ij, z_ij, which_i, k, n, mean, precision, ij) - R::rexp(1.0);
-  double pij = p_ij[ij];
-  double left = pij - w;
-  double right = pij + w;
+  double y0 = multinom_LL(p_ij, sum_exp_p, z_ij, k, n, mean, precision) - R::rexp(1.0);
+  double left = p_ij - w;
+  double right = p_ij + w;
   int jj = 0;
-  while(multinom_LL(replace_it(p_ij, ij, left), z_ij, which_i, k, n, mean, precision, ij) > y0 && jj++ < nexpand) {
+  while(multinom_LL(left, sum_exp_p, z_ij, k, n, mean, precision) > y0 && jj++ < nexpand) {
     left -= w;
   }
   jj = 0;
-  while(multinom_LL(replace_it(p_ij, ij, right), z_ij, which_i, k, n, mean, precision, ij) > y0 && jj++ < nexpand) {
+  while(multinom_LL(right, sum_exp_p, z_ij, k, n, mean, precision) > y0 && jj++ < nexpand) {
     right += w;
   }
   double newx = R::runif(left, right);
   jj = 0;
-  while(multinom_LL(replace_it(p_ij, ij, newx), z_ij, which_i, k, n, mean, precision, ij) < y0 && jj++ < ncontract) {
-    if(newx < pij) {
+  while(multinom_LL(newx, sum_exp_p, z_ij, k, n, mean, precision) < y0 && jj++ < ncontract) {
+    if(newx < p_ij) {
       left = newx;
     } else {
       right = newx;
     }
     newx = R::runif(left, right);
   }
-  if(jj == ncontract) return pij;
+  if(jj == ncontract) return p_ij;
   return newx;
 }
 
@@ -62,6 +61,7 @@ NumericMatrix slice_sample_multinom_mv(NumericMatrix p_ij, LogicalMatrix z_ij, I
     NumericVector kk = k_ij(r, _);
     NumericVector nn = n_ij(r, _);
     NumericVector mm = mean(r, _);
+    LogicalVector zz = z_ij(r, _);
     for(int ij=0; ij < p_ij.ncol(); ij++) {
       if(is_ref[ij]) {
         out(r, ij) = 0.0;
@@ -75,7 +75,15 @@ NumericMatrix slice_sample_multinom_mv(NumericMatrix p_ij, LogicalMatrix z_ij, I
       } else {
         mmm = cond_mv_mean_multinom(out(r, _), refidx, mm, Q, ij);
       }
-      out(r, ij) = one_multinom_slice(out(r, _), z_ij(r, _), which_i, kk[ij], nn[ij], mmm, Q(refidx[ij], refidx[ij]), ij, w, nexpand, ncontract);
+
+      int i = which_i[ij];
+      double sum_exp_p = 0.0;
+      for(int iijj = 0; iijj < zz.size(); iijj++) {
+        if(iijj != ij && zz[iijj] && which_i[iijj] == i) {
+          sum_exp_p += exp(out(r, iijj));
+        }
+      }
+      out(r, ij) = one_multinom_slice(out(r, ij), sum_exp_p, zz[ij], kk[ij], nn[ij], mmm, Q(refidx[ij], refidx[ij]), w, nexpand, ncontract);
     }
   }
   return out;
