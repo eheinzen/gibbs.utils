@@ -126,33 +126,38 @@ NumericVector mh_pois_mv(int method, NumericMatrix L, NumericMatrix proposal, Nu
     NumericVector mm = mean(r, _);
     NumericVector aa = trunc_at(r, _);
     LogicalVector bb = lower(r, _);
+    NumericVector tmp = out(r, _);
+    NumericVector propp = proposal(r, _);
+    LogicalVector acc = accept(r, _);
     for(int i = 0; i < L.ncol(); i++) {
-      // safe not to replace out(r, i) because it's not used in this calculation
-      double mmm = cond_mv_mean(out(r, _), mm, Q, i);
+      // safe not to replace tmp[i] because it's not used in this calculation
+      double mmm = cond_mv_mean(tmp, mm, Q, i);
 
       if(kk_na[i]) {
-        out(r, i) = R::rnorm(mmm, 1.0/sqrt(Q(i, i)));
-        accept(r, i) = true;
+        tmp[i] = R::rnorm(mmm, 1.0/sqrt(Q(i, i)));
+        acc[i] = true;
         continue;
       }
 
       double ratio, prop;
       if(method == 1) { // 'proposal' is ignored
         if(kk_na[i]) stop("Something went wrong");
-        one_qt_pois_proposal_ratio(out(r, i), kk[i], mmm, Q(i, i), prop, ratio, acceptance);
+        one_qt_pois_proposal_ratio(tmp[i], kk[i], mmm, Q(i, i), prop, ratio, acceptance);
       } else if(method == 2) {
         if(kk_na[i]) stop("Something went wrong");
-        one_gamma_pois_proposal_ratio(out(r, i), proposal(r, i), kk[i], mmm, Q(i, i), prop, ratio, acceptance);
+        one_gamma_pois_proposal_ratio(tmp[i], propp[i], kk[i], mmm, Q(i, i), prop, ratio, acceptance);
       } else {
-        prop = proposal(r, i);
-        ratio = one_m_pois_ratio(out(r, i), proposal(r, i), kk[i], mmm, Q(i, i), aa[i], bb[i], acceptance);
+        prop = propp[i];
+        ratio = one_m_pois_ratio(tmp[i], prop, kk[i], mmm, Q(i, i), aa[i], bb[i], acceptance);
       }
       bool a = accept_reject(ratio);
-      accept(r, i) = a;
+      acc[i] = a;
       if(a) {
-        out(r, i) = prop;
+        tmp[i] = prop;
       }
     }
+    out(r, _) = tmp;
+    accept(r, _) = acc;
   }
   out.attr("accept") = accept;
   return out;

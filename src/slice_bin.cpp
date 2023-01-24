@@ -60,15 +60,17 @@ NumericMatrix slice_sample_binom_mv(NumericMatrix p, NumericMatrix k, NumericMat
     NumericVector kk = k(r, _);
     NumericVector nn = n(r, _);
     NumericVector mm = mean(r, _);
+    NumericVector tmp = out(r, _);
     for(int i=0; i < p.ncol(); i++) {
-      // safe not to replace out(r, i) because it's not used in this calculation
-      double mmm = cond_mv_mean(out(r, _), mm, Q, i);
+      // safe not to replace tmp[i] because it's not used in this calculation
+      double mmm = cond_mv_mean(tmp, mm, Q, i);
       if(nn[i] == 0.0) {
-        out(r, i) = R::rnorm(mmm, 1.0/sqrt(Q(i, i)));
+        tmp[i] = R::rnorm(mmm, 1.0/sqrt(Q(i, i)));
         continue;
       }
-      out(r, i) = one_binom_slice(out(r, i), kk[i], nn[i], mmm, Q(i, i), w, nexpand, ncontract);
+      tmp[i] = one_binom_slice(tmp[i], kk[i], nn[i], mmm, Q(i, i), w, nexpand, ncontract);
     }
+    out(r, _) = tmp;
   }
   return out;
 }

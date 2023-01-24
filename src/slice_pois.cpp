@@ -60,15 +60,17 @@ NumericMatrix slice_sample_pois_mv(NumericMatrix L, NumericMatrix k, LogicalMatr
     NumericVector mm = mean(r, _);
     NumericVector aa = trunc_at(r, _);
     LogicalVector bb = lower(r, _);
+    NumericVector tmp = out(r, _);
     for(int i=0; i < L.ncol(); i++) {
-      // safe not to replace out(r, i) because it's not used in this calculation
-      double mmm = cond_mv_mean(out(r, _), mm, Q, i);
+      // safe not to replace tmp[i] because it's not used in this calculation
+      double mmm = cond_mv_mean(tmp, mm, Q, i);
       if(kk_na[i]) {
-        out(r, i) = R::rnorm(mmm, 1.0/sqrt(Q(i, i)));
+        tmp[i] = R::rnorm(mmm, 1.0/sqrt(Q(i, i)));
         continue;
       }
-      out(r, i) = one_pois_slice(out(r, i), kk[i], mmm, Q(i, i), aa[i], bb[i], w, nexpand, ncontract);
+      tmp[i] = one_pois_slice(tmp[i], kk[i], mmm, Q(i, i), aa[i], bb[i], w, nexpand, ncontract);
     }
+    out(r, _) = tmp;
   }
 
   return out;

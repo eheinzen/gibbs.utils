@@ -1,21 +1,68 @@
-mh_gamma <- function(curr, k, mean, tau, mult = 1) {
-  lmean <- exp(mean + 0.5/tau)
-  lvar <- (exp(1/tau) - 1)*lmean^2
+library(tidyverse)
+rej <- function(curr, k, mean, tau, mult = 1) {
+  accept <- FALSE
+  out <- curr
 
-  alpha <- (lmean^2 / lvar + k)*mult
-  beta <- (lmean / lvar + 1)*mult
+  norm_LL <- function(L, mu, tauu) {
+    -0.5*tauu*(L - mu)*(L - mu)
+  }
 
-  proposal <- rgamma(1, shape = alpha, rate = beta)
+  pois_LL_mv <- function(L) {
+    sum((k * L - exp(L))[!is.na(k)]) + norm_LL(L, mean, tau)
+  }
 
-  LL.prop <- dpois(k, proposal, log = TRUE) + dlnorm(proposal, meanlog = mean, sdlog = 1/sqrt(tau), log = TRUE)
-  q.prop <- dgamma(proposal, shape = alpha, rate = beta, log = TRUE)
+  ep <- exp(curr)
+  # -H(x)
+  newtau <- tau + replace(ep, is.na(k), 0)
+  newsd <- 1.0/sqrt(newtau)
+  # x - H^-1(x) g(x)
+  newmean <- curr + (replace(k - ep, is.na(k), 0) - tau*(curr - mean))/newtau
 
-  LL.curr <- dpois(k, exp(curr), log = TRUE) + dlnorm(exp(curr), meanlog = mean, sdlog = 1/sqrt(tau), log = TRUE)
-  q.curr <- dgamma(exp(curr), shape = alpha, rate = beta, log = TRUE)
+  M <- pois_LL_mv(curr)
 
-  ratio <- (LL.prop - q.prop) - (LL.curr - q.curr)
-  accept <- log(runif(1)) <= ratio
-  if(accept) log(proposal) else curr
+  tibble(
+    x = seq(-4, 4, by = 0.1),
+    y1 = map_dbl(x, pois_LL_mv),
+    y2 = norm_LL(x, mu = newmean, tauu = newtau) - norm_LL(curr, mu = newmean, tauu = newtau) + pois_LL_mv(curr)
+  ) %>%
+    ggplot(aes(x = x, y = y1)) +
+    geom_line() +
+    geom_line(aes(y = y2), color = "red")
+
+
+
+  k <- 5
+  n <- 10
+  curr <- 1
+  mean <- 0
+  tau <- 1
+  ep <- exp(curr);
+  ep1 = 1.0 + ep;
+  ep2 = ep1*ep1;
+
+  # -H(x)
+  newtau = tau + n*ep / ep2;
+  outsd = 1.0/sqrt(newtau);
+
+  # x - H^-1(x) g(x)
+  newmean = curr + (k - n*ep/ep1 - tau*(curr - mean))/newtau;
+
+  binom_LL_mv <- function(p) {
+    sum(k*p - n*log(1 + exp(p))) + norm_LL(p, mean, tau)
+  }
+
+
+  tibble(
+    x = seq(-4, 4, by = 0.1),
+    y1 = map_dbl(x, binom_LL_mv),
+    y2 = norm_LL(x, mu = newmean, tauu = newtau) - norm_LL(curr, mu = newmean, tauu = newtau) + binom_LL_mv(curr)
+  ) %>%
+    ggplot(aes(x = x, y = y1)) +
+    geom_line() +
+    geom_line(aes(y = y2), color = "red")
+
+
+    out
 }
 
 y <- matrix(1)
@@ -32,7 +79,6 @@ for(i in seq_len(10000-1)) {
   out7[i+1, ] <- sample_pois_reg(out7[i, , drop = FALSE], y, m, Q, method = "mv gamma")
 }
 
-library(tidyverse)
 abind::abind(out, out2, out3, out4, out5, out6, out7, along = 0L) %>%
   reshape2::melt(c("method", "i", "x")) %>%
   filter(i > 1000) %>%

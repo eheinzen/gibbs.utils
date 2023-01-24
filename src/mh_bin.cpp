@@ -91,29 +91,34 @@ NumericVector mh_binom_mv(bool qt, NumericMatrix p, NumericMatrix proposal, Nume
     NumericVector kk = k(r, _);
     NumericVector nn = n(r, _);
     NumericVector mm = mean(r, _);
+    NumericVector tmp = out(r, _);
+    NumericVector propp = proposal(r, _);
+    LogicalVector acc = accept(r, _);
     for(int i = 0; i < p.ncol(); i++) {
-      // safe not to replace out(r, i) because it's not used in this calculation
-      double mmm = cond_mv_mean(out(r, _), mm, Q, i);
+      // safe not to replace tmp[i] because it's not used in this calculation
+      double mmm = cond_mv_mean(tmp, mm, Q, i);
 
       if(nn[i] == 0.0) {
-        out(r, i) = R::rnorm(mmm, 1.0/sqrt(Q(i, i)));
-        accept(r, i) = true;
+        tmp[i] = R::rnorm(mmm, 1.0/sqrt(Q(i, i)));
+        acc[i] = true;
         continue;
       }
 
       double ratio, prop;
       if(qt) { // 'proposal' is ignored
-        one_qt_binom_proposal_ratio(out(r, i), kk[i], nn[i], mmm, Q(i, i), prop, ratio, acceptance);
+        one_qt_binom_proposal_ratio(tmp[i], kk[i], nn[i], mmm, Q(i, i), prop, ratio, acceptance);
       } else {
-        prop = proposal(r, i);
-        ratio = one_m_binom_ratio(out(r, i), prop, kk[i], nn[i], mmm, Q(i, i), acceptance);
+        prop = propp[i];
+        ratio = one_m_binom_ratio(tmp[i], prop, kk[i], nn[i], mmm, Q(i, i), acceptance);
       }
       bool a = accept_reject(ratio);
-      accept(r, i) = a;
+      acc[i] = a;
       if(a) {
-        out(r, i) = prop;
+        tmp[i] = prop;
       }
     }
+    out(r, _) = tmp;
+    accept(r, _) = acc;
   }
   out.attr("accept") = accept;
   return out;

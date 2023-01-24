@@ -313,3 +313,39 @@ microbenchmark::microbenchmark(
   check = "equal",
   times = 5
 )
+
+
+
+
+
+
+set.seed(20230124)
+L <- matrix(rnorm(1000*151), nrow = 50, ncol = 151)
+k <- matrix(rpois(1000*151, exp(L)), nrow = 50, ncol = 151)
+prec <- diag(rgamma(151, shape = 0.1, rate = 0.1))
+
+microbenchmark::microbenchmark(
+  five = {set.seed(99); sample_pois_reg(L, k, mean = 0, precision = prec, method = "quad")},
+  six = {set.seed(99); sample_pois_reg2(L, k, mean = 0, precision = prec, method = "quad")},
+  times = 10,
+  check = "equal"
+)
+microbenchmark::microbenchmark(
+  five = {set.seed(99); sample_pois_reg(L, k, mean = 0, precision = prec, method = "slice")},
+  six = {set.seed(99); sample_pois_reg2(L, k, mean = 0, precision = prec, method = "slice")},
+  times = 10,
+  check = "equal"
+)
+
+set.seed(20230124)
+p <- runif(24*8*138)
+n <- rpois(24*8*138, 50)
+k <- rbinom(24*8*138, n, p)
+dim(n) <- dim(k) <- dim(p) <- c(24*8, 138)
+prec <- diag(1, 138)
+microbenchmark::microbenchmark(
+  five = {set.seed(99); sample_binom_reg(p, k, n, mean = 2, precision = prec, method = "quad")},
+  six = {set.seed(99); sample_binom_reg2(p, k, n, mean = 2, precision = prec, method = "quad")},
+  check = "equal",
+  times = 10
+)
