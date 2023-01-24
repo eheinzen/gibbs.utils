@@ -63,31 +63,31 @@ NumericMatrix slice_sample_multinom_mv(NumericMatrix p_ij, LogicalMatrix z_ij, I
     NumericVector nn = n_ij(r, _);
     NumericVector mm = mean(r, _);
     LogicalVector zz = z_ij(r, _);
+    NumericVector tmp = out(r, _);
     for(int ij=0; ij < p_ij.ncol(); ij++) {
       if(is_ref[ij]) {
-        out(r, ij) = 0.0;
+        tmp[ij] = 0.0;
         continue;
       }
 
-      // safe not to replace out(r, i) because it's not used in this calculation
+      // safe not to replace tmp[ij] because it's not used in this calculation
       double mmm;
       if(diag) {
         mmm = mm[refidx[ij]];
       } else {
-        mmm = cond_mv_mean_multinom(out(r, _), refidx, mm, Q, ij);
+        mmm = cond_mv_mean_multinom(tmp, refidx, mm, Q, ij);
       }
 
       int i = which_i[ij];
       double sum_exp_p = 0.0;
       for(int iijj = 0; iijj < zz.size(); iijj++) {
         if(iijj != ij && zz[iijj] && which_i[iijj] == i) {
-          sum_exp_p += exp(out(r, iijj));
+          sum_exp_p += exp(tmp[iijj]);
         }
       }
-      out(r, ij) = one_multinom_slice(out(r, ij), sum_exp_p, zz[ij], kk[ij], nn[ij], mmm, Q(refidx[ij], refidx[ij]), w, nexpand, ncontract);
+      tmp[ij] = one_multinom_slice(tmp[ij], sum_exp_p, zz[ij], kk[ij], nn[ij], mmm, Q(refidx[ij], refidx[ij]), w, nexpand, ncontract);
     }
+    out(r, _) = tmp;
   }
   return out;
 }
-
-
