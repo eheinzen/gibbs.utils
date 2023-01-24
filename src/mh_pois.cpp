@@ -42,10 +42,13 @@ void one_qt_pois_proposal_ratio(double L, double k, double mean, double precisio
 void gamma_pois_approx(double k, double mean, double tau, double& outalpha, double& outbeta) {
   double invtau = 1.0/tau;
   double m = exp(mean + 0.5*invtau);
-  double mm = m*m;
-  double v = (exp(invtau) - 1.0) * mm;
-  double alpha = mm / v + k;
-  double beta = m / v + 1.0;
+  //double mm = m*m;
+  //double v = (exp(invtau) - 1.0) * mm;
+  //double alpha = mm / v + k;
+  //double beta = m / v + 1.0;
+  double vv = exp(invtau) - 1.0;
+  double alpha = 1.0/vv + k;
+  double beta = 1.0/(m*vv) + 1.0;
   outalpha = alpha;
   outbeta = beta;
 }

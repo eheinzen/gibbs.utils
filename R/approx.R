@@ -97,10 +97,14 @@ mvgamma_pois_approx <- function(k, mean, Q) {
   if(!is.matrix(mean)) mean <- matrix(mean, nrow = 1)
   invtau <- matrix(1.0/diag(Q), nrow = nrow(k), ncol = ncol(k), byrow = TRUE)
   m <- exp(mean + 0.5*invtau)
-  mm <- m*m
-  v <- (exp(invtau) - 1.0) * mm
-  alpha <- mm / v + replace(k, is.na(k), 0)
-  beta <- m / v + (!is.na(k))
+  # mm <- m*m
+  # v <- (exp(invtau) - 1.0) * mm
+  # alpha <- mm / v + replace(k, is.na(k), 0)
+  # beta <- m / v + (!is.na(k))
+  vv <- exp(invtau) - 1.0
+  alpha <- 1/vv + replace(k, is.na(k), 0)
+  beta <- 1/(m*vv) + (!is.na(k))
+  if(any(!is.finite(alpha)) || any(!is.finite(beta))) stop("Can't seem to make the mv gamma approximation. Is your precision too small?")
   gu_params(alpha = alpha, beta = beta)
 }
 

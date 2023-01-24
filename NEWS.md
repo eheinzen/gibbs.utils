@@ -2,6 +2,8 @@
 
 - Sped up `sample_pois_reg()` and `sample_binom_reg()` by something like half, and
   `sample_multinom_reg()` by maybe 1 percent by improving matrix subscripting in the C++ code.
+  
+- Improved the numeric stability of the gamma approximations in `sample_pois_reg()`.
 
 # v4.5.1
 
