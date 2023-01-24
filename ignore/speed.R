@@ -338,14 +338,14 @@ microbenchmark::microbenchmark(
 )
 
 set.seed(20230124)
-p <- runif(24*8*138)
+p <- runif(24*8*138, max = 0.1)
 n <- rpois(24*8*138, 50)
 k <- rbinom(24*8*138, n, p)
 dim(n) <- dim(k) <- dim(p) <- c(24*8, 138)
-prec <- diag(1, 138)
+prec <- diag(1000, 138)
 microbenchmark::microbenchmark(
-  five = {set.seed(99); sample_binom_reg(p, k, n, mean = 2, precision = prec, method = "quad")},
-  six = {set.seed(99); sample_binom_reg2(p, k, n, mean = 2, precision = prec, method = "quad")},
+  five = {set.seed(99); sample_binom_reg(logit(p), k, n, mean = -2, precision = prec, method = "mv beta")},
+  six = {set.seed(99); sample_binom_reg2(logit(p), k, n, mean = -2, precision = prec, method = "mv beta")},
   check = "equal",
   times = 10
 )

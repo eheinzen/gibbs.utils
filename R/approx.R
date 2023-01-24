@@ -240,14 +240,20 @@ mvbeta_binom_approx <- function(k, n, mean, Q) {
   # use the log-normal approximation for when p is small
   m <- exp(mean + 0.5*invtau)
   # if(any(m > 1)) ## this is already taken into account below
-  mm <- m*m
-  v <- (exp(invtau) - 1.0) * mm
-  if(any(v >= m*(1-m))) {
+  # mm <- m*m
+  # v <- (exp(invtau) - 1.0) * mm
+  # if(any(v >= m*(1-m))) {
+  #   # I think this is equivalent to 3/2 < -mu * tau
+  #   stop("Cannot make the beta approximation")
+  # }
+  #
+  # tmp <- m*(1-m)/v - 1
+  vv <- exp(invtau) - 1.0
+  if(any(vv*m >= 1-m)) {
     # I think this is equivalent to 3/2 < -mu * tau
     stop("Cannot make the beta approximation")
   }
-
-  tmp <- m*(1-m)/v - 1
+  tmp <- (1-m)/(vv*m) - 1
 
   alpha <- m*tmp + k
   beta <- (1-m)*tmp + n
