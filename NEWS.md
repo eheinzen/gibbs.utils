@@ -5,6 +5,8 @@
   
 - Improved the numeric stability of the gamma approximations in `sample_pois_reg()`.
 
+- Fixed a bug in the (still experimental) "mv beta" metohd of `sample_binom_reg()`.
+
 # v4.5.1
 
 - Sped up `sample_multinom_reg()` by 7x by reworking some C++ internals.
