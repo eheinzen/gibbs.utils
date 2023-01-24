@@ -35,10 +35,11 @@ double one_multinom_slice(double p_ij, double sum_exp_p, bool z_ij, double k, do
 double cond_mv_mean_multinom(NumericVector x, IntegerVector refidx, NumericVector mean, NumericMatrix Q, int ij) {
   int i = refidx[ij];
   double mm = mean[i];
+  double Qii = Q(i, i);
   for(int jj = 0; jj < x.size(); jj++) {
     int j = refidx[jj];
     if(ij != jj &&  j >= 0) {
-      mm -= Q(i, j)*(x[jj] - mean[j]) / Q(i, i);
+      mm -= Q(i, j)*(x[jj] - mean[j]) / Qii;
     }
   }
   return mm;

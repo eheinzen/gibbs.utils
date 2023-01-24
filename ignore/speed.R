@@ -325,9 +325,9 @@ k <- matrix(rpois(1000*151, exp(L)), nrow = 50, ncol = 151)
 prec <- diag(rgamma(151, shape = 0.1, rate = 0.1))
 
 microbenchmark::microbenchmark(
-  five = {set.seed(99); sample_pois_reg(L, k, mean = 0, precision = prec, method = "quad")},
-  six = {set.seed(99); sample_pois_reg2(L, k, mean = 0, precision = prec, method = "quad")},
-  times = 10,
+  five = {set.seed(99); sample_pois_reg(L, k, mean = 0, precision = prec, method = "slice")},
+  six = {set.seed(99); sample_pois_reg2(L, k, mean = 0, precision = prec, method = "slice")},
+  times = 100,
   check = "equal"
 )
 microbenchmark::microbenchmark(

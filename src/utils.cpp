@@ -31,9 +31,10 @@ double multinom_LL(double p, double sum_exp_p, bool z_ij, double k, double n, do
 
 double cond_mv_mean(NumericVector x, NumericVector mean, NumericMatrix Q, int i) {
   double mm = mean[i];
+  double Qii = Q(i, i);
   for(int j = 0; j < x.size(); j++) {
     if(i != j) {
-      mm -= Q(i, j)*(x[j] - mean[j]) / Q(i, i);
+      mm -= Q(i, j)*(x[j] - mean[j]) / Qii;
     }
   }
   return mm;
