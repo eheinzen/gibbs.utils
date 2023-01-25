@@ -26,13 +26,16 @@
 #' @details
 #'   The internals are defined in C++.
 #'
-#'   In the case that \code{n} is zero or \code{z} is zero, slice sampling is ignored in favor of a normal draw.
+#'   In the case that \code{n} is zero or \code{z} is zero, slice sampling is ignored in favor of a
+#'   (possibly multivarite) normal draw.
 #' @seealso \code{\link{sample_pois_reg}}, \code{\link{sample_binom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
 #' @export
-sample_multinom_reg <- function(p, z, k, mean, precision, method = c("slice"), ref = c("first", "last"), ...,
+sample_multinom_reg <- function(p, z, k, mean, precision, method = c("slice", "normal", "uniform", "quadratic taylor"), ref = c("first", "last"), ...,
                                 diag = all(precision[upper.tri(precision)] == 0),
-                                zmax = NULL, width = 1, nexpand = 10, ncontract = 100) {
+                                zmax = NULL, width = 1, nexpand = 10, ncontract = 100, acceptance = c("MH", "LL only", "regardless")) {
   method <- match.arg(method)
+  acceptance <- match.arg(acceptance)
+  acceptance <- match(acceptance, c("MH", "LL only", "regardless")) - 1L
 
   nr <- nrow(p)
   z <- TRUE & z
@@ -124,20 +127,57 @@ sample_multinom_reg <- function(p, z, k, mean, precision, method = c("slice"), r
   if(any(!z & k > 0)) stop("z == 0 but k > 0")
   if(any(p[, is_ref] != 0)) stop("p[, ref] != 0")
 
-  p <- slice_sample_multinom_mv(
-    p_ij = p,
-    z_ij = z,
-    k_ij = k,
-    n_ij = n,
-    which_i = which_i,
-    is_ref = is_ref,
-    mean = mean,
-    Q = precision,
-    diag = diag,
-    w = width,
-    nexpand = nexpand,
-    ncontract = ncontract
-  )
-  dim(p) <- d
-  p
+  use_norm <- rowSums(n) == 0
+  if(any(use_norm)) {
+    norm <- matrix(0, sum(use_norm), ncol(p))
+    norm[, !is_ref] <- mean[use_norm, , drop = FALSE] + spam::rmvnorm.prec(sum(use_norm), Q = precision)
+  } else norm <- matrix()
+
+  if(method == "slice") {
+    out <- slice_sample_multinom_mv(
+      p_ij = p,
+      z_ij = z,
+      k_ij = k,
+      n_ij = n,
+      which_i = which_i,
+      is_ref = is_ref,
+      mean = mean,
+      Q = precision,
+      diag = diag,
+      use_norm = use_norm,
+      norm = norm,
+      w = width,
+      nexpand = nexpand,
+      ncontract = ncontract
+    )
+  } else if(method %in% c("normal", "uniform", "quadratic taylor")) {
+    if(method %in% c("normal", "uniform")) {
+      width <- check_one_or_all(width, length(p))
+      prop <- p + if(method == "normal") stats::rnorm(length(p), 0, width) else stats::runif(length(p), -width, width)
+      qt <- FALSE
+    } else if(method == "quadratic taylor") {
+      if(!missing(width)) warning("'width' is being ignored for this method.")
+      prop <- p # this is ignored
+      qt <- TRUE
+    }
+    dim(prop) <- dim(p)
+    out <- mh_multinom_mv(
+      qt = qt,
+      p_ij = p,
+      proposal = prop,
+      z_ij = z,
+      k_ij = k,
+      n_ij = n,
+      which_i = which_i,
+      is_ref = is_ref,
+      mean = mean,
+      Q = precision,
+      diag = diag,
+      use_norm = use_norm,
+      norm = norm,
+      acceptance = acceptance
+    )
+  }
+  dim(out) <- d
+  out
 }

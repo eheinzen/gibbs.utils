@@ -369,3 +369,10 @@ microbenchmark::microbenchmark(
   check = "equal",
   times = 5
 )
+microbenchmark::microbenchmark(
+  slic = {set.seed(124); sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q, method = "slice")},
+  norm = {set.seed(124); sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q, method = "norm")},
+  unif = {set.seed(124); sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q, method = "unif")},
+  quad = {set.seed(124); sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q, method = "quad")},
+  times = 50
+)

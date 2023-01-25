@@ -8,6 +8,8 @@
 
 - Fixed a bug in the (still experimental) "mv beta" metohd of `sample_binom_reg()`.
 
+- Added methods to `sample_multinom_reg()` for "normal", "uniform", and "quadratic taylor".
+
 # v4.5.1
 
 - Sped up `sample_multinom_reg()` by 7x by reworking some C++ internals.

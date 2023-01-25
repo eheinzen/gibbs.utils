@@ -10,14 +10,15 @@ sample_multinom_reg(
   k,
   mean,
   precision,
-  method = c("slice"),
+  method = c("slice", "normal", "uniform", "quadratic taylor"),
   ref = c("first", "last"),
   ...,
   diag = all(precision[upper.tri(precision)] == 0),
   zmax = NULL,
   width = 1,
   nexpand = 10,
-  ncontract = 100
+  ncontract = 100,
+  acceptance = c("MH", "LL only", "regardless")
 )
 }
 \arguments{
@@ -81,6 +82,10 @@ For \code{"gamma"}, \code{"beta"}, and \code{"mv ind quadratic taylor"} a scalin
 \item{nexpand}{The maximum number of expansions (to the right and left each)}
 
 \item{ncontract}{The maximum number of contractions. If this is exceeded, the original value is returned}
+
+\item{acceptance}{What should be the criteria for acceptance? "MH" indicates the usual Metropolis-Hastings update. "LL only" ignores the proposal
+densities but considers the log-likelihoods. "regardless" accepts no matter what. This is useful for testing, or for
+when the method is a gamma, beta, or quadratic approximation, which can be hard to accept if the initial starting point is low-density.}
 }
 \description{
 Sample a multinomial regression rate
@@ -88,7 +93,8 @@ Sample a multinomial regression rate
 \details{
 The internals are defined in C++.
 
-  In the case that \code{n} is zero or \code{z} is zero, slice sampling is ignored in favor of a normal draw.
+  In the case that \code{n} is zero or \code{z} is zero, slice sampling is ignored in favor of a
+  (possibly multivarite) normal draw.
 }
 \seealso{
 \code{\link{sample_pois_reg}}, \code{\link{sample_binom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}

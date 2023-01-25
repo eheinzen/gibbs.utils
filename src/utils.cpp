@@ -39,3 +39,17 @@ double cond_mv_mean(NumericVector x, NumericVector mean, NumericMatrix Q, int i)
   }
   return mm;
 }
+
+double cond_mv_mean_multinom(NumericVector x, IntegerVector refidx, NumericVector mean, NumericMatrix Q, int ij) {
+  int i = refidx[ij];
+  double mm = mean[i];
+  double Qii = Q(i, i);
+  for(int jj = 0; jj < x.size(); jj++) {
+    int j = refidx[jj];
+    if(ij != jj &&  j >= 0) {
+      mm -= Q(i, j)*(x[jj] - mean[j]) / Qii;
+    }
+  }
+  return mm;
+}
+

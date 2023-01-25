@@ -32,21 +32,10 @@ double one_multinom_slice(double p_ij, double sum_exp_p, bool z_ij, double k, do
   return newx;
 }
 
-double cond_mv_mean_multinom(NumericVector x, IntegerVector refidx, NumericVector mean, NumericMatrix Q, int ij) {
-  int i = refidx[ij];
-  double mm = mean[i];
-  double Qii = Q(i, i);
-  for(int jj = 0; jj < x.size(); jj++) {
-    int j = refidx[jj];
-    if(ij != jj &&  j >= 0) {
-      mm -= Q(i, j)*(x[jj] - mean[j]) / Qii;
-    }
-  }
-  return mm;
-}
-
 // [[Rcpp::export]]
-NumericMatrix slice_sample_multinom_mv(NumericMatrix p_ij, LogicalMatrix z_ij, IntegerVector which_i, LogicalVector is_ref, NumericMatrix k_ij, NumericMatrix n_ij, NumericMatrix mean, NumericMatrix Q, bool diag, double w, int nexpand, int ncontract) {
+NumericMatrix slice_sample_multinom_mv(NumericMatrix p_ij, LogicalMatrix z_ij, IntegerVector which_i, LogicalVector is_ref,
+                                       NumericMatrix k_ij, NumericMatrix n_ij, NumericMatrix mean, NumericMatrix Q, bool diag,
+                                       LogicalVector use_norm, NumericMatrix norm, double w, int nexpand, int ncontract) {
   NumericMatrix out = clone(p_ij);
   IntegerVector refidx(is_ref.size());
   int ridx = 0;
@@ -57,8 +46,12 @@ NumericMatrix slice_sample_multinom_mv(NumericMatrix p_ij, LogicalMatrix z_ij, I
       refidx[ij] = ridx++;
     }
   }
-
+  int nrm = 0;
   for(int r=0; r < p_ij.nrow(); r++) {
+    if(use_norm[r]) {
+      out(r, _) = norm(nrm++, _);
+      continue;
+    }
     NumericVector kk = k_ij(r, _);
     NumericVector nn = n_ij(r, _);
     NumericVector mm = mean(r, _);

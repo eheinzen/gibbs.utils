@@ -9,6 +9,8 @@ double multinom_LL(double p, double sum_exp_p, bool z_ij, double k, double n, do
 
 
 double cond_mv_mean(Rcpp::NumericVector x, Rcpp::NumericVector mean, Rcpp::NumericMatrix Q, int i);
+double cond_mv_mean_multinom(Rcpp::NumericVector x, Rcpp::IntegerVector refidx, Rcpp::NumericVector mean, Rcpp::NumericMatrix Q, int ij);
+
 bool accept_reject(double ratio);
 
 #endif
