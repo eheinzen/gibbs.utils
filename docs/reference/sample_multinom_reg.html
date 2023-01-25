@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">4.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">4.6.0</span>
       </span>
     </div>
 
@@ -136,14 +136,15 @@
   <span class='va'>k</span>,
   <span class='va'>mean</span>,
   <span class='va'>precision</span>,
-  method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"slice"</span><span class='op'>)</span>,
+  method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"slice"</span>, <span class='st'>"normal"</span>, <span class='st'>"uniform"</span>, <span class='st'>"quadratic taylor"</span><span class='op'>)</span>,
   ref <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"first"</span>, <span class='st'>"last"</span><span class='op'>)</span>,
   <span class='va'>...</span>,
   diag <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/all.html'>all</a></span><span class='op'>(</span><span class='va'>precision</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/lower.tri.html'>upper.tri</a></span><span class='op'>(</span><span class='va'>precision</span><span class='op'>)</span><span class='op'>]</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span>,
   zmax <span class='op'>=</span> <span class='cn'>NULL</span>,
   width <span class='op'>=</span> <span class='fl'>1</span>,
   nexpand <span class='op'>=</span> <span class='fl'>10</span>,
-  ncontract <span class='op'>=</span> <span class='fl'>100</span>
+  ncontract <span class='op'>=</span> <span class='fl'>100</span>,
+  acceptance <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"MH"</span>, <span class='st'>"LL only"</span>, <span class='st'>"regardless"</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -234,12 +235,19 @@ For <code>"gamma"</code>, <code>"beta"</code>, and <code>"mv ind quadratic taylo
       <th>ncontract</th>
       <td><p>The maximum number of contractions. If this is exceeded, the original value is returned</p></td>
     </tr>
+    <tr>
+      <th>acceptance</th>
+      <td><p>What should be the criteria for acceptance? "MH" indicates the usual Metropolis-Hastings update. "LL only" ignores the proposal
+densities but considers the log-likelihoods. "regardless" accepts no matter what. This is useful for testing, or for
+when the method is a gamma, beta, or quadratic approximation, which can be hard to accept if the initial starting point is low-density.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The internals are defined in C++.</p>
-<p>In the case that <code>n</code> is zero or <code>z</code> is zero, slice sampling is ignored in favor of a normal draw.</p>
+<p>In the case that <code>n</code> is zero or <code>z</code> is zero, slice sampling is ignored in favor of a
+  (possibly multivarite) normal draw.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='sample_pois_reg.html'>sample_pois_reg</a></code>, <code><a href='sample_binom_reg.html'>sample_binom_reg</a></code>, <a href='https://en.wikipedia.org/wiki/Slice_sampling'>https://en.wikipedia.org/wiki/Slice_sampling</a></p></div>
