@@ -105,18 +105,20 @@ Q <- Q[, , -1]
 
 k[4, , ] <- 0
 
-out <- out2 <- out3 <- out4 <- array(0, c(10000, dim(p)))
+out <- out2 <- out3 <- out4 <- out5 <- array(0, c(10000, dim(p)))
 for(i in seq_len(10000-1)) {
   out[i+1, , , ] <-  sample_multinom_reg(p = out[i, , , ], z = z, k = k, mean = mean, precision = Q, method = "slice")
   out2[i+1, , , ] <-  sample_multinom_reg(p = out2[i, , , ], z = z, k = k, mean = mean, precision = Q, method = "unif")
   out3[i+1, , , ] <-  sample_multinom_reg(p = out3[i, , , ], z = z, k = k, mean = mean, precision = Q, method = "norm")
   out4[i+1, , , ] <-  sample_multinom_reg(p = out4[i, , , ], z = z, k = k, mean = mean, precision = Q, method = "quad")
+  out5[i+1, , , ] <-  sample_multinom_reg(p = out5[i, , , ], z = z, k = k, mean = mean, precision = Q, method = "mv ind",
+                                          acceptance = if(i <= 10) "LL only" else "MH", width = 16)
 }
 
-stopifnot(out[, , , 1] == 0, out2[, , , 1] == 0, out3[, , , 1] == 0, out4[, , , 1] == 0)
+stopifnot(out[, , , 1] == 0, out2[, , , 1] == 0, out3[, , , 1] == 0, out4[, , , 1] == 0, out5[, , , 1] == 0)
 
 library(tidyverse)
-abind::abind(out, out2, out3, out4, along = 0L) %>%
+abind::abind(out, out2, out3, out4, out5, along = 0L) %>%
   reshape2::melt(c("method", "iter", "r", "i", "j")) %>%
   filter(iter > 1000, j != 1) %>%
   ggplot(aes(x = value, color = factor(method))) +

@@ -1,3 +1,7 @@
+# v4.6.1
+
+- Added method to `sample_multinom_reg()` for "mv ind quadratic taylor".
+  
 # v4.6.0
 
 - Sped up `sample_pois_reg()` and `sample_binom_reg()` by something like half, and

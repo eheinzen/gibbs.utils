@@ -10,7 +10,8 @@ sample_multinom_reg(
   k,
   mean,
   precision,
-  method = c("slice", "normal", "uniform", "quadratic taylor"),
+  method = c("slice", "normal", "uniform", "quadratic taylor",
+    "mv ind quadratic taylor"),
   ref = c("first", "last"),
   ...,
   diag = all(precision[upper.tri(precision)] == 0),
@@ -56,7 +57,8 @@ in the proposal (for speed's sake; this may result in low acceptance rates when 
    \item{\code{"mv quadratic taylor"} does the same, but uses a multivariate normal approximation.}
    \item{\code{"mv ind quadratic taylor"} proposes using a similar Taylor approximation, but approximates the log-density around
    the mean, instead of the current value. Furthermore, like \code{"mv beta"} and \code{"mv gamma"}, it ignores off-diagonal
-   elements of the precision matrix for the proposal, which again might yield low acceptance rates when elements are highly correlated.
+   elements of the precision matrix for the proposal, which again might yield low acceptance rates when elements are highly correlated;
+   in particular, it is not recommended for \code{sample_multinom_reg}, whose data are a priori correlated.
    Both of these simplifications yield a significant speed boost.}
 }
 Note that \code{"mv gamma"}, \code{"mv beta"} and \code{"mv [ind ]quadratic taylor"} accept or reject an entire row at a time.}
