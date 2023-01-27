@@ -54,9 +54,8 @@ mviqt_binom_approx <- function(around, k, n, mean, Q) {
 
   # -H(x)
   newtau <- tau + n*ep / ep2
-  newtau.inv <- 1/newtau
   # x - H^-1(x) g(x)
-  newmean <- around + newtau.inv * (k - tau*(around - mean) - n*ep/ep1)
+  newmean <- around + (k - tau*(around - mean) - n*ep/ep1)/newtau
 
   gu_params(mu = newmean, tau = newtau)
 }
@@ -69,7 +68,7 @@ mviqt_binom <- function(p, mult, k, n, mean, Q, acceptance) {
   }
 
   tmp <- mviqt_binom_approx(around = mean, k, n, mean, Q) # !!! the only way we don't need to recompute params is because we approximate around the mean
-  tau2 <- tmp$tau / mult
+  tau2 <- tmp$tau / mult^2
   proposal <- matrix(stats::rnorm(length(p), tmp$mu, 1/sqrt(tau2)), nrow = nrow(p), ncol = ncol(p))
 
   if(acceptance == 2) {
@@ -125,8 +124,8 @@ mvbeta_binom <- function(p, mult, k, n, mean, Q, acceptance) {
   }
 
   tmp <- mvbeta_binom_approx(k, n, mean, Q)
-  alpha2 <- tmp$alpha / mult # this doesn't *exactly* multiply the variance by mult, but close enough when alpha+beta is large
-  beta2 <- tmp$beta / mult
+  alpha2 <- tmp$alpha / mult^2 # this doesn't *exactly* multiply the variance by mult, but close enough when alpha+beta is large
+  beta2 <- tmp$beta / mult^2
 
   proposal <- matrix(stats::rbeta(length(p), alpha2, beta2), nrow = nrow(p), ncol = ncol(p))
   lproposal <- logit(proposal)

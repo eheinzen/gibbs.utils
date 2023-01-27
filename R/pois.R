@@ -30,7 +30,8 @@
 #'   Note that \code{"mv gamma"}, \code{"mv beta"} and \code{"mv [ind ]quadratic taylor"} accept or reject an entire row at a time.
 #' @param width For \code{"normal"} proposals, the standard deviation(s) of proposals. For \code{"uniform"} proposals,
 #' the half-width of the uniform proposal interval. For \code{"slice"}, the width of each expansion (to the right and left each).
-#' For \code{"gamma"}, \code{"beta"}, and \code{"mv ind quadratic taylor"} a scaling factor to increase the variance of the proposal.
+#' For \code{"gamma"}, \code{"beta"}, and \code{"mv ind quadratic taylor"} a scaling factor to increase the variance of the proposal
+#' (it's squared, so that \code{width} is on the sd scale).
 #' @param truncate Either \code{NULL} for no truncation (default), or else a list with components \code{at} to indicate the value, and \code{allow}
 #'   to indicate whether values "above" (strict) or "below" (inclusive) are allowed. For convenience, negative values of \code{at} are
 #'   interpreted as no truncation.

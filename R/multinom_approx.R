@@ -39,7 +39,7 @@ mviqt_multinom <- function(p, mult, z, which_i, is_ref, k, n, mean, Q, acceptanc
   around <- p
   around[, !is_ref] <- mean
   tmp <- mviqt_multinom_approx(around, z, which_i, is_ref, k, n, mean, Q) # !!! the only way we don't need to recompute params is because we approximate around the mean
-  tau2 <- tmp$tau / mult
+  tau2 <- tmp$tau / mult^2
   proposal <- p
   proposal[, !is_ref] <- matrix(stats::rnorm(nrow(p)*sum(!is_ref), tmp$mu, 1/sqrt(tau2)), nrow = nrow(p), ncol = sum(!is_ref))
 

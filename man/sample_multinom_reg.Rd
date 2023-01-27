@@ -79,7 +79,8 @@ Etc.}
 
 \item{width}{For \code{"normal"} proposals, the standard deviation(s) of proposals. For \code{"uniform"} proposals,
 the half-width of the uniform proposal interval. For \code{"slice"}, the width of each expansion (to the right and left each).
-For \code{"gamma"}, \code{"beta"}, and \code{"mv ind quadratic taylor"} a scaling factor to increase the variance of the proposal.}
+For \code{"gamma"}, \code{"beta"}, and \code{"mv ind quadratic taylor"} a scaling factor to increase the variance of the proposal
+(it's squared, so that \code{width} is on the sd scale).}
 
 \item{nexpand}{The maximum number of expansions (to the right and left each)}
 

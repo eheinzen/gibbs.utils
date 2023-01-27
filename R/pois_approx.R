@@ -57,9 +57,8 @@ mviqt_pois_approx <- function(around, k, mean, Q) {
 
   # -H(x)
   newtau <- tau + replace(ep, is.na(k), 0)
-  newtau.inv <- 1/newtau
   # x - H^-1(x) g(x)
-  newmean <- around + newtau.inv * (replace(k - ep, is.na(k), 0) - tau*(around - mean))
+  newmean <- around + (replace(k - ep, is.na(k), 0) - tau*(around - mean))/newtau
 
   gu_params(mu = newmean, tau = newtau)
 }
@@ -72,7 +71,7 @@ mviqt_pois <- function(L, mult, k, mean, Q, acceptance) {
   }
 
   tmp <- mviqt_pois_approx(around = mean, k, mean, Q) # !!! the only way we don't need to recompute params is because we approximate around the mean
-  tau2 <- tmp$tau / mult
+  tau2 <- tmp$tau / mult^2
   proposal <- matrix(stats::rnorm(length(L), tmp$mu, 1/sqrt(tau2)), nrow = nrow(L), ncol = ncol(L))
   if(acceptance == 2) {
     accept <- rep_len(TRUE, nrow(L))
@@ -115,8 +114,8 @@ mvgamma_pois <- function(L, mult, k, mean, Q, acceptance) {
   }
 
   tmp <- mvgamma_pois_approx(k, mean, Q)
-  alpha2 <- tmp$alpha / mult
-  scale2 <- mult / tmp$beta
+  alpha2 <- tmp$alpha / mult^2
+  scale2 <- mult^2 / tmp$beta
 
   proposal <- matrix(stats::rgamma(length(L), shape = alpha2, scale = scale2), nrow = nrow(L), ncol = ncol(L))
   lproposal <- log(proposal)

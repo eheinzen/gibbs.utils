@@ -1,6 +1,9 @@
-# v4.6.1
+# v4.7.0
 
 - Added method to `sample_multinom_reg()` for "mv ind quadratic taylor".
+
+- The `width=` argument is now squared when applied to the variance for various methods, so that it is
+  consistency on the sd scale.
   
 # v4.6.0
 
