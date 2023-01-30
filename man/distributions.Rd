@@ -12,6 +12,10 @@
 \alias{dmatnorm_diff}
 \alias{dlogitnorm}
 \alias{rdirich}
+\alias{rtruncexp}
+\alias{dtruncexp}
+\alias{ptruncexp}
+\alias{qtruncexp}
 \title{Statistical Distributions}
 \usage{
 dmvnorm(x, mu, Q, detQ = determinant(Q, logarithm = TRUE)$modulus, log = TRUE)
@@ -41,6 +45,14 @@ dmatnorm_diff(x, y, mu, V, U = NULL, log = TRUE)
 dlogitnorm(x, mu, sd, log = FALSE)
 
 rdirich(n, alpha)
+
+rtruncexp(n, rate = 1, a = 0, b = Inf)
+
+dtruncexp(x, rate = 1, a = 0, b = Inf, log = FALSE)
+
+ptruncexp(q, rate = 1, a = 0, b = Inf, lower.tail = TRUE, log.p = FALSE)
+
+qtruncexp(p, rate = 1, a = 0, b = Inf)
 }
 \arguments{
 \item{x, y}{vector of quantiles}
@@ -62,6 +74,18 @@ rdirich(n, alpha)
 \item{n}{Number of deviates to produce.}
 
 \item{alpha}{the Dirichlet parameter vector or matrix.}
+
+\item{rate}{the Exponential rate parameter}
+
+\item{a, b}{Bounds for the truncated exponential distribution.}
+
+\item{q}{A quantile}
+
+\item{lower.tail}{Should lower tail probabilities be returned (default) or upper?}
+
+\item{log.p}{Should the log be returned?}
+
+\item{p}{A probability}
 }
 \description{
 Statistical Distributions

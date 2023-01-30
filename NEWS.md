@@ -2,6 +2,8 @@
 
 - Removed some spurious code.
 
+- Added `rtruncexp()`, `qtruncexp()`, `ptruncexp()`, and `dtruncexp()` for truncated exponential distributions.
+
 # v4.7.0
 
 - Added method to `sample_multinom_reg()` for "mv ind quadratic taylor".

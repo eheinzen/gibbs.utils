@@ -68,3 +68,37 @@ test_that("*_diff", {
   )
 
 })
+
+
+test_that("*truncexp", {
+  expect_equal(
+    dtruncexp(1:10, rate = 2.5),
+    stats::dexp(1:10, rate = 2.5)
+  )
+  expect_equal(
+    dtruncexp(1:10, rate = 2.5, log = TRUE),
+    stats::dexp(1:10, rate = 2.5, log = TRUE)
+  )
+  expect_equal(
+    dtruncexp(c(0, 3), rate = 1, a = 1, b = 2),
+    c(0, 0)
+  )
+
+  expect_equal(
+    qtruncexp(c(0, 1), rate = 2.5),
+    c(0, Inf)
+  )
+  expect_equal(
+    qtruncexp(c(0, 1), rate = 2.5, a = 1, b = 2),
+    c(1, 2)
+  )
+
+  expect_equal(
+    ptruncexp(c(0, Inf), rate = 2.5),
+    c(0, 1)
+  )
+  expect_equal(
+    ptruncexp(c(1, 2, 3, 0), rate = 2.5, a = 1, b = 2),
+    c(0, 1, 1, 0)
+  )
+})
