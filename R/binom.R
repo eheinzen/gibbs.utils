@@ -20,7 +20,7 @@
 #'   The internals are defined in C++.
 #' @export
 sample_binom_reg <- function(p, k, n, mean, precision,
-                             method = c("slice", "normal", "uniform", "quadratic taylor", "mv quadratic taylor", "mv ind quadratic taylor", "mv beta"),
+                             method = c("slice", "normal", "uniform", "quadratic taylor", "mv quadratic taylor", "mv ind quadratic taylor", "mv beta", "mv truncated exponential"),
                              ..., width = 1, nexpand = 10, ncontract = 100, acceptance = c("MH", "LL only", "regardless")) {
   method <- match.arg(method)
   acceptance <- match.arg(acceptance)
@@ -82,7 +82,7 @@ sample_binom_reg <- function(p, k, n, mean, precision,
     } else {
       out <- mh_binom(qt = qt, p = p, proposal = prop, k = k, n = n, mean = mean, precision = precision, acceptance = acceptance)
     }
-  } else if(method %in% c("mv beta", "mv ind quadratic taylor")) {
+  } else if(method %in% c("mv beta", "mv ind quadratic taylor", "mv truncated exponential")) {
     width <- check_one_or_all(width, length(p))
     dim(width) <- dim(p)
     out <- p
@@ -90,7 +90,7 @@ sample_binom_reg <- function(p, k, n, mean, precision,
 
     not_norm <- !use_norm
     if(any(not_norm)) {
-      FUN <- if(method == "mv beta") mvbeta_binom else mviqt_binom
+      FUN <- if(method == "mv beta") mvbeta_binom else if(method == "mv ind quadratic taylor") mviqt_binom else mvexp_binom
       tmp <- FUN(p[not_norm, , drop = FALSE], width[not_norm, , drop = FALSE], k[not_norm, , drop = FALSE], n[not_norm, , drop = FALSE],
                  mean[not_norm, , drop = FALSE], Q = precision, acceptance = acceptance)
       out[not_norm, ] <- tmp$p

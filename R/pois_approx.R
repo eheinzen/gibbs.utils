@@ -139,3 +139,60 @@ mvgamma_pois <- function(L, mult, k, mean, Q, acceptance) {
   )
 }
 
+
+
+
+mvexp_pois_approx <- function(around, k, mean, Q) {
+  if(!is.matrix(k)) k <- matrix(k, nrow = 1)
+  if(!is.matrix(mean)) mean <- matrix(mean, nrow = 1)
+
+  ep <- exp(around)
+
+  # g(x)
+  g <- replace(k - ep, is.na(k), 0) - (around - mean) %*% Q
+
+  gu_params(slope = g)
+}
+
+
+mvexp_pois <- function(L, mult, k, mean, Q, acceptance) {
+
+  pois_LL_mv <- function(L, k) {
+    rowSums(k * L - exp(L), na.rm = TRUE)
+  }
+
+  tmp <- mvexp_pois_approx(L, k, mean, Q)
+
+  aL <- L - mult
+  bL <- L + mult
+  proposal <- matrix(
+    rtruncexp(
+      n = nrow(L)*ncol(L),
+      rate = tmp$slope,
+      a = aL,
+      b = bL
+    ),
+    nrow = nrow(L), ncol = ncol(L)
+  )
+  if(acceptance == 2) {
+    accept <- rep_len(TRUE, nrow(L))
+  } else {
+    ratio <- pois_LL_mv(proposal, k) - pois_LL_mv(L, k) + dmvnorm_diff(proposal, L, mu = mean, Q = Q, log = TRUE, byrow = TRUE)
+    if(acceptance == 0) {
+      tmp2 <- mvexp_pois_approx(proposal, k, mean, Q)
+      aprop <- proposal - mult
+      bprop <- proposal + mult
+      ratio <- ratio -
+        rowSums(dtruncexp(proposal, rate = tmp$slope, a = aL, b = bL, log = TRUE)) +
+        rowSums(dtruncexp(L, rate = tmp2$slope, a = aprop, b = bprop, log = TRUE))
+    }
+    accept <- vapply(ratio, accept_reject, NA)
+  }
+
+  L[accept, ] <- proposal[accept, ]
+  list(
+    L = L,
+    accept = accept
+  )
+}
+

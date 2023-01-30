@@ -4,6 +4,9 @@
 
 - Added `rtruncexp()`, `qtruncexp()`, `ptruncexp()`, and `dtruncexp()` for truncated exponential distributions.
 
+- Added "mv truncated exponential" to `sample_pois_reg()`, `sample_binom_reg()`, and `sample_multinom_reg()`, to approximate
+  the log-density with a first-order Taylor approximation (which is an exponential distribution).
+
 # v4.7.0
 
 - Added method to `sample_multinom_reg()` for "mv ind quadratic taylor".

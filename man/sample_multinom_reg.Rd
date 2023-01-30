@@ -11,7 +11,7 @@ sample_multinom_reg(
   mean,
   precision,
   method = c("slice", "normal", "uniform", "quadratic taylor",
-    "mv ind quadratic taylor"),
+    "mv ind quadratic taylor", "mv truncated exponential"),
   ref = c("first", "last"),
   ...,
   diag = all(precision[upper.tri(precision)] == 0),
@@ -58,8 +58,11 @@ in the proposal (for speed's sake; this may result in low acceptance rates when 
    \item{\code{"mv ind quadratic taylor"} proposes using a similar Taylor approximation, but approximates the log-density around
    the mean, instead of the current value. Furthermore, like \code{"mv beta"} and \code{"mv gamma"}, it ignores off-diagonal
    elements of the precision matrix for the proposal, which again might yield low acceptance rates when elements are highly correlated;
-   in particular, it is not recommended for \code{sample_multinom_reg}, whose data are a priori correlated.
+   in particular, it is not recommended for \code{sample_multinom_reg}, whose data are a priori correlated (unless you increase the
+   variance a lot, in which case it works okay).
    Both of these simplifications yield a significant speed boost.}
+   \item{\code{"mv truncated exponential"} proposes using a first-order Taylor approximation of the log-density at the current value,
+   which amounts to a truncated exponential proposal.}
 }
 Note that \code{"mv gamma"}, \code{"mv beta"} and \code{"mv [ind ]quadratic taylor"} accept or reject an entire row at a time.}
 

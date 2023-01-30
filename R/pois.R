@@ -24,8 +24,11 @@
 #'      \item{\code{"mv ind quadratic taylor"} proposes using a similar Taylor approximation, but approximates the log-density around
 #'      the mean, instead of the current value. Furthermore, like \code{"mv beta"} and \code{"mv gamma"}, it ignores off-diagonal
 #'      elements of the precision matrix for the proposal, which again might yield low acceptance rates when elements are highly correlated;
-#'      in particular, it is not recommended for \code{sample_multinom_reg}, whose data are a priori correlated.
+#'      in particular, it is not recommended for \code{sample_multinom_reg}, whose data are a priori correlated (unless you increase the
+#'      variance a lot, in which case it works okay).
 #'      Both of these simplifications yield a significant speed boost.}
+#'      \item{\code{"mv truncated exponential"} proposes using a first-order Taylor approximation of the log-density at the current value,
+#'      which amounts to a truncated exponential proposal.}
 #'   }
 #'   Note that \code{"mv gamma"}, \code{"mv beta"} and \code{"mv [ind ]quadratic taylor"} accept or reject an entire row at a time.
 #' @param width For \code{"normal"} proposals, the standard deviation(s) of proposals. For \code{"uniform"} proposals,
@@ -56,7 +59,7 @@
 #' \url{https://en.wikipedia.org/wiki/Metropolis–Hastings_algorithm}, \url{https://arxiv.org/pdf/1308.0657.pdf}
 #' @export
 sample_pois_reg <- function(L, k, mean, precision,
-                            method = c("slice", "normal", "uniform", "gamma", "mv gamma", "quadratic taylor", "mv quadratic taylor", "mv ind quadratic taylor"),
+                            method = c("slice", "normal", "uniform", "gamma", "mv gamma", "quadratic taylor", "mv quadratic taylor", "mv ind quadratic taylor", "mv truncated exponential"),
                             ..., width = 1, nexpand = 10, ncontract = 100, truncate = NULL, acceptance = c("MH", "LL only", "regardless")) {
   method <- match.arg(method)
   acceptance <- match.arg(acceptance)
@@ -139,7 +142,7 @@ sample_pois_reg <- function(L, k, mean, precision,
       out <- mh_pois(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean, precision = precision,
                      trunc_at = at, lower = lower.tail, acceptance = acceptance)
     }
-  } else if(method %in% c("mv gamma", "mv ind quadratic taylor")) {
+  } else if(method %in% c("mv gamma", "mv ind quadratic taylor", "mv truncated exponential")) {
     width <- check_one_or_all(width, length(L))
     dim(width) <- dim(L)
     out <- L
@@ -147,7 +150,7 @@ sample_pois_reg <- function(L, k, mean, precision,
 
     not_norm <- !use_norm
     if(any(not_norm)) {
-      FUN <- if(method == "mv gamma") mvgamma_pois else mviqt_pois
+      FUN <- if(method == "mv gamma") mvgamma_pois else if(method == "mv ind quadratic taylor") mviqt_pois else mvexp_pois
       tmp <- FUN(L[not_norm, , drop = FALSE], width[not_norm, , drop = FALSE], k[not_norm, , drop = FALSE], mean[not_norm, , drop = FALSE],
                  Q = precision, acceptance = acceptance)
       out[not_norm, ] <- tmp$L

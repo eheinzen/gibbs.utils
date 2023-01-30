@@ -149,3 +149,62 @@ mvbeta_binom <- function(p, mult, k, n, mean, Q, acceptance) {
     accept = accept
   )
 }
+
+
+
+mvexp_binom_approx <- function(around, k, n, mean, Q) {
+  if(!is.matrix(k)) k <- matrix(k, nrow = 1)
+  if(!is.matrix(n)) n <- matrix(n, nrow = 1)
+  if(!is.matrix(mean)) mean <- matrix(mean, nrow = 1)
+
+  ep <- exp(around)
+  ep1 <- 1 + ep
+
+  # g(x)
+  g <- k - n*ep/ep1 - (around - mean) %*% Q
+
+  gu_params(slope = g)
+}
+
+
+mvexp_binom <- function(p, mult, k, n, mean, Q, acceptance) {
+
+  binom_LL_mv <- function(p, k, n) {
+    rowSums(k*p - n*log(1 + exp(p)))
+  }
+
+  tmp <- mvexp_binom_approx(p, k, n, mean, Q)
+  ap <- p - mult
+  bp <- p + mult
+  proposal <- matrix(
+    rtruncexp(
+      n = nrow(p)*ncol(p),
+      rate = tmp$slope,
+      a = ap,
+      b = bp
+    ),
+    nrow = nrow(p), ncol = ncol(p)
+  )
+
+  if(acceptance == 2) {
+    accept <- rep_len(TRUE, nrow(p))
+  } else {
+    ratio <- binom_LL_mv(proposal, k, n) - binom_LL_mv(p, k, n) + dmvnorm_diff(proposal, p, mu = mean, Q = Q, log = TRUE, byrow = TRUE)
+    if(acceptance == 0) {
+      tmp2 <- mvexp_binom_approx(proposal, k, n, mean, Q)
+      aprop <- proposal - mult
+      bprop <- proposal + mult
+      ratio <- ratio -
+        rowSums(dtruncexp(proposal, rate = tmp$slope, a = ap, b = bp, log = TRUE)) +
+        rowSums(dtruncexp(p, rate = tmp2$slope, a = aprop, b = bprop, log = TRUE))
+    }
+    accept <- vapply(ratio, accept_reject, NA)
+  }
+
+  p[accept, ] <- proposal[accept, ]
+  list(
+    p = p,
+    accept = accept
+  )
+}
+

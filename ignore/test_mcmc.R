@@ -6,7 +6,7 @@ out <- out2 <- out3 <- out4 <- out5 <- out6 <- out7 <- matrix(0, 10000, 1)
 for(i in seq_len(10000-1)) {
   out[i+1, ] <- sample_pois_reg(out[i, , drop = FALSE], y, m, Q, method = "slice")
   out2[i+1, ] <- sample_pois_reg(out2[i, , drop = FALSE], y, m, Q, method = "mv ind quad")
-  # out3[i+1, ] <- mh_gamma(out3[i, ], y, m, as.vector(Q), mult = 1)
+  out3[i+1, ] <- sample_pois_reg(out3[i, , drop = FALSE], y, m, Q, method = "mv trunc")
   out4[i+1, ] <- sample_pois_reg(out4[i, , drop = FALSE], y, m, Q, method = "mv quadratic")
   out5[i+1, ] <- sample_pois_reg(out5[i, , drop = FALSE], y, m, Q, method = "normal")
   out6[i+1, ] <- sample_pois_reg(out6[i, , drop = FALSE], y, m, as.vector(Q), method = "gamma")
@@ -69,16 +69,17 @@ k <- matrix(1)
 n <- matrix(20)
 m <- matrix(-3)
 Q <- diag(1, 1)
-out <- out2 <- out4 <- out5 <- out7 <- matrix(0, 10000, 1)
+out <- out2 <- out3 <- out4 <- out5 <- out7 <- matrix(-4, 10000, 1)
 for(i in seq_len(10000-1)) {
   out[i+1, ] <-  sample_binom_reg(out[i, , drop = FALSE],  k, n, m, Q, method = "slice")
   out2[i+1, ] <- sample_binom_reg(out2[i, , drop = FALSE], k, n, m, Q, method = "mv ind quad")
+  out3[i+1, ] <- sample_binom_reg(out3[i, , drop = FALSE], k, n, m, Q, method = "mv trunc")
   out4[i+1, ] <- sample_binom_reg(out4[i, , drop = FALSE], k, n, m, Q, method = "mv quadratic")
   out5[i+1, ] <- sample_binom_reg(out5[i, , drop = FALSE], k, n, m, Q, method = "normal")
   out7[i+1, ] <- sample_binom_reg(out7[i, , drop = FALSE], k, n, m, Q, method = "mv beta")
 }
 
-abind::abind(out, out2, out4, out5, out7, along = 0L) %>%
+abind::abind(out, out2, out3, out4, out5, out7, along = 0L) %>%
   reshape2::melt(c("method", "i", "x")) %>%
   filter(i > 1000) %>%
   ggplot(aes(x = value, color = factor(method))) +
@@ -111,8 +112,7 @@ for(i in seq_len(10000-1)) {
   out2[i+1, , , ] <-  sample_multinom_reg(p = out2[i, , , ], z = z, k = k, mean = mean, precision = Q, method = "unif")
   out3[i+1, , , ] <-  sample_multinom_reg(p = out3[i, , , ], z = z, k = k, mean = mean, precision = Q, method = "norm")
   out4[i+1, , , ] <-  sample_multinom_reg(p = out4[i, , , ], z = z, k = k, mean = mean, precision = Q, method = "quad")
-  out5[i+1, , , ] <-  sample_multinom_reg(p = out5[i, , , ], z = z, k = k, mean = mean, precision = Q, method = "mv ind",
-                                          acceptance = if(i <= 10) "LL only" else "MH", width = 16)
+  out5[i+1, , , ] <-  sample_multinom_reg(p = out5[i, , , ], z = z, k = k, mean = mean, precision = Q, method = "mv trunc", width = 0.01)
 }
 
 stopifnot(out[, , , 1] == 0, out2[, , , 1] == 0, out3[, , , 1] == 0, out4[, , , 1] == 0, out5[, , , 1] == 0)
@@ -120,7 +120,7 @@ stopifnot(out[, , , 1] == 0, out2[, , , 1] == 0, out3[, , , 1] == 0, out4[, , , 
 library(tidyverse)
 abind::abind(out, out2, out3, out4, out5, along = 0L) %>%
   reshape2::melt(c("method", "iter", "r", "i", "j")) %>%
-  filter(iter > 1000, j != 1) %>%
+  filter(iter > 9000, j != 1) %>%
   ggplot(aes(x = value, color = factor(method))) +
   facet_wrap(~ r + i + j, scales = "free") +
   geom_density()

@@ -30,7 +30,9 @@
 #'   (possibly multivarite) normal draw.
 #' @seealso \code{\link{sample_pois_reg}}, \code{\link{sample_binom_reg}}, \url{https://en.wikipedia.org/wiki/Slice_sampling}
 #' @export
-sample_multinom_reg <- function(p, z, k, mean, precision, method = c("slice", "normal", "uniform", "quadratic taylor", "mv ind quadratic taylor"), ref = c("first", "last"), ...,
+sample_multinom_reg <- function(p, z, k, mean, precision,
+                                method = c("slice", "normal", "uniform", "quadratic taylor", "mv ind quadratic taylor", "mv truncated exponential"),
+                                ref = c("first", "last"), ...,
                                 diag = all(precision[upper.tri(precision)] == 0),
                                 zmax = NULL, width = 1, nexpand = 10, ncontract = 100, acceptance = c("MH", "LL only", "regardless")) {
   method <- match.arg(method)
@@ -178,7 +180,7 @@ sample_multinom_reg <- function(p, z, k, mean, precision, method = c("slice", "n
       norm = norm,
       acceptance = acceptance
     )
-  } else if(method == "mv ind quadratic taylor") {
+  } else if(method %in% c("mv ind quadratic taylor", "mv truncated exponential")) {
     width <- check_one_or_all(width, nrow(p)*sum(!is_ref))
     dim(width) <- c(nrow(p), sum(!is_ref))
     out <- p
@@ -186,7 +188,7 @@ sample_multinom_reg <- function(p, z, k, mean, precision, method = c("slice", "n
 
     not_norm <- !use_norm
     if(any(not_norm)) {
-      FUN <- mviqt_multinom
+      FUN <- if(method == "mv ind quadratic taylor") mviqt_multinom else mvexp_multinom
       tmp <- FUN(
         p = p[not_norm, , drop = FALSE],
         mult = width[not_norm, , drop = FALSE],
