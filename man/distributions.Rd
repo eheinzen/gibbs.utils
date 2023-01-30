@@ -75,7 +75,8 @@ qtruncexp(p, rate = 1, a = 0, b = Inf)
 
 \item{alpha}{the Dirichlet parameter vector or matrix.}
 
-\item{rate}{the Exponential rate parameter}
+\item{rate}{the Exponential rate parameter. If zero, a normal distribution is used instead. If negative,
+the problem is flipped and calculated using \code{-rate}.}
 
 \item{a, b}{Bounds for the truncated exponential distribution.}
 

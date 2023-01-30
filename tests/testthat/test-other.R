@@ -70,7 +70,7 @@ test_that("*_diff", {
 })
 
 
-test_that("*truncexp", {
+test_that("*truncexp basic functionality works", {
   expect_equal(
     dtruncexp(1:10, rate = 2.5),
     stats::dexp(1:10, rate = 2.5)
@@ -78,6 +78,14 @@ test_that("*truncexp", {
   expect_equal(
     dtruncexp(1:10, rate = 2.5, log = TRUE),
     stats::dexp(1:10, rate = 2.5, log = TRUE)
+  )
+  expect_equal(
+    dtruncexp(1:2, rate = 2.5, a = 1, b = 2, log = TRUE),
+    dtruncexp(2:1, rate = -2.5, a = 1, b = 2, log = TRUE)
+  )
+  expect_equal(
+    dtruncexp(1:2, rate = 2.5, a = 1, b = 2, log = TRUE),
+    dtruncexp(-(1:2), rate = -2.5, a = -2, b = -1, log = TRUE)
   )
   expect_equal(
     dtruncexp(c(0, 3), rate = 1, a = 1, b = 2),
@@ -89,8 +97,8 @@ test_that("*truncexp", {
     c(0, Inf)
   )
   expect_equal(
-    qtruncexp(c(0, 1), rate = 2.5, a = 1, b = 2),
-    c(1, 2)
+    qtruncexp(c(0, 1, 0, 1), rate = c(2.5, 2.5, -2.5, -2.5), a = 1, b = 2),
+    c(1, 2, 1, 2)
   )
 
   expect_equal(
@@ -98,7 +106,30 @@ test_that("*truncexp", {
     c(0, 1)
   )
   expect_equal(
-    ptruncexp(c(1, 2, 3, 0), rate = 2.5, a = 1, b = 2),
-    c(0, 1, 1, 0)
+    ptruncexp(rep(0:3, times = 2), rate = rep(c(2.5, -2.5), each = 4), a = 1, b = 2),
+    rep(0:1, each = 2, times = 2)
+  )
+})
+
+test_that("*truncexp errors work", {
+  expect_error(dtruncexp(1, rate = -1), "An invalid bound is infinite")
+  expect_error(rtruncexp(1, rate = -1), "An invalid bound is infinite")
+  expect_error(qtruncexp(1, rate = -1), "An invalid bound is infinite")
+  expect_error(ptruncexp(1, rate = -1), "An invalid bound is infinite")
+})
+
+test_that("rate == 0 works for *truncexp", {
+
+  expect_equal(
+    dtruncexp(c(-1, 0, 0.5, 1, 2), rate = 0, a = 0, b = 1),
+    c(0, 1, 1, 1, 0)
+  )
+  expect_equal(
+    ptruncexp(c(0, 1, 1.5, 2, 3), rate = 0, a = 1, b = 2),
+    c(0, 0, 0.5, 1, 1)
+  )
+  expect_equal(
+    qtruncexp(c(0, 0.5, 1), rate = 0, a = 1, b = 2),
+    c(1, 1.5, 2)
   )
 })
