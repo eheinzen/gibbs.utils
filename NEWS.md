@@ -1,3 +1,7 @@
+# v4.7.0.9000
+
+- Removed some spurious code.
+
 # v4.7.0
 
 - Added method to `sample_multinom_reg()` for "mv ind quadratic taylor".
