@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">4.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">4.8.0</span>
       </span>
     </div>
 
@@ -156,7 +156,15 @@
 
 <span class='fu'>dlogitnorm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mu</span>, <span class='va'>sd</span>, log <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>rdirich</span><span class='op'>(</span><span class='va'>n</span>, <span class='va'>alpha</span><span class='op'>)</span></pre>
+<span class='fu'>rdirich</span><span class='op'>(</span><span class='va'>n</span>, <span class='va'>alpha</span><span class='op'>)</span>
+
+<span class='fu'>rtruncexp</span><span class='op'>(</span><span class='va'>n</span>, rate <span class='op'>=</span> <span class='fl'>1</span>, a <span class='op'>=</span> <span class='fl'>0</span>, b <span class='op'>=</span> <span class='cn'>Inf</span><span class='op'>)</span>
+
+<span class='fu'>dtruncexp</span><span class='op'>(</span><span class='va'>x</span>, rate <span class='op'>=</span> <span class='fl'>1</span>, a <span class='op'>=</span> <span class='fl'>0</span>, b <span class='op'>=</span> <span class='cn'>Inf</span>, log <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+
+<span class='fu'>ptruncexp</span><span class='op'>(</span><span class='va'>q</span>, rate <span class='op'>=</span> <span class='fl'>1</span>, a <span class='op'>=</span> <span class='fl'>0</span>, b <span class='op'>=</span> <span class='cn'>Inf</span>, lower.tail <span class='op'>=</span> <span class='cn'>TRUE</span>, log.p <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+
+<span class='fu'>qtruncexp</span><span class='op'>(</span><span class='va'>p</span>, rate <span class='op'>=</span> <span class='fl'>1</span>, a <span class='op'>=</span> <span class='fl'>0</span>, b <span class='op'>=</span> <span class='cn'>Inf</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -200,6 +208,31 @@
     <tr>
       <th>alpha</th>
       <td><p>the Dirichlet parameter vector or matrix.</p></td>
+    </tr>
+    <tr>
+      <th>rate</th>
+      <td><p>the Exponential rate parameter. If zero, a normal distribution is used instead. If negative,
+the problem is flipped and calculated using <code>-rate</code>.</p></td>
+    </tr>
+    <tr>
+      <th>a, b</th>
+      <td><p>Bounds for the truncated exponential distribution.</p></td>
+    </tr>
+    <tr>
+      <th>q</th>
+      <td><p>A quantile</p></td>
+    </tr>
+    <tr>
+      <th>lower.tail</th>
+      <td><p>Should lower tail probabilities be returned (default) or upper?</p></td>
+    </tr>
+    <tr>
+      <th>log.p</th>
+      <td><p>Should the log be returned?</p></td>
+    </tr>
+    <tr>
+      <th>p</th>
+      <td><p>A probability</p></td>
     </tr>
     </table>
 
