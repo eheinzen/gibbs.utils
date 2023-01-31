@@ -135,7 +135,7 @@ mvbeta_binom <- function(p, mult, k, n, mean, Q, acceptance) {
   } else {
     ep <- expit(p)
     ratio <- binom_LL_mv(lproposal, k, n) - binom_LL_mv(p, k, n) + dmvnorm_diff(lproposal, p, mu = mean, Q = Q, log = TRUE, byrow = FALSE)
-    ratio <- ratio - rowSums(log(proposal*(1 - proposal)) + log(ep*(1 - ep)))
+    ratio <- ratio - rowSums(log(proposal*(1 - proposal)) - log(ep*(1 - ep)))
     if(acceptance == 0) {
       ratio <- ratio - rowSums((alpha2 - 1)*log(proposal) + (beta2 - 1)*log(1 - proposal))
       ratio <- ratio + rowSums((alpha2 - 1)*log(ep)       + (beta2 - 1)*log(1 - ep))

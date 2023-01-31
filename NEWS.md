@@ -6,6 +6,8 @@
 
 - Added "mv truncated exponential" to `sample_pois_reg()`, `sample_binom_reg()`, and `sample_multinom_reg()`, to approximate
   the log-density with a first-order Taylor approximation (which is an exponential distribution).
+  
+- Fixed a bug in the "mv beta" method of `sample_binom_reg()`, where a `+` sign was accidentally present in place of a `-`.
 
 # v4.7.0
 
