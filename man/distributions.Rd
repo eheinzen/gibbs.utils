@@ -18,9 +18,21 @@
 \alias{qtruncexp}
 \title{Statistical Distributions}
 \usage{
-dmvnorm(x, mu, Q, detQ = determinant(Q, logarithm = TRUE)$modulus, log = TRUE)
+dmvnorm(
+  x,
+  mu = NULL,
+  Q,
+  detQ = determinant(Q, logarithm = TRUE)$modulus,
+  log = TRUE
+)
 
-dmvlnorm(x, mu, Q, detQ = determinant(Q, logarithm = TRUE)$modulus, log = TRUE)
+dmvlnorm(
+  x,
+  mu = NULL,
+  Q,
+  detQ = determinant(Q, logarithm = TRUE)$modulus,
+  log = TRUE
+)
 
 dmvnorm_diff(x, y, mu, Q, log = TRUE, byrow = FALSE)
 
@@ -32,7 +44,7 @@ dlnorm_diff(x, y, mu, tau, log = TRUE, byrow = FALSE)
 
 dmatnorm(
   x,
-  mu,
+  mu = NULL,
   V,
   U = NULL,
   detV = determinant(V, logarithm = TRUE)$modulus,
@@ -57,7 +69,8 @@ qtruncexp(p, rate = 1, a = 0, b = Inf)
 \arguments{
 \item{x, y}{vector of quantiles}
 
-\item{mu}{the mean}
+\item{mu}{the mean. The default (\code{NULL})- is the same as an appropriately-dimensioned
+vector/matrix of all zeros, but a little faster.}
 
 \item{detQ, detU, detV}{Pre-computed log-determinants}
 

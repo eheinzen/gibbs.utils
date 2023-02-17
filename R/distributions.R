@@ -2,7 +2,8 @@
 #' Statistical Distributions
 #'
 #' @param x,y vector of quantiles
-#' @param mu the mean
+#' @param mu the mean. The default (\code{NULL})- is the same as an appropriately-dimensioned
+#'  vector/matrix of all zeros, but a little faster.
 #' @param sd the standard deviation
 #' @param tau,Q the precision (matrix)
 #' @param byrow Should the densities be summed (FALSE, the default) or returned separately by row (TRUE).
@@ -26,16 +27,19 @@ NULL
 
 #' @rdname distributions
 #' @export
-dmvnorm <- function(x, mu, Q, detQ = determinant(Q, logarithm = TRUE)$modulus, log = TRUE) {
+dmvnorm <- function(x, mu = NULL, Q, detQ = determinant(Q, logarithm = TRUE)$modulus, log = TRUE) {
   if(!is.matrix(x)) {
     x <- matrix(x, nrow = 1)
-    mu <- matrix(mu, nrow = 1)
+    if(!is.null(mu)) mu <- matrix(mu, nrow = 1)
   }
-  stopifnot(identical(dim(x), dim(mu)))
   p <- ncol(x)
   n <- nrow(x)
 
-  xmu <- x - mu
+  xmu <- if(!is.null(mu)) {
+    stopifnot(identical(dim(x), dim(mu)))
+    x - mu
+  } else x
+
   num <- n/2 * as.numeric(detQ)
   # tr(xmu Q xmu^T) = tr(xmu^T xmu Q) = vec(xmu)^T vec(xmu Q)
   num <- num - 0.5*sum(xmu * (xmu %*% Q))
@@ -46,17 +50,20 @@ dmvnorm <- function(x, mu, Q, detQ = determinant(Q, logarithm = TRUE)$modulus, l
 
 #' @rdname distributions
 #' @export
-dmvlnorm <- function(x, mu, Q, detQ = determinant(Q, logarithm = TRUE)$modulus, log = TRUE) {
+dmvlnorm <- function(x, mu = NULL, Q, detQ = determinant(Q, logarithm = TRUE)$modulus, log = TRUE) {
   if(!is.matrix(x)) {
     x <- matrix(x, nrow = 1)
-    mu <- matrix(mu, nrow = 1)
+    if(!is.null(mu)) mu <- matrix(mu, nrow = 1)
   }
-  stopifnot(identical(dim(x), dim(mu)))
   p <- ncol(x)
   n <- nrow(x)
 
   lx <- log(x)
-  xmu <- lx - mu
+  xmu <- if(!is.null(mu)) {
+    stopifnot(identical(dim(x), dim(mu)))
+    lx - mu
+  } else lx
+
   num <- n/2 * as.numeric(detQ)
   # tr(xmu Q xmu^T) = tr(xmu^T xmu Q) = vec(xmu)^T vec(xmu Q)
   num <- num + sum(-0.5*xmu * (xmu %*% Q) - lx)
@@ -118,8 +125,7 @@ dlnorm_diff <- function(x, y, mu, tau, log = TRUE, byrow = FALSE) {
 
 #' @rdname distributions
 #' @export
-dmatnorm <- function(x, mu, V, U = NULL, detV = determinant(V, logarithm = TRUE)$modulus, detU = determinant(U, logarithm = TRUE)$modulus, log = TRUE) {
-  stopifnot(identical(dim(x), dim(mu)))
+dmatnorm <- function(x, mu = NULL, V, U = NULL, detV = determinant(V, logarithm = TRUE)$modulus, detU = determinant(U, logarithm = TRUE)$modulus, log = TRUE) {
   p <- ncol(x)
   n <- nrow(x)
   stopifnot(p == dim(V))
@@ -130,8 +136,10 @@ dmatnorm <- function(x, mu, V, U = NULL, detV = determinant(V, logarithm = TRUE)
     Udet <- as.numeric(detU)
   } else Udet <- 0
 
-
-  xmu <- x - mu
+  xmu <- if(!is.null(mu)) {
+    stopifnot(identical(dim(x), dim(mu)))
+    x - mu
+  } else x
   xV <- xmu %*% V
   UxV <- if(is.null(U)) xV else U %*% xV
   # tr(V x^T U x) = vec(x) vec(U x V)
