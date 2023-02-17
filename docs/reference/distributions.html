@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">4.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">4.8.1</span>
       </span>
     </div>
 
@@ -130,9 +130,21 @@
     <p>Statistical Distributions</p>
     </div>
 
-    <pre class="usage"><span class='fu'>dmvnorm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, detQ <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/det.html'>determinant</a></span><span class='op'>(</span><span class='va'>Q</span>, logarithm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>$</span><span class='va'>modulus</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>dmvnorm</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  mu <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>Q</span>,
+  detQ <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/det.html'>determinant</a></span><span class='op'>(</span><span class='va'>Q</span>, logarithm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>$</span><span class='va'>modulus</span>,
+  log <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span>
 
-<span class='fu'>dmvlnorm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, detQ <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/det.html'>determinant</a></span><span class='op'>(</span><span class='va'>Q</span>, logarithm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>$</span><span class='va'>modulus</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>dmvlnorm</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  mu <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>Q</span>,
+  detQ <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/det.html'>determinant</a></span><span class='op'>(</span><span class='va'>Q</span>, logarithm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>$</span><span class='va'>modulus</span>,
+  log <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span>
 
 <span class='fu'>dmvnorm_diff</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>mu</span>, <span class='va'>Q</span>, log <span class='op'>=</span> <span class='cn'>TRUE</span>, byrow <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
@@ -144,7 +156,7 @@
 
 <span class='fu'>dmatnorm</span><span class='op'>(</span>
   <span class='va'>x</span>,
-  <span class='va'>mu</span>,
+  mu <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>V</span>,
   U <span class='op'>=</span> <span class='cn'>NULL</span>,
   detV <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/det.html'>determinant</a></span><span class='op'>(</span><span class='va'>V</span>, logarithm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>$</span><span class='va'>modulus</span>,
@@ -175,7 +187,8 @@
     </tr>
     <tr>
       <th>mu</th>
-      <td><p>the mean</p></td>
+      <td><p>the mean. The default (<code>NULL</code>)- is the same as an appropriately-dimensioned
+vector/matrix of all zeros, but a little faster.</p></td>
     </tr>
     <tr>
       <th>detQ, detU, detV</th>

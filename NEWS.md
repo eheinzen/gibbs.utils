@@ -1,3 +1,9 @@
+# gibbs.utils v4.8.1
+
+- Added the special case `mu=NULL` to `dmatnorm()`, `dmvnorm()`, and `dmvlnorm()`.
+
+- Fixed an issue in the multinomial approximations when the number of rows is 1.
+
 # gibbs.utils v4.8.0
 
 - Removed some spurious code.
