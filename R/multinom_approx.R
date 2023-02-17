@@ -27,8 +27,9 @@ mviqt_multinom_approx <- function(around, z, which_i, is_ref, k, n, mean, Q) {
 mviqt_multinom <- function(p, mult, z, which_i, is_ref, k, n, mean, Q, acceptance) {
 
   multinom_LL_mv <- function(x) {
+    FUN <- if(nrow(k) == 1) sum else rowSums
     kz <- k*z
-    rowSums(kz*x) - rowSums(vapply(seq_len(max(which_i)), function(i) {
+    rowSums(kz*x) - FUN(vapply(seq_len(max(which_i)), function(i) {
       nn <- rowSums(kz[, which_i == i, drop = FALSE])
       stopifnot(n[, which_i == i & is_ref] == nn)
       e <- log(rowSums(exp(x[, which_i == i, drop = FALSE]) * z[, which_i == i, drop = FALSE]))
@@ -82,8 +83,9 @@ mvexp_multinom_approx <- function(around, z, which_i, is_ref, k, n, mean, Q) {
 mvexp_multinom <- function(p, mult, z, which_i, is_ref, k, n, mean, Q, acceptance) {
 
   multinom_LL_mv <- function(x) {
+    FUN <- if(nrow(k) == 1) sum else rowSums
     kz <- k*z
-    rowSums(kz*x) - rowSums(vapply(seq_len(max(which_i)), function(i) {
+    rowSums(kz*x) - FUN(vapply(seq_len(max(which_i)), function(i) {
       nn <- rowSums(kz[, which_i == i, drop = FALSE])
       stopifnot(n[, which_i == i & is_ref] == nn)
       e <- log(rowSums(exp(x[, which_i == i, drop = FALSE]) * z[, which_i == i, drop = FALSE]))
