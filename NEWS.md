@@ -1,3 +1,7 @@
+# gibbs.utils v4.8.1.9000
+
+- Fixed a misspecified `glue`.
+
 # gibbs.utils v4.8.1
 
 - Added the special case `mu=NULL` to `dmatnorm()`, `dmvnorm()`, and `dmvlnorm()`.

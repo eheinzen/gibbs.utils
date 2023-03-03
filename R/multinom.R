@@ -59,7 +59,7 @@ sample_multinom_reg <- function(p, z, k, mean, precision,
     ref <- match.arg(ref)
     ref <- if(ref == "first") 1 else ncol(zmax)
   } else {
-    if(!(ref %in% seq_len(ncol(zmax)))) stop(glue::glue("'ref' must be between 1 and {ncol(zmax))}"))
+    if(!(ref %in% seq_len(ncol(zmax)))) stop(glue::glue("'ref' must be between 1 and {ncol(zmax)}"))
   }
   is_ref <- as.vector(col(zmax) == ref)
   which_i <- as.vector(row(zmax))
