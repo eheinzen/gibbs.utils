@@ -1,6 +1,10 @@
-# gibbs.utils v4.8.1.9000
+# gibbs.utils v4.9.0
 
 - Fixed a misspecified `glue`.
+
+- Changed all the relevant C++ code to include a `const` declaration, so I don't regret it later.
+
+- Removed `MASS` as a dependency.
 
 # gibbs.utils v4.8.1
 
