@@ -10,7 +10,6 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     Rcpp (>= 1.0.6),
-    MASS,
     truncnorm,
     spam,
     stats,
