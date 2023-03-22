@@ -3,7 +3,10 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-double one_multinom_slice(double p_ij, double sum_exp_p, bool z_ij, double k, double n, double mean, double precision, double w, int nexpand, int ncontract) {
+double one_multinom_slice(const double p_ij, const double sum_exp_p, const bool z_ij,
+                          const double k, const double n,
+                          const double mean, const double precision,
+                          const double w, const int nexpand, const int ncontract) {
   if(n == 0.0 || !z_ij) {
     return R::rnorm(mean, 1/sqrt(precision));
   }
@@ -33,9 +36,13 @@ double one_multinom_slice(double p_ij, double sum_exp_p, bool z_ij, double k, do
 }
 
 // [[Rcpp::export]]
-NumericMatrix slice_sample_multinom_mv(NumericMatrix p_ij, LogicalMatrix z_ij, IntegerVector which_i, LogicalVector is_ref,
-                                       NumericMatrix k_ij, NumericMatrix n_ij, NumericMatrix mean, NumericMatrix Q, bool diag,
-                                       LogicalVector use_norm, NumericMatrix norm, double w, int nexpand, int ncontract) {
+NumericMatrix slice_sample_multinom_mv(const NumericMatrix p_ij, const LogicalMatrix z_ij,
+                                       const IntegerVector which_i, const LogicalVector is_ref,
+                                       const NumericMatrix k_ij, const NumericMatrix n_ij,
+                                       const NumericMatrix mean, const NumericMatrix Q,
+                                       const bool diag,
+                                       const LogicalVector use_norm, const NumericMatrix norm,
+                                       const double w, const int nexpand, const int ncontract) {
   NumericMatrix out = clone(p_ij);
   IntegerVector refidx(is_ref.size());
   int ridx = 0;

@@ -3,7 +3,9 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-double one_binom_slice(double p, double k, double n, double mean, double precision, double w, int nexpand, int ncontract) {
+double one_binom_slice(const double p, const double k, const double n,
+                       const double mean, const double precision,
+                       const double w, const int nexpand, const int ncontract) {
   double y0 = binom_LL(p, k, n, mean, precision) - R::rexp(1.0);
   double left = p - w;
   double right = p + w;
@@ -33,8 +35,10 @@ double one_binom_slice(double p, double k, double n, double mean, double precisi
 
 
 // [[Rcpp::export]]
-NumericVector slice_sample_binom(NumericVector p, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision,
-                                 double w, int nexpand, int ncontract) {
+NumericVector slice_sample_binom(const NumericVector p,
+                                 const NumericVector k, const NumericVector n,
+                                 const NumericVector mean, const NumericVector precision,
+                                 const double w, const int nexpand, const int ncontract) {
   NumericVector out(p.size());
   for(int i=0; i < p.size(); i++) {
     if(n[i] == 0.0) {
@@ -48,8 +52,11 @@ NumericVector slice_sample_binom(NumericVector p, NumericVector k, NumericVector
 
 
 // [[Rcpp::export]]
-NumericMatrix slice_sample_binom_mv(NumericMatrix p, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q,
-                                    LogicalVector use_norm, NumericMatrix norm, double w, int nexpand, int ncontract) {
+NumericMatrix slice_sample_binom_mv(const NumericMatrix p,
+                                    const NumericMatrix k, const NumericMatrix n,
+                                    const NumericMatrix mean, const NumericMatrix Q,
+                                    const LogicalVector use_norm, const NumericMatrix norm,
+                                    const double w, const int nexpand, const int ncontract) {
   NumericMatrix out = clone(p);
   int nrm = 0;
   for(int r=0; r < p.nrow(); r++) {

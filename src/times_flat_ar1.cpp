@@ -2,7 +2,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-NumericVector times_flat_ar1_cpp(NumericMatrix xt, NumericMatrix flat_ar1) {
+NumericVector times_flat_ar1_cpp(const NumericMatrix xt, const NumericMatrix flat_ar1) {
   NumericMatrix out(xt.nrow(), xt.ncol());
   for(int i=0; i < xt.ncol(); i++) {
     out(_, i) = xt(_, i)*flat_ar1(1, i);

@@ -11,305 +11,305 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // impute_conj_mvnorm_mu_cpp
-NumericMatrix impute_conj_mvnorm_mu_cpp(NumericMatrix y, NumericMatrix mu, LogicalMatrix impute, NumericMatrix Q, NumericVector mu0, NumericVector tau0);
+NumericMatrix impute_conj_mvnorm_mu_cpp(const NumericMatrix y, const NumericMatrix mu, const LogicalMatrix impute, const NumericMatrix Q, const NumericVector mu0, const NumericVector tau0);
 RcppExport SEXP _gibbs_utils_impute_conj_mvnorm_mu_cpp(SEXP ySEXP, SEXP muSEXP, SEXP imputeSEXP, SEXP QSEXP, SEXP mu0SEXP, SEXP tau0SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type y(ySEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type mu(muSEXP);
-    Rcpp::traits::input_parameter< LogicalMatrix >::type impute(imputeSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type mu0(mu0SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type tau0(tau0SEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< const LogicalMatrix >::type impute(imputeSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type Q(QSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type mu0(mu0SEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type tau0(tau0SEXP);
     rcpp_result_gen = Rcpp::wrap(impute_conj_mvnorm_mu_cpp(y, mu, impute, Q, mu0, tau0));
     return rcpp_result_gen;
 END_RCPP
 }
 // mh_binom
-NumericVector mh_binom(bool qt, NumericVector p, NumericVector proposal, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision, int acceptance);
+NumericVector mh_binom(const bool qt, const NumericVector p, const NumericVector proposal, const NumericVector k, const NumericVector n, const NumericVector mean, const NumericVector precision, const int acceptance);
 RcppExport SEXP _gibbs_utils_mh_binom(SEXP qtSEXP, SEXP pSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP precisionSEXP, SEXP acceptanceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< bool >::type qt(qtSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type p(pSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type proposal(proposalSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type n(nSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type precision(precisionSEXP);
-    Rcpp::traits::input_parameter< int >::type acceptance(acceptanceSEXP);
+    Rcpp::traits::input_parameter< const bool >::type qt(qtSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type proposal(proposalSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type n(nSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type precision(precisionSEXP);
+    Rcpp::traits::input_parameter< const int >::type acceptance(acceptanceSEXP);
     rcpp_result_gen = Rcpp::wrap(mh_binom(qt, p, proposal, k, n, mean, precision, acceptance));
     return rcpp_result_gen;
 END_RCPP
 }
 // mh_binom_mv
-NumericVector mh_binom_mv(bool qt, NumericMatrix p, NumericMatrix proposal, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm, int acceptance);
+NumericVector mh_binom_mv(const bool qt, const NumericMatrix p, const NumericMatrix proposal, const NumericMatrix k, const NumericMatrix n, const NumericMatrix mean, const NumericMatrix Q, const LogicalVector use_norm, const NumericMatrix norm, const int acceptance);
 RcppExport SEXP _gibbs_utils_mh_binom_mv(SEXP qtSEXP, SEXP pSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP use_normSEXP, SEXP normSEXP, SEXP acceptanceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< bool >::type qt(qtSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type p(pSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type proposal(proposalSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type k(kSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type n(nSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type use_norm(use_normSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type norm(normSEXP);
-    Rcpp::traits::input_parameter< int >::type acceptance(acceptanceSEXP);
+    Rcpp::traits::input_parameter< const bool >::type qt(qtSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type proposal(proposalSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type n(nSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type Q(QSEXP);
+    Rcpp::traits::input_parameter< const LogicalVector >::type use_norm(use_normSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type norm(normSEXP);
+    Rcpp::traits::input_parameter< const int >::type acceptance(acceptanceSEXP);
     rcpp_result_gen = Rcpp::wrap(mh_binom_mv(qt, p, proposal, k, n, mean, Q, use_norm, norm, acceptance));
     return rcpp_result_gen;
 END_RCPP
 }
 // mh_multinom_mv
-NumericVector mh_multinom_mv(bool qt, NumericMatrix p_ij, NumericMatrix proposal, LogicalMatrix z_ij, IntegerVector which_i, LogicalVector is_ref, NumericMatrix k_ij, NumericMatrix n_ij, NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm, bool diag, int acceptance);
+NumericVector mh_multinom_mv(const bool qt, const NumericMatrix p_ij, const NumericMatrix proposal, const LogicalMatrix z_ij, const IntegerVector which_i, const LogicalVector is_ref, const NumericMatrix k_ij, const NumericMatrix n_ij, const NumericMatrix mean, const NumericMatrix Q, const LogicalVector use_norm, const NumericMatrix norm, const bool diag, const int acceptance);
 RcppExport SEXP _gibbs_utils_mh_multinom_mv(SEXP qtSEXP, SEXP p_ijSEXP, SEXP proposalSEXP, SEXP z_ijSEXP, SEXP which_iSEXP, SEXP is_refSEXP, SEXP k_ijSEXP, SEXP n_ijSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP use_normSEXP, SEXP normSEXP, SEXP diagSEXP, SEXP acceptanceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< bool >::type qt(qtSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type p_ij(p_ijSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type proposal(proposalSEXP);
-    Rcpp::traits::input_parameter< LogicalMatrix >::type z_ij(z_ijSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type which_i(which_iSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type is_ref(is_refSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type k_ij(k_ijSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type n_ij(n_ijSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type use_norm(use_normSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type norm(normSEXP);
-    Rcpp::traits::input_parameter< bool >::type diag(diagSEXP);
-    Rcpp::traits::input_parameter< int >::type acceptance(acceptanceSEXP);
+    Rcpp::traits::input_parameter< const bool >::type qt(qtSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type p_ij(p_ijSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type proposal(proposalSEXP);
+    Rcpp::traits::input_parameter< const LogicalMatrix >::type z_ij(z_ijSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector >::type which_i(which_iSEXP);
+    Rcpp::traits::input_parameter< const LogicalVector >::type is_ref(is_refSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type k_ij(k_ijSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type n_ij(n_ijSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type Q(QSEXP);
+    Rcpp::traits::input_parameter< const LogicalVector >::type use_norm(use_normSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type norm(normSEXP);
+    Rcpp::traits::input_parameter< const bool >::type diag(diagSEXP);
+    Rcpp::traits::input_parameter< const int >::type acceptance(acceptanceSEXP);
     rcpp_result_gen = Rcpp::wrap(mh_multinom_mv(qt, p_ij, proposal, z_ij, which_i, is_ref, k_ij, n_ij, mean, Q, use_norm, norm, diag, acceptance));
     return rcpp_result_gen;
 END_RCPP
 }
 // mh_pois
-NumericVector mh_pois(int method, NumericVector L, NumericVector proposal, NumericVector k, LogicalVector k_na, NumericVector mean, NumericVector precision, NumericVector trunc_at, LogicalVector lower, int acceptance);
+NumericVector mh_pois(const int method, const NumericVector L, const NumericVector proposal, const NumericVector k, const LogicalVector k_na, const NumericVector mean, const NumericVector precision, const NumericVector trunc_at, const LogicalVector lower, const int acceptance);
 RcppExport SEXP _gibbs_utils_mh_pois(SEXP methodSEXP, SEXP LSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP k_naSEXP, SEXP meanSEXP, SEXP precisionSEXP, SEXP trunc_atSEXP, SEXP lowerSEXP, SEXP acceptanceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type method(methodSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type proposal(proposalSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type k_na(k_naSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type precision(precisionSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type trunc_at(trunc_atSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type lower(lowerSEXP);
-    Rcpp::traits::input_parameter< int >::type acceptance(acceptanceSEXP);
+    Rcpp::traits::input_parameter< const int >::type method(methodSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type L(LSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type proposal(proposalSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const LogicalVector >::type k_na(k_naSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type precision(precisionSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type trunc_at(trunc_atSEXP);
+    Rcpp::traits::input_parameter< const LogicalVector >::type lower(lowerSEXP);
+    Rcpp::traits::input_parameter< const int >::type acceptance(acceptanceSEXP);
     rcpp_result_gen = Rcpp::wrap(mh_pois(method, L, proposal, k, k_na, mean, precision, trunc_at, lower, acceptance));
     return rcpp_result_gen;
 END_RCPP
 }
 // mh_pois_mv
-NumericVector mh_pois_mv(int method, NumericMatrix L, NumericMatrix proposal, NumericMatrix k, LogicalMatrix k_na, NumericMatrix mean, NumericMatrix Q, NumericMatrix trunc_at, LogicalMatrix lower, LogicalVector use_norm, NumericMatrix norm, int acceptance);
+NumericVector mh_pois_mv(const int method, const NumericMatrix L, const NumericMatrix proposal, const NumericMatrix k, const LogicalMatrix k_na, const NumericMatrix mean, const NumericMatrix Q, const NumericMatrix trunc_at, const LogicalMatrix lower, const LogicalVector use_norm, const NumericMatrix norm, const int acceptance);
 RcppExport SEXP _gibbs_utils_mh_pois_mv(SEXP methodSEXP, SEXP LSEXP, SEXP proposalSEXP, SEXP kSEXP, SEXP k_naSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP trunc_atSEXP, SEXP lowerSEXP, SEXP use_normSEXP, SEXP normSEXP, SEXP acceptanceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type method(methodSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type L(LSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type proposal(proposalSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type k(kSEXP);
-    Rcpp::traits::input_parameter< LogicalMatrix >::type k_na(k_naSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type trunc_at(trunc_atSEXP);
-    Rcpp::traits::input_parameter< LogicalMatrix >::type lower(lowerSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type use_norm(use_normSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type norm(normSEXP);
-    Rcpp::traits::input_parameter< int >::type acceptance(acceptanceSEXP);
+    Rcpp::traits::input_parameter< const int >::type method(methodSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type L(LSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type proposal(proposalSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const LogicalMatrix >::type k_na(k_naSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type Q(QSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type trunc_at(trunc_atSEXP);
+    Rcpp::traits::input_parameter< const LogicalMatrix >::type lower(lowerSEXP);
+    Rcpp::traits::input_parameter< const LogicalVector >::type use_norm(use_normSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type norm(normSEXP);
+    Rcpp::traits::input_parameter< const int >::type acceptance(acceptanceSEXP);
     rcpp_result_gen = Rcpp::wrap(mh_pois_mv(method, L, proposal, k, k_na, mean, Q, trunc_at, lower, use_norm, norm, acceptance));
     return rcpp_result_gen;
 END_RCPP
 }
 // one_binom_slice
-double one_binom_slice(double p, double k, double n, double mean, double precision, double w, int nexpand, int ncontract);
+double one_binom_slice(const double p, const double k, const double n, const double mean, const double precision, const double w, const int nexpand, const int ncontract);
 RcppExport SEXP _gibbs_utils_one_binom_slice(SEXP pSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP precisionSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type p(pSEXP);
-    Rcpp::traits::input_parameter< double >::type k(kSEXP);
-    Rcpp::traits::input_parameter< double >::type n(nSEXP);
-    Rcpp::traits::input_parameter< double >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< double >::type precision(precisionSEXP);
-    Rcpp::traits::input_parameter< double >::type w(wSEXP);
-    Rcpp::traits::input_parameter< int >::type nexpand(nexpandSEXP);
-    Rcpp::traits::input_parameter< int >::type ncontract(ncontractSEXP);
+    Rcpp::traits::input_parameter< const double >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const double >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const double >::type n(nSEXP);
+    Rcpp::traits::input_parameter< const double >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< const double >::type precision(precisionSEXP);
+    Rcpp::traits::input_parameter< const double >::type w(wSEXP);
+    Rcpp::traits::input_parameter< const int >::type nexpand(nexpandSEXP);
+    Rcpp::traits::input_parameter< const int >::type ncontract(ncontractSEXP);
     rcpp_result_gen = Rcpp::wrap(one_binom_slice(p, k, n, mean, precision, w, nexpand, ncontract));
     return rcpp_result_gen;
 END_RCPP
 }
 // slice_sample_binom
-NumericVector slice_sample_binom(NumericVector p, NumericVector k, NumericVector n, NumericVector mean, NumericVector precision, double w, int nexpand, int ncontract);
+NumericVector slice_sample_binom(const NumericVector p, const NumericVector k, const NumericVector n, const NumericVector mean, const NumericVector precision, const double w, const int nexpand, const int ncontract);
 RcppExport SEXP _gibbs_utils_slice_sample_binom(SEXP pSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP precisionSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type p(pSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type n(nSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type precision(precisionSEXP);
-    Rcpp::traits::input_parameter< double >::type w(wSEXP);
-    Rcpp::traits::input_parameter< int >::type nexpand(nexpandSEXP);
-    Rcpp::traits::input_parameter< int >::type ncontract(ncontractSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type n(nSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type precision(precisionSEXP);
+    Rcpp::traits::input_parameter< const double >::type w(wSEXP);
+    Rcpp::traits::input_parameter< const int >::type nexpand(nexpandSEXP);
+    Rcpp::traits::input_parameter< const int >::type ncontract(ncontractSEXP);
     rcpp_result_gen = Rcpp::wrap(slice_sample_binom(p, k, n, mean, precision, w, nexpand, ncontract));
     return rcpp_result_gen;
 END_RCPP
 }
 // slice_sample_binom_mv
-NumericMatrix slice_sample_binom_mv(NumericMatrix p, NumericMatrix k, NumericMatrix n, NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm, double w, int nexpand, int ncontract);
+NumericMatrix slice_sample_binom_mv(const NumericMatrix p, const NumericMatrix k, const NumericMatrix n, const NumericMatrix mean, const NumericMatrix Q, const LogicalVector use_norm, const NumericMatrix norm, const double w, const int nexpand, const int ncontract);
 RcppExport SEXP _gibbs_utils_slice_sample_binom_mv(SEXP pSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP use_normSEXP, SEXP normSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type p(pSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type k(kSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type n(nSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type use_norm(use_normSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type norm(normSEXP);
-    Rcpp::traits::input_parameter< double >::type w(wSEXP);
-    Rcpp::traits::input_parameter< int >::type nexpand(nexpandSEXP);
-    Rcpp::traits::input_parameter< int >::type ncontract(ncontractSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type n(nSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type Q(QSEXP);
+    Rcpp::traits::input_parameter< const LogicalVector >::type use_norm(use_normSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type norm(normSEXP);
+    Rcpp::traits::input_parameter< const double >::type w(wSEXP);
+    Rcpp::traits::input_parameter< const int >::type nexpand(nexpandSEXP);
+    Rcpp::traits::input_parameter< const int >::type ncontract(ncontractSEXP);
     rcpp_result_gen = Rcpp::wrap(slice_sample_binom_mv(p, k, n, mean, Q, use_norm, norm, w, nexpand, ncontract));
     return rcpp_result_gen;
 END_RCPP
 }
 // one_multinom_slice
-double one_multinom_slice(double p_ij, double sum_exp_p, bool z_ij, double k, double n, double mean, double precision, double w, int nexpand, int ncontract);
+double one_multinom_slice(const double p_ij, const double sum_exp_p, const bool z_ij, const double k, const double n, const double mean, const double precision, const double w, const int nexpand, const int ncontract);
 RcppExport SEXP _gibbs_utils_one_multinom_slice(SEXP p_ijSEXP, SEXP sum_exp_pSEXP, SEXP z_ijSEXP, SEXP kSEXP, SEXP nSEXP, SEXP meanSEXP, SEXP precisionSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type p_ij(p_ijSEXP);
-    Rcpp::traits::input_parameter< double >::type sum_exp_p(sum_exp_pSEXP);
-    Rcpp::traits::input_parameter< bool >::type z_ij(z_ijSEXP);
-    Rcpp::traits::input_parameter< double >::type k(kSEXP);
-    Rcpp::traits::input_parameter< double >::type n(nSEXP);
-    Rcpp::traits::input_parameter< double >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< double >::type precision(precisionSEXP);
-    Rcpp::traits::input_parameter< double >::type w(wSEXP);
-    Rcpp::traits::input_parameter< int >::type nexpand(nexpandSEXP);
-    Rcpp::traits::input_parameter< int >::type ncontract(ncontractSEXP);
+    Rcpp::traits::input_parameter< const double >::type p_ij(p_ijSEXP);
+    Rcpp::traits::input_parameter< const double >::type sum_exp_p(sum_exp_pSEXP);
+    Rcpp::traits::input_parameter< const bool >::type z_ij(z_ijSEXP);
+    Rcpp::traits::input_parameter< const double >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const double >::type n(nSEXP);
+    Rcpp::traits::input_parameter< const double >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< const double >::type precision(precisionSEXP);
+    Rcpp::traits::input_parameter< const double >::type w(wSEXP);
+    Rcpp::traits::input_parameter< const int >::type nexpand(nexpandSEXP);
+    Rcpp::traits::input_parameter< const int >::type ncontract(ncontractSEXP);
     rcpp_result_gen = Rcpp::wrap(one_multinom_slice(p_ij, sum_exp_p, z_ij, k, n, mean, precision, w, nexpand, ncontract));
     return rcpp_result_gen;
 END_RCPP
 }
 // slice_sample_multinom_mv
-NumericMatrix slice_sample_multinom_mv(NumericMatrix p_ij, LogicalMatrix z_ij, IntegerVector which_i, LogicalVector is_ref, NumericMatrix k_ij, NumericMatrix n_ij, NumericMatrix mean, NumericMatrix Q, bool diag, LogicalVector use_norm, NumericMatrix norm, double w, int nexpand, int ncontract);
+NumericMatrix slice_sample_multinom_mv(const NumericMatrix p_ij, const LogicalMatrix z_ij, const IntegerVector which_i, const LogicalVector is_ref, const NumericMatrix k_ij, const NumericMatrix n_ij, const NumericMatrix mean, const NumericMatrix Q, const bool diag, const LogicalVector use_norm, const NumericMatrix norm, const double w, const int nexpand, const int ncontract);
 RcppExport SEXP _gibbs_utils_slice_sample_multinom_mv(SEXP p_ijSEXP, SEXP z_ijSEXP, SEXP which_iSEXP, SEXP is_refSEXP, SEXP k_ijSEXP, SEXP n_ijSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP diagSEXP, SEXP use_normSEXP, SEXP normSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type p_ij(p_ijSEXP);
-    Rcpp::traits::input_parameter< LogicalMatrix >::type z_ij(z_ijSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type which_i(which_iSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type is_ref(is_refSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type k_ij(k_ijSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type n_ij(n_ijSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
-    Rcpp::traits::input_parameter< bool >::type diag(diagSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type use_norm(use_normSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type norm(normSEXP);
-    Rcpp::traits::input_parameter< double >::type w(wSEXP);
-    Rcpp::traits::input_parameter< int >::type nexpand(nexpandSEXP);
-    Rcpp::traits::input_parameter< int >::type ncontract(ncontractSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type p_ij(p_ijSEXP);
+    Rcpp::traits::input_parameter< const LogicalMatrix >::type z_ij(z_ijSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector >::type which_i(which_iSEXP);
+    Rcpp::traits::input_parameter< const LogicalVector >::type is_ref(is_refSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type k_ij(k_ijSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type n_ij(n_ijSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type Q(QSEXP);
+    Rcpp::traits::input_parameter< const bool >::type diag(diagSEXP);
+    Rcpp::traits::input_parameter< const LogicalVector >::type use_norm(use_normSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type norm(normSEXP);
+    Rcpp::traits::input_parameter< const double >::type w(wSEXP);
+    Rcpp::traits::input_parameter< const int >::type nexpand(nexpandSEXP);
+    Rcpp::traits::input_parameter< const int >::type ncontract(ncontractSEXP);
     rcpp_result_gen = Rcpp::wrap(slice_sample_multinom_mv(p_ij, z_ij, which_i, is_ref, k_ij, n_ij, mean, Q, diag, use_norm, norm, w, nexpand, ncontract));
     return rcpp_result_gen;
 END_RCPP
 }
 // one_pois_slice
-double one_pois_slice(double L, double k, double mean, double precision, double trunc_at, bool lower, double w, int nexpand, int ncontract);
+double one_pois_slice(const double L, const double k, const double mean, const double precision, const double trunc_at, const bool lower, const double w, const int nexpand, const int ncontract);
 RcppExport SEXP _gibbs_utils_one_pois_slice(SEXP LSEXP, SEXP kSEXP, SEXP meanSEXP, SEXP precisionSEXP, SEXP trunc_atSEXP, SEXP lowerSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type L(LSEXP);
-    Rcpp::traits::input_parameter< double >::type k(kSEXP);
-    Rcpp::traits::input_parameter< double >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< double >::type precision(precisionSEXP);
-    Rcpp::traits::input_parameter< double >::type trunc_at(trunc_atSEXP);
-    Rcpp::traits::input_parameter< bool >::type lower(lowerSEXP);
-    Rcpp::traits::input_parameter< double >::type w(wSEXP);
-    Rcpp::traits::input_parameter< int >::type nexpand(nexpandSEXP);
-    Rcpp::traits::input_parameter< int >::type ncontract(ncontractSEXP);
+    Rcpp::traits::input_parameter< const double >::type L(LSEXP);
+    Rcpp::traits::input_parameter< const double >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const double >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< const double >::type precision(precisionSEXP);
+    Rcpp::traits::input_parameter< const double >::type trunc_at(trunc_atSEXP);
+    Rcpp::traits::input_parameter< const bool >::type lower(lowerSEXP);
+    Rcpp::traits::input_parameter< const double >::type w(wSEXP);
+    Rcpp::traits::input_parameter< const int >::type nexpand(nexpandSEXP);
+    Rcpp::traits::input_parameter< const int >::type ncontract(ncontractSEXP);
     rcpp_result_gen = Rcpp::wrap(one_pois_slice(L, k, mean, precision, trunc_at, lower, w, nexpand, ncontract));
     return rcpp_result_gen;
 END_RCPP
 }
 // slice_sample_pois
-NumericVector slice_sample_pois(NumericVector L, NumericVector k, LogicalVector k_na, NumericVector mean, NumericVector precision, NumericVector trunc_at, LogicalVector lower, double w, int nexpand, int ncontract);
+NumericVector slice_sample_pois(const NumericVector L, const NumericVector k, const LogicalVector k_na, const NumericVector mean, const NumericVector precision, const NumericVector trunc_at, const LogicalVector lower, const double w, const int nexpand, const int ncontract);
 RcppExport SEXP _gibbs_utils_slice_sample_pois(SEXP LSEXP, SEXP kSEXP, SEXP k_naSEXP, SEXP meanSEXP, SEXP precisionSEXP, SEXP trunc_atSEXP, SEXP lowerSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type k_na(k_naSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type precision(precisionSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type trunc_at(trunc_atSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type lower(lowerSEXP);
-    Rcpp::traits::input_parameter< double >::type w(wSEXP);
-    Rcpp::traits::input_parameter< int >::type nexpand(nexpandSEXP);
-    Rcpp::traits::input_parameter< int >::type ncontract(ncontractSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type L(LSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const LogicalVector >::type k_na(k_naSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type precision(precisionSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type trunc_at(trunc_atSEXP);
+    Rcpp::traits::input_parameter< const LogicalVector >::type lower(lowerSEXP);
+    Rcpp::traits::input_parameter< const double >::type w(wSEXP);
+    Rcpp::traits::input_parameter< const int >::type nexpand(nexpandSEXP);
+    Rcpp::traits::input_parameter< const int >::type ncontract(ncontractSEXP);
     rcpp_result_gen = Rcpp::wrap(slice_sample_pois(L, k, k_na, mean, precision, trunc_at, lower, w, nexpand, ncontract));
     return rcpp_result_gen;
 END_RCPP
 }
 // slice_sample_pois_mv
-NumericMatrix slice_sample_pois_mv(NumericMatrix L, NumericMatrix k, LogicalMatrix k_na, NumericMatrix mean, NumericMatrix Q, NumericMatrix trunc_at, LogicalMatrix lower, LogicalVector use_norm, NumericMatrix norm, double w, int nexpand, int ncontract);
+NumericMatrix slice_sample_pois_mv(const NumericMatrix L, const NumericMatrix k, const LogicalMatrix k_na, const NumericMatrix mean, const NumericMatrix Q, const NumericMatrix trunc_at, const LogicalMatrix lower, const LogicalVector use_norm, const NumericMatrix norm, const double w, const int nexpand, const int ncontract);
 RcppExport SEXP _gibbs_utils_slice_sample_pois_mv(SEXP LSEXP, SEXP kSEXP, SEXP k_naSEXP, SEXP meanSEXP, SEXP QSEXP, SEXP trunc_atSEXP, SEXP lowerSEXP, SEXP use_normSEXP, SEXP normSEXP, SEXP wSEXP, SEXP nexpandSEXP, SEXP ncontractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type L(LSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type k(kSEXP);
-    Rcpp::traits::input_parameter< LogicalMatrix >::type k_na(k_naSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type Q(QSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type trunc_at(trunc_atSEXP);
-    Rcpp::traits::input_parameter< LogicalMatrix >::type lower(lowerSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type use_norm(use_normSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type norm(normSEXP);
-    Rcpp::traits::input_parameter< double >::type w(wSEXP);
-    Rcpp::traits::input_parameter< int >::type nexpand(nexpandSEXP);
-    Rcpp::traits::input_parameter< int >::type ncontract(ncontractSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type L(LSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const LogicalMatrix >::type k_na(k_naSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type Q(QSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type trunc_at(trunc_atSEXP);
+    Rcpp::traits::input_parameter< const LogicalMatrix >::type lower(lowerSEXP);
+    Rcpp::traits::input_parameter< const LogicalVector >::type use_norm(use_normSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type norm(normSEXP);
+    Rcpp::traits::input_parameter< const double >::type w(wSEXP);
+    Rcpp::traits::input_parameter< const int >::type nexpand(nexpandSEXP);
+    Rcpp::traits::input_parameter< const int >::type ncontract(ncontractSEXP);
     rcpp_result_gen = Rcpp::wrap(slice_sample_pois_mv(L, k, k_na, mean, Q, trunc_at, lower, use_norm, norm, w, nexpand, ncontract));
     return rcpp_result_gen;
 END_RCPP
 }
 // times_flat_ar1_cpp
-NumericVector times_flat_ar1_cpp(NumericMatrix xt, NumericMatrix flat_ar1);
+NumericVector times_flat_ar1_cpp(const NumericMatrix xt, const NumericMatrix flat_ar1);
 RcppExport SEXP _gibbs_utils_times_flat_ar1_cpp(SEXP xtSEXP, SEXP flat_ar1SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type xt(xtSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type flat_ar1(flat_ar1SEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type xt(xtSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type flat_ar1(flat_ar1SEXP);
     rcpp_result_gen = Rcpp::wrap(times_flat_ar1_cpp(xt, flat_ar1));
     return rcpp_result_gen;
 END_RCPP
 }
 // accept_reject
-bool accept_reject(double ratio);
+bool accept_reject(const double ratio);
 RcppExport SEXP _gibbs_utils_accept_reject(SEXP ratioSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type ratio(ratioSEXP);
+    Rcpp::traits::input_parameter< const double >::type ratio(ratioSEXP);
     rcpp_result_gen = Rcpp::wrap(accept_reject(ratio));
     return rcpp_result_gen;
 END_RCPP

@@ -3,8 +3,9 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-NumericMatrix impute_conj_mvnorm_mu_cpp(NumericMatrix y, NumericMatrix mu, LogicalMatrix impute, NumericMatrix Q,
-                            NumericVector mu0, NumericVector tau0) {
+NumericMatrix impute_conj_mvnorm_mu_cpp(const NumericMatrix y, const NumericMatrix mu,
+                                        const LogicalMatrix impute, const NumericMatrix Q,
+                                        const NumericVector mu0, const NumericVector tau0) {
   NumericMatrix out = clone(mu);
   int s = 0;
   for(int i = 0; i < out.ncol(); i++) {

@@ -2,14 +2,21 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-double one_m_multinom_ratio(double p, double proposal, double sum_exp_p, bool z_ij, double k, double n, double mean, double precision, int acceptance) {
+double one_m_multinom_ratio(const double p, const double proposal,
+                            const double sum_exp_p, const bool z_ij,
+                            const double k, const double n,
+                            const double mean, const double precision,
+                            const int acceptance) {
   if(acceptance == 2) return 0.0;
   return multinom_LL(proposal, sum_exp_p, z_ij, k, n, mean, precision) -
     multinom_LL(p, sum_exp_p, z_ij, k, n, mean, precision);
 }
 
 
-void qt_multinom_approx(double around, double sum_exp_p, /*bool z_ij,*/ double k, double n, double mean, double tau, double& outmean, double& outsd) {
+void qt_multinom_approx(const double around, const double sum_exp_p,
+                        const double k, const double n,
+                        const double mean, const double tau,
+                        double& outmean, double& outsd) {
   // don't calculate these more than once
   double ep = exp(around);
   double ep1 = sum_exp_p + ep;
@@ -24,7 +31,11 @@ void qt_multinom_approx(double around, double sum_exp_p, /*bool z_ij,*/ double k
   outmean = newmean;
 }
 
-void one_qt_multinom_proposal_ratio(double p, double sum_exp_p, bool z_ij, double k, double n, double mean, double precision, double& outproposal, double& outratio, int acceptance) {
+void one_qt_multinom_proposal_ratio(const double p, const double sum_exp_p, const bool z_ij,
+                                    const double k, const double n,
+                                    const double mean, const double precision,
+                                    double& outproposal, double& outratio,
+                                    const int acceptance) {
 
   double prop_mean, prop_sd;
   qt_multinom_approx(p, sum_exp_p, /*z_ij,*/ k, n, mean, precision, prop_mean, prop_sd);
@@ -43,11 +54,12 @@ void one_qt_multinom_proposal_ratio(double p, double sum_exp_p, bool z_ij, doubl
 
 
 // [[Rcpp::export]]
-NumericVector mh_multinom_mv(bool qt, NumericMatrix p_ij, NumericMatrix proposal,
-                          LogicalMatrix z_ij, IntegerVector which_i, LogicalVector is_ref,
-                          NumericMatrix k_ij, NumericMatrix n_ij,
-                          NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm,
-                          bool diag, int acceptance) {
+NumericVector mh_multinom_mv(const bool qt, const NumericMatrix p_ij,const  NumericMatrix proposal,
+                             const LogicalMatrix z_ij, const IntegerVector which_i, const LogicalVector is_ref,
+                             const NumericMatrix k_ij, const NumericMatrix n_ij,
+                             const NumericMatrix mean, const NumericMatrix Q,
+                             const LogicalVector use_norm, const NumericMatrix norm,
+                             const bool diag, const int acceptance) {
   NumericMatrix out = clone(p_ij);
   LogicalMatrix accept(p_ij.nrow(), p_ij.ncol());
   IntegerVector refidx(is_ref.size());

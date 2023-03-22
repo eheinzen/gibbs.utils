@@ -2,13 +2,18 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-double one_m_binom_ratio(double p, double proposal, double k, double n, double mean, double precision, int acceptance) {
+double one_m_binom_ratio(const double p, const double proposal,
+                         const double k, const double n,
+                         const double mean, const double precision,
+                         const int acceptance) {
   if(acceptance == 2) return 0.0;
   return binom_LL(proposal, k, n, mean, precision) - binom_LL(p, k, n, mean, precision);
 }
 
 
-void qt_binom_approx(double around, double k, double n, double mean, double tau, double& outmean, double& outsd) {
+void qt_binom_approx(const double around, const double k, const double n,
+                     const double mean, const double tau,
+                     double& outmean, double& outsd) {
   // don't calculate these more than once
   double ep = exp(around);
   double ep1 = 1.0 + ep;
@@ -23,7 +28,10 @@ void qt_binom_approx(double around, double k, double n, double mean, double tau,
   outmean = newmean;
 }
 
-void one_qt_binom_proposal_ratio(double p, double k, double n, double mean, double precision, double& outproposal, double& outratio, int acceptance) {
+void one_qt_binom_proposal_ratio(const double p, const double k, const double n,
+                                 const double mean, const double precision,
+                                 double& outproposal, double& outratio,
+                                 const int acceptance) {
 
   double prop_mean, prop_sd;
   qt_binom_approx(p, k, n, mean, precision, prop_mean, prop_sd);
@@ -42,8 +50,10 @@ void one_qt_binom_proposal_ratio(double p, double k, double n, double mean, doub
 
 
 // [[Rcpp::export]]
-NumericVector mh_binom(bool qt, NumericVector p, NumericVector proposal, NumericVector k, NumericVector n,
-                       NumericVector mean, NumericVector precision, int acceptance) {
+NumericVector mh_binom(const bool qt, const NumericVector p, const NumericVector proposal,
+                       const NumericVector k, const NumericVector n,
+                       const NumericVector mean, const NumericVector precision,
+                       const int acceptance) {
   NumericVector out = clone(p);
   LogicalVector accept(p.size());
 
@@ -73,8 +83,11 @@ NumericVector mh_binom(bool qt, NumericVector p, NumericVector proposal, Numeric
 
 
 // [[Rcpp::export]]
-NumericVector mh_binom_mv(bool qt, NumericMatrix p, NumericMatrix proposal, NumericMatrix k, NumericMatrix n,
-                          NumericMatrix mean, NumericMatrix Q, LogicalVector use_norm, NumericMatrix norm, int acceptance) {
+NumericVector mh_binom_mv(const bool qt, const NumericMatrix p, const NumericMatrix proposal,
+                          const NumericMatrix k, const NumericMatrix n,
+                          const NumericMatrix mean, const NumericMatrix Q,
+                          const LogicalVector use_norm, const NumericMatrix norm,
+                          const int acceptance) {
   NumericMatrix out = clone(p);
   LogicalMatrix accept(p.nrow(), p.ncol());
 

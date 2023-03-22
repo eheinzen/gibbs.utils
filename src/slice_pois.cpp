@@ -3,7 +3,10 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-double one_pois_slice(double L, double k, double mean, double precision, double trunc_at, bool lower, double w, int nexpand, int ncontract) {
+double one_pois_slice(const double L, const double k,
+                      const double mean, const double precision,
+                      const double trunc_at, const bool lower,
+                      const double w, const int nexpand, const int ncontract) {
   double y0 = pois_LL(L, k, mean, precision, trunc_at, lower) - R::rexp(1.0);
   double left = L - w;
   double right = L + w;
@@ -31,8 +34,11 @@ double one_pois_slice(double L, double k, double mean, double precision, double 
 
 
 // [[Rcpp::export]]
-NumericVector slice_sample_pois(NumericVector L, NumericVector k, LogicalVector k_na, NumericVector mean, NumericVector precision,
-                                NumericVector trunc_at, LogicalVector lower, double w, int nexpand, int ncontract) {
+NumericVector slice_sample_pois(const NumericVector L,
+                                const NumericVector k, const LogicalVector k_na,
+                                const NumericVector mean, const NumericVector precision,
+                                const NumericVector trunc_at, const LogicalVector lower,
+                                const double w, const int nexpand, const int ncontract) {
   NumericVector out(L.size());
   for(int i=0; i < L.size(); i++) {
     if(k_na[i]) {
@@ -45,9 +51,12 @@ NumericVector slice_sample_pois(NumericVector L, NumericVector k, LogicalVector 
 }
 
 // [[Rcpp::export]]
-NumericMatrix slice_sample_pois_mv(NumericMatrix L, NumericMatrix k, LogicalMatrix k_na, NumericMatrix mean, NumericMatrix Q,
-                                   NumericMatrix trunc_at, LogicalMatrix lower,
-                                   LogicalVector use_norm, NumericMatrix norm, double w, int nexpand, int ncontract) {
+NumericMatrix slice_sample_pois_mv(const NumericMatrix L,
+                                   const NumericMatrix k, const LogicalMatrix k_na,
+                                   const NumericMatrix mean, const NumericMatrix Q,
+                                   const NumericMatrix trunc_at, const LogicalMatrix lower,
+                                   const LogicalVector use_norm, const NumericMatrix norm,
+                                   const double w, const int nexpand, const int ncontract) {
   NumericMatrix out = clone(L);
   int nrm = 0;
   for(int r=0; r < L.nrow(); r++) {

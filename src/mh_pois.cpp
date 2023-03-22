@@ -2,13 +2,18 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-double one_m_pois_ratio(double L, double proposal, double k, double mean, double precision, double trunc_at, bool lower, int acceptance) {
+double one_m_pois_ratio(const double L, const double proposal, const double k,
+                        const double mean, const double precision,
+                        const double trunc_at, const bool lower,
+                        const int acceptance) {
   if(acceptance == 2) return 0.0;
   return pois_LL(proposal, k, mean, precision, trunc_at, lower) - pois_LL(L, k, mean, precision, trunc_at, lower);
 }
 
 
-void qt_pois_approx(double around, double k, double mean, double tau, double& outmean, double& outsd) {
+void qt_pois_approx(const double around, const double k,
+                    const double mean, const double tau,
+                    double& outmean, double& outsd) {
   // don't calculate this more than once
   double ep = exp(around);
 
@@ -22,7 +27,10 @@ void qt_pois_approx(double around, double k, double mean, double tau, double& ou
 }
 
 
-void one_qt_pois_proposal_ratio(double L, double k, double mean, double precision, double& outproposal, double& outratio, int acceptance) {
+void one_qt_pois_proposal_ratio(const double L, const double k,
+                                const double mean, const double precision,
+                                double& outproposal, double& outratio,
+                                const int acceptance) {
 
   double prop_mean, prop_sd;
   qt_pois_approx(L, k, mean, precision, prop_mean, prop_sd);
@@ -39,7 +47,8 @@ void one_qt_pois_proposal_ratio(double L, double k, double mean, double precisio
   outratio = ratio;
 }
 
-void gamma_pois_approx(double k, double mean, double tau, double& outalpha, double& outbeta) {
+void gamma_pois_approx(const double k, const double mean, const double tau,
+                       double& outalpha, double& outbeta) {
   double invtau = 1.0/tau;
   double m = exp(mean + 0.5*invtau);
   //double mm = m*m;
@@ -53,7 +62,10 @@ void gamma_pois_approx(double k, double mean, double tau, double& outalpha, doub
   outbeta = beta;
 }
 
-void one_gamma_pois_proposal_ratio(double L, double mult, double k, double mean, double precision, double& outproposal, double& outratio, int acceptance) {
+void one_gamma_pois_proposal_ratio(const double L, const double mult, const double k,
+                                   const double mean, const double precision,
+                                   double& outproposal, double& outratio,
+                                   const int acceptance) {
 
   double alpha, beta;
   gamma_pois_approx(k, mean, precision, alpha, beta);
@@ -73,8 +85,11 @@ void one_gamma_pois_proposal_ratio(double L, double mult, double k, double mean,
 
 
 // [[Rcpp::export]]
-NumericVector mh_pois(int method, NumericVector L, NumericVector proposal, NumericVector k, LogicalVector k_na,
-                      NumericVector mean, NumericVector precision, NumericVector trunc_at, LogicalVector lower, int acceptance) {
+NumericVector mh_pois(const int method, const NumericVector L, const NumericVector proposal,
+                      const NumericVector k, const LogicalVector k_na,
+                      const NumericVector mean, const NumericVector precision,
+                      const NumericVector trunc_at, const LogicalVector lower,
+                      const int acceptance) {
   NumericVector out = clone(L);
   LogicalVector accept(L.size());
 
@@ -108,9 +123,12 @@ NumericVector mh_pois(int method, NumericVector L, NumericVector proposal, Numer
 
 
 // [[Rcpp::export]]
-NumericVector mh_pois_mv(int method, NumericMatrix L, NumericMatrix proposal, NumericMatrix k, LogicalMatrix k_na,
-                         NumericMatrix mean, NumericMatrix Q, NumericMatrix trunc_at, LogicalMatrix lower,
-                         LogicalVector use_norm, NumericMatrix norm, int acceptance) {
+NumericVector mh_pois_mv(const int method, const NumericMatrix L, const NumericMatrix proposal,
+                         const NumericMatrix k, const LogicalMatrix k_na,
+                         const NumericMatrix mean, const NumericMatrix Q,
+                         const NumericMatrix trunc_at, const LogicalMatrix lower,
+                         const LogicalVector use_norm, const NumericMatrix norm,
+                         const int acceptance) {
   NumericMatrix out = clone(L);
   LogicalMatrix accept(L.nrow(), L.ncol());
 
