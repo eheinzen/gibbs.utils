@@ -124,3 +124,54 @@ abind::abind(out, out2, out3, out4, out5, along = 0L) %>%
   ggplot(aes(x = value, color = factor(method))) +
   facet_wrap(~ r + i + j, scales = "free") +
   geom_density()
+
+
+
+
+
+
+
+
+
+
+
+
+
+# -------------------------------------------------------------------------
+
+set.seed(99)
+beta <- matrix(c(1, 0, 1, 0, 3, 3), nrow = 2)
+V <- 10*chol_inv(matrix(c(1, 0.95, 0.1, 0.95, 1, 0.25, 0.1, 0.25, 1), nrow = 3))
+stopifnot(isSymmetric(V))
+X <- scale(matrix(rnorm(2*100000), ncol = 2))
+z <- +(beta != 0)
+err <- spam::rmvnorm.prec(100000, Q = V)
+err <- err - matrix(colMeans(err), nrow = 100000, ncol = 3, byrow = TRUE)
+y <- X %*% beta + err
+Q0 <- diag(0.1, sum(z))
+Q1 <- diag(ifelse(as.vector(z) == 1, 0.1, Inf), 6)
+
+
+out <- out2 <- out3 <- out4 <- array(0, c(100000, prod(dim(beta))))
+for(i in seq_len(100000-1)) {
+  out[i+1, as.vector(z == 1)] <- conj_matlm_beta(zero = z, y = y, X = X, V = V, U = NULL, Q0 = Q0, mu0 = NULL)
+  out2[i+1, ] <- conj_matlm_beta(y = y, X = X, V = V, U = NULL, Q0 = Q1, mu0 = NULL)
+  out3[i+1, as.vector(z == 1)] <- gs_matlm_beta(beta = out3[i, as.vector(z == 1)], zero = z, y = y, X = X, V = V, U = NULL, Q0 = Q0, mu0 = NULL)
+  out4[i+1, ] <- gs_matlm_beta(beta = out4[i, ], y = y, X = X, V = V, U = NULL, Q0 = Q1, mu0 = NULL)
+}
+
+stopifnot(out[, c(1, 3)] == 0, out2[, c(1, 3)] == 0, out3[, c(1, 3)] == 0, out4[, c(1, 3)] == 0)
+
+library(tidyverse)
+abind::abind(out, out2, out3, out4, along = 0L) %>%
+  reshape2::melt(c("method", "iter", "i")) %>%
+  filter(iter > 9000, i != 1, i != 3) %>%
+  ggplot(aes(x = value, color = factor(method))) +
+  facet_wrap(~ i, scales = "free") +
+  geom_density()
+
+
+
+
+
+
