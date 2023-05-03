@@ -160,12 +160,12 @@ for(i in seq_len(100000-1)) {
   out4[i+1, ] <- gs_matlm_beta(beta = out4[i, ], y = y, X = X, V = V, U = NULL, Q0 = Q1, mu0 = NULL)
 }
 
-stopifnot(out[, c(1, 3)] == 0, out2[, c(1, 3)] == 0, out3[, c(1, 3)] == 0, out4[, c(1, 3)] == 0)
+stopifnot(out[, c(2, 4)] == 0, out2[, c(2, 4)] == 0, out3[, c(2, 4)] == 0, out4[, c(2, 4)] == 0)
 
 library(tidyverse)
 abind::abind(out, out2, out3, out4, along = 0L) %>%
   reshape2::melt(c("method", "iter", "i")) %>%
-  filter(iter > 9000, i != 1, i != 3) %>%
+  filter(iter > 9000, i != 2, i != 4) %>%
   ggplot(aes(x = value, color = factor(method))) +
   facet_wrap(~ i, scales = "free") +
   geom_density()
