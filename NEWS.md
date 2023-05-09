@@ -1,3 +1,7 @@
+# gibbs.utils v4.9.1
+
+- Added `conj_gamma_b()`.
+
 # gibbs.utils v4.9.0
 
 - Fixed a misspecified `glue`.

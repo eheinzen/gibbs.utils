@@ -12,6 +12,7 @@
 \alias{conj_matnorm_V}
 \alias{conj_lm_tau}
 \alias{conj_binom_p}
+\alias{conj_gamma_b}
 \title{Draw Conjugate Samples}
 \usage{
 conj_norm_mu(y, tau, mu0 = 0, tau0 = 0.001, ..., mult = 1, params.only = FALSE)
@@ -99,9 +100,11 @@ conj_lm_tau(
 )
 
 conj_binom_p(k, n, a0 = 1, b0 = 1, params.only = FALSE)
+
+conj_gamma_b(x, a, a0, b0, params.only = FALSE)
 }
 \arguments{
-\item{y}{realizations from the distribution whose parameter is being drawn. For multivariate conjugacy,
+\item{y, x}{realizations from the distribution whose parameter is being drawn. For multivariate conjugacy,
 this is an n-by-p matrix}
 
 \item{mu0}{the prior mean of \code{mu} or \code{beta}. The default (\code{NULL}) is the same as an appropriately-dimensioned
@@ -142,6 +145,8 @@ or the parameters (shape1 and shape2) of the beta distribution prior on \code{p}
 \item{k}{The number of successes}
 
 \item{n}{The number of trials}
+
+\item{a}{The shape parameter for the gamma distribution}
 }
 \description{
 Sample from the posterior (conditional on all other parameters) in the conjugate setting.

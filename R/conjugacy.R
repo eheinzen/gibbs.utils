@@ -3,7 +3,7 @@
 #'
 #' Sample from the posterior (conditional on all other parameters) in the conjugate setting.
 #'
-#' @param y realizations from the distribution whose parameter is being drawn. For multivariate conjugacy,
+#' @param y,x realizations from the distribution whose parameter is being drawn. For multivariate conjugacy,
 #'   this is an n-by-p matrix
 #' @param Q,tau the precision of the (multivariate) normal distribution from which \code{y} comes
 #' @param mu0 the prior mean of \code{mu} or \code{beta}. The default (\code{NULL}) is the same as an appropriately-dimensioned
@@ -13,6 +13,7 @@
 #' @param mu the mean of the normal distribution from which \code{y} comes
 #' @param a0,b0 the parameters (shape and rate) of the gamma distribution prior on \code{tau},
 #'   or the parameters (shape1 and shape2) of the beta distribution prior on \code{p}.
+#' @param a The shape parameter for the gamma distribution
 #' @param k The number of successes
 #' @param n The number of trials
 #' @param V0,v0 the parameters (matrix and degrees of freedom) of the Wishart prior on \code{Q} or \code{V}
@@ -328,6 +329,13 @@ conj_binom_p <- function(k, n, a0 = 1, b0 = 1, params.only = FALSE) {
 }
 
 
-
+#' @rdname conjugacy
+#' @export
+conj_gamma_b <- function(x, a, a0, b0, params.only = FALSE) {
+  a <- a0 + length(x)
+  b <- b0 + sum(x)
+  if(params.only) return(gu_params(a = a, b = b))
+  stats::rgamma(1, a, b)
+}
 
 
