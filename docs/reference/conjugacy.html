@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.9.1</span>
       </span>
     </div>
 
@@ -144,12 +144,14 @@
 <span>  params.only <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">conj_binom_p</span><span class="op">(</span><span class="va">k</span>, <span class="va">n</span>, a0 <span class="op">=</span> <span class="fl">1</span>, b0 <span class="op">=</span> <span class="fl">1</span>, params.only <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">conj_binom_p</span><span class="op">(</span><span class="va">k</span>, <span class="va">n</span>, a0 <span class="op">=</span> <span class="fl">1</span>, b0 <span class="op">=</span> <span class="fl">1</span>, params.only <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">conj_gamma_b</span><span class="op">(</span><span class="va">x</span>, <span class="va">a</span>, <span class="va">a0</span>, <span class="va">b0</span>, params.only <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>y</dt>
+    <dl><dt>y, x</dt>
 <dd><p>realizations from the distribution whose parameter is being drawn. For multivariate conjugacy,
 this is an n-by-p matrix</p></dd>
 
@@ -225,6 +227,10 @@ or the parameters (shape1 and shape2) of the beta distribution prior on <code>p<
 
 <dt>n</dt>
 <dd><p>The number of trials</p></dd>
+
+
+<dt>a</dt>
+<dd><p>The shape parameter for the gamma distribution</p></dd>
 
 </dl></div>
 
