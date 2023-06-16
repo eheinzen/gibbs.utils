@@ -19,6 +19,7 @@
 #' @param lower.tail Should lower tail probabilities be returned (default) or upper?
 #' @param log.p Should the log be returned?
 #' @param alpha the Dirichlet parameter vector or matrix.
+#' @param meanlog,sdlog the parameters of the underlying log-normal distribution.
 #' @details
 #'   \code{dmvnorm_diff(x, y, mu, Q)} is equivalent to (but usually twice as fast as)
 #'   \code{dmvnorm(x, mu, Q) - dmvnorm(y, mu, Q)}. Likewise \code{dmatnorm_diff}.

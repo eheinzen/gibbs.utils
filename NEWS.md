@@ -1,3 +1,7 @@
+# gibbs.utils v4.9.2
+
+- Added `[dpr]dlnorm()` for the discrete log-normal distribution.
+
 # gibbs.utils v4.9.1
 
 - Added `conj_gamma_b()`.
