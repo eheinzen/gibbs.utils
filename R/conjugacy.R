@@ -89,7 +89,7 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
   if(diag) {
     if(!missing(newQ) || !missing(newQ.chol)) warning("Arguments 'newQ' and 'newQ.chol' are being ignored because diag = TRUE")
     if(is.null(mu0)) mu0 <- 0
-    Q0 <- diag(Q0)
+    Q0 <- spam::diag(Q0)
     if(!is.null(zero)) {
       Q0 <- vec(replace(zero, zero == 1, Q0))
       mu0 <- vec(replace(zero, zero == 1, mu0))
@@ -189,7 +189,7 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ..., XtU = if(is.
   if(diag) {
     if(!missing(newQ) || !missing(newQ.chol)) warning("Arguments 'newQ' and 'newQ.chol' are being ignored because diag = TRUE")
     if(is.null(mu0)) mu0 <- 0
-    Q0 <- diag(Q0)
+    Q0 <- spam::diag(Q0)
     if(!is.null(zero)) {
       Q0 <- vec(replace(zero, zero == 1, Q0))
       mu0 <- vec(replace(zero, zero == 1, mu0))

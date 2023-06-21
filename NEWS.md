@@ -1,3 +1,8 @@
+# gibbs.utils v4.9.3
+
+- Changed `base::diag()` to `spam::diag()` in `conj_matlm_mu()` and `conj_matlm_beta()`, in the case `diag=TRUE` and
+  `Q0` is a `spam` object.
+
 # gibbs.utils v4.9.2
 
 - Added `[dpr]dlnorm()` for the discrete log-normal distribution.
