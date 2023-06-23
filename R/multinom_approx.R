@@ -4,7 +4,7 @@ mviqt_multinom_approx <- function(around, z, which_i, is_ref, k, n, mean, Q) {
   if(!is.matrix(n)) n <- matrix(n, nrow = 1)
   if(!is.matrix(mean)) mean <- matrix(mean, nrow = 1)
 
-  tau <- matrix(diag(Q), nrow = nrow(k), ncol = ncol(Q), byrow = TRUE)
+  tau <- matrix(spam::diag(Q), nrow = nrow(k), ncol = ncol(Q), byrow = TRUE)
 
   ep <- exp(around) * z
 

@@ -99,7 +99,7 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
     Uy.lst <- asplit(U %*% y, 2)
     zero.lst <- if(is.null(zero)) rep_len(list(NULL), p) else asplit(zero == 1, 2)
     tmp <- Map(function(v, q, m, uyy, zz) {
-      newQ <- v * U + diag(q)
+      newQ <- v * U + spam::diag(q)
       b <- q*m + vec(uyy * v)
       if(!is.null(zz)) {
         newQ <- newQ[zz, zz, drop = FALSE]
@@ -200,7 +200,7 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ..., XtU = if(is.
     zero.lst <- if(is.null(zero)) rep_len(list(NULL), p) else asplit(zero == 1, 2)
     tmp <- Map(function(v, q, m, xtuyy, zz) {
 
-      newQ <- v * XtUX + diag(q)
+      newQ <- v * XtUX + spam::diag(q)
       b <- q*m + vec(xtuyy * v)
       if(!is.null(zz)) {
         newQ <- newQ[zz, zz, drop = FALSE]

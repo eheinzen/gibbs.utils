@@ -1,3 +1,11 @@
+# gibbs.utils v4.9.4
+
+- Changed a few more `base::diag()` to `spam::diag()` in the case `diag=TRUE` and
+  `Q0` or `precision` is a `spam` object.
+  
+- Changed some internals for `sample_multinom_reg()` when `diag=TRUE`. In particular,
+  `precision` can now be a `spam` matrix.
+  
 # gibbs.utils v4.9.3
 
 - Changed `base::diag()` to `spam::diag()` in `conj_matlm_mu()` and `conj_matlm_beta()`, in the case `diag=TRUE` and

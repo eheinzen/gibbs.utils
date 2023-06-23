@@ -323,10 +323,19 @@ test_that("diag=TRUE works for multinomial", {
   diagtrue <- sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q, diag = TRUE)
   set.seed(20221128)
   nothing <- sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Q)
+  set.seed(20221128)
+  orig.dim.p <- dim(p)
+  dim(p) <- c(nrow(p), prod(dim(p)[2:3]))
+  dim(k) <- dim(p)
+  dim(mean) <- c(nrow(mean), prod(dim(mean)[2:3]))
+  Qspam <- spam::diag.spam(2, 4)
+  diagspam <- sample_multinom_reg(p = p, z = z, k = k, mean = mean, precision = Qspam, diag = TRUE)
+  dim(diagspam) <- orig.dim.p
+
 
   expect_equal(regular, diagtrue)
   expect_equal(regular, nothing)
-
+  expect_equal(regular, diagspam)
 })
 
 

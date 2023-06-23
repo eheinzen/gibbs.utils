@@ -57,7 +57,7 @@ void one_qt_multinom_proposal_ratio(const double p, const double sum_exp_p, cons
 NumericVector mh_multinom_mv(const bool qt, const NumericMatrix p_ij,const  NumericMatrix proposal,
                              const LogicalMatrix z_ij, const IntegerVector which_i, const LogicalVector is_ref,
                              const NumericMatrix k_ij, const NumericMatrix n_ij,
-                             const NumericMatrix mean, const NumericMatrix Q,
+                             const NumericMatrix mean, const NumericMatrix Q, const NumericVector Qdiag,
                              const LogicalVector use_norm, const NumericMatrix norm,
                              const bool diag, const int acceptance) {
   NumericMatrix out = clone(p_ij);
@@ -103,8 +103,9 @@ NumericVector mh_multinom_mv(const bool qt, const NumericMatrix p_ij,const  Nume
         mmm = cond_mv_mean_multinom(tmp, refidx, mm, Q, ij);
       }
 
+      double q11 = Qdiag[refidx[ij]];
       if(nn[ij] == 0.0) {
-        tmp[ij] = R::rnorm(mmm, 1.0/sqrt(Q(refidx[ij], refidx[ij])));
+        tmp[ij] = R::rnorm(mmm, 1.0/sqrt(q11));
         acc[ij] = true;
         continue;
       }
@@ -119,10 +120,10 @@ NumericVector mh_multinom_mv(const bool qt, const NumericMatrix p_ij,const  Nume
 
       double ratio, prop;
       if(qt) { // 'proposal' is ignored
-        one_qt_multinom_proposal_ratio(tmp[ij], sum_exp_p, zz[ij], kk[ij], nn[ij], mmm, Q(refidx[ij], refidx[ij]), prop, ratio, acceptance);
+        one_qt_multinom_proposal_ratio(tmp[ij], sum_exp_p, zz[ij], kk[ij], nn[ij], mmm, q11, prop, ratio, acceptance);
       } else {
         prop = propp[ij];
-        ratio = one_m_multinom_ratio(tmp[ij], prop, sum_exp_p, zz[ij], kk[ij], nn[ij], mmm, Q(refidx[ij], refidx[ij]), acceptance);
+        ratio = one_m_multinom_ratio(tmp[ij], prop, sum_exp_p, zz[ij], kk[ij], nn[ij], mmm, q11, acceptance);
       }
       bool a = accept_reject(ratio);
       acc[ij] = a;

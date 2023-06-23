@@ -39,7 +39,7 @@ double one_multinom_slice(const double p_ij, const double sum_exp_p, const bool 
 NumericMatrix slice_sample_multinom_mv(const NumericMatrix p_ij, const LogicalMatrix z_ij,
                                        const IntegerVector which_i, const LogicalVector is_ref,
                                        const NumericMatrix k_ij, const NumericMatrix n_ij,
-                                       const NumericMatrix mean, const NumericMatrix Q,
+                                       const NumericMatrix mean, const NumericMatrix Q, const NumericVector Qdiag,
                                        const bool diag,
                                        const LogicalVector use_norm, const NumericMatrix norm,
                                        const double w, const int nexpand, const int ncontract) {
@@ -85,7 +85,7 @@ NumericMatrix slice_sample_multinom_mv(const NumericMatrix p_ij, const LogicalMa
           sum_exp_p += exp(tmp[iijj]);
         }
       }
-      tmp[ij] = one_multinom_slice(tmp[ij], sum_exp_p, zz[ij], kk[ij], nn[ij], mmm, Q(refidx[ij], refidx[ij]), w, nexpand, ncontract);
+      tmp[ij] = one_multinom_slice(tmp[ij], sum_exp_p, zz[ij], kk[ij], nn[ij], mmm, Qdiag[refidx[ij]], w, nexpand, ncontract);
     }
     out(r, _) = tmp;
   }
