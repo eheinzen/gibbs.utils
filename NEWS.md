@@ -1,3 +1,7 @@
+# gibbs.utils v4.9.5
+
+- Changed a few more `base::diag()` to `spam::diag()` (I missed these last time).
+  
 # gibbs.utils v4.9.4
 
 - Changed a few more `base::diag()` to `spam::diag()` in the case `diag=TRUE` and

@@ -75,7 +75,7 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
                             newQ = V %x% U + Q0, newQ.chol = gu_chol(newQ), diag = FALSE, zero = NULL, params.only = FALSE) {
   if(!is.matrix(y)) stop("'y' must be a matrix")
   if(is.matrix(mu0)) mu0 <- vec(mu0)
-  if(is.null(U)) U <- diag(1, nrow(Q0) / nrow(V))
+  if(is.null(U)) U <- spam::diag.spam(1, nrow(Q0) / nrow(V))
   m <- ncol(U)
   p <- nrow(V)
 
@@ -113,7 +113,7 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
       } else {
         drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
       }
-    }, v = diag(V), q = Q0.mat.lst, m = mu0.lst, uyy = Uy.lst, zz = zero.lst)
+    }, v = spam::diag(V), q = Q0.mat.lst, m = mu0.lst, uyy = Uy.lst, zz = zero.lst)
     if(params.only) {
       return(gu_params(mu = lapply(tmp, "[[", "mu"), Q = lapply(tmp, "[[", "Q"), Q.inv = lapply(tmp, "[[", "Q.inv"), b = lapply(tmp, "[[", "b")))
     }
@@ -214,7 +214,7 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ..., XtU = if(is.
       } else {
         drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
       }
-    }, v = diag(V), q = Q0.mat.lst, m = mu0.lst, xtuyy = XtUy.lst, zz = zero.lst)
+    }, v = spam::diag(V), q = Q0.mat.lst, m = mu0.lst, xtuyy = XtUy.lst, zz = zero.lst)
     if(params.only) {
       return(gu_params(mu = lapply(tmp, "[[", "mu"), Q = lapply(tmp, "[[", "Q"), Q.inv = lapply(tmp, "[[", "Q.inv"), b = lapply(tmp, "[[", "b")))
     }
