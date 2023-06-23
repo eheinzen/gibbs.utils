@@ -207,3 +207,33 @@ test_that("mu = NULL works for conj_matnorm_V", {
 })
 
 
+
+
+test_that("one-column X works for conj_matnorm_mu and conj_matlm_beta when diag=TRUE", {
+  set.seed(99)
+  y <- matrix(1:4, nrow = 2, ncol = 2)
+  X <- matrix(1, nrow = 2, ncol = 1)
+  V <- Q0 <- diag(1:2)
+  expect_error(
+    tmpbeta <- conj_matlm_beta(
+      y = y,
+      X = X,
+      U = NULL,
+      V = V,
+      mu0 = NULL,
+      Q0 = Q0,
+      diag = TRUE
+    ), NA
+  )
+  expect_error(
+    tmpbeta <- conj_matnorm_mu(
+      y = y[1, , drop = FALSE],
+      U = NULL,
+      V = V,
+      mu0 = NULL,
+      Q0 = Q0,
+      diag = TRUE
+    ), NA
+  )
+})
+

@@ -1,3 +1,7 @@
+# gibbs.utils v4.9.6
+
+- Fixed a bug in `conj_matlm_beta()` and `conj_matnorm_mu()` when `diag=TRUE` and a dimension is 1.
+
 # gibbs.utils v4.9.5
 
 - Changed a few more `base::diag()` to `spam::diag()` (I missed these last time).

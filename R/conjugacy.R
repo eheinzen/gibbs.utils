@@ -98,9 +98,9 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
     mu0.lst <- asplit(matrix(mu0, nrow = m, ncol = p), 2)
     Uy.lst <- asplit(U %*% y, 2)
     zero.lst <- if(is.null(zero)) rep_len(list(NULL), p) else asplit(zero == 1, 2)
-    tmp <- Map(function(v, q, m, uyy, zz) {
-      newQ <- v * U + spam::diag(q)
-      b <- q*m + vec(uyy * v)
+    tmp <- Map(function(v, q, mm, uyy, zz) {
+      newQ <- v * U + spam::diag.spam(q, m)
+      b <- q*mm + vec(uyy * v)
       if(!is.null(zz)) {
         newQ <- newQ[zz, zz, drop = FALSE]
         b <- b[zz]
@@ -113,7 +113,7 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
       } else {
         drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
       }
-    }, v = spam::diag(V), q = Q0.mat.lst, m = mu0.lst, uyy = Uy.lst, zz = zero.lst)
+    }, v = spam::diag(V), q = Q0.mat.lst, mm = mu0.lst, uyy = Uy.lst, zz = zero.lst)
     if(params.only) {
       return(gu_params(mu = lapply(tmp, "[[", "mu"), Q = lapply(tmp, "[[", "Q"), Q.inv = lapply(tmp, "[[", "Q.inv"), b = lapply(tmp, "[[", "b")))
     }
@@ -198,10 +198,9 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ..., XtU = if(is.
     mu0.lst <- asplit(matrix(mu0, nrow = m, ncol = p), 2)
     XtUy.lst <- asplit(XtU %*% y, 2)
     zero.lst <- if(is.null(zero)) rep_len(list(NULL), p) else asplit(zero == 1, 2)
-    tmp <- Map(function(v, q, m, xtuyy, zz) {
-
-      newQ <- v * XtUX + spam::diag(q)
-      b <- q*m + vec(xtuyy * v)
+    tmp <- Map(function(v, q, mm, xtuyy, zz) {
+      newQ <- v * XtUX + spam::diag.spam(q, m)
+      b <- q*mm + vec(xtuyy * v)
       if(!is.null(zz)) {
         newQ <- newQ[zz, zz, drop = FALSE]
         b <- b[zz]
@@ -214,7 +213,7 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ..., XtU = if(is.
       } else {
         drop(spam::rmvnorm.canonical(1, b = b, Q = newQ, ...))
       }
-    }, v = spam::diag(V), q = Q0.mat.lst, m = mu0.lst, xtuyy = XtUy.lst, zz = zero.lst)
+    }, v = spam::diag(V), q = Q0.mat.lst, mm = mu0.lst, xtuyy = XtUy.lst, zz = zero.lst)
     if(params.only) {
       return(gu_params(mu = lapply(tmp, "[[", "mu"), Q = lapply(tmp, "[[", "Q"), Q.inv = lapply(tmp, "[[", "Q.inv"), b = lapply(tmp, "[[", "b")))
     }
