@@ -1,3 +1,10 @@
+# gibbs.utils v4.9.6.9000
+
+- Enforce `spam >= 2.9-2` because of a critical bug fix related to the element-wise
+  multipliction of a full `spam` object. This led to incorrect densities.
+  Note: if you can't find a compatible version on CRAN, try the source GitLab,
+  which has tarballs of the packages.
+
 # gibbs.utils v4.9.6
 
 - Fixed a bug in `conj_matlm_beta()` and `conj_matnorm_mu()` when `diag=TRUE` and a dimension is 1.

@@ -1,7 +1,7 @@
 Package: gibbs.utils
 Type: Package
 Title: Utilities for Gibbs Sampling
-Version: 4.9.6
+Version: 4.9.6.9000
 Authors@R: c(
     person("Ethan", "Heinzen", email = "heinzen.ethan@mayo.edu", role = c("aut", "cre"))
   )
@@ -11,7 +11,7 @@ LazyData: true
 Imports:
     Rcpp (>= 1.0.6),
     truncnorm,
-    spam,
+    spam (>= 2.9-2),
     stats,
     glue
 LinkingTo: Rcpp
