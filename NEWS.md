@@ -4,7 +4,10 @@
   multipliction of a full `spam` object. This led to incorrect densities.
   Note: if you can't find a compatible version on CRAN, try the source GitLab,
   which has tarballs of the packages.
-
+  
+- Added the `diag=` argument to `conj_matnorm_mu()` and `conj_matlm_beta()` output when
+  `params.only=TRUE`.
+  
 # gibbs.utils v4.9.6
 
 - Fixed a bug in `conj_matlm_beta()` and `conj_matnorm_mu()` when `diag=TRUE` and a dimension is 1.

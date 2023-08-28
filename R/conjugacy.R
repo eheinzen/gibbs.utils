@@ -115,7 +115,7 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
       }
     }, v = spam::diag(V), q = Q0.mat.lst, mm = mu0.lst, uyy = Uy.lst, zz = zero.lst)
     if(params.only) {
-      return(gu_params(mu = lapply(tmp, "[[", "mu"), Q = lapply(tmp, "[[", "Q"), Q.inv = lapply(tmp, "[[", "Q.inv"), b = lapply(tmp, "[[", "b")))
+      return(gu_params(mu = lapply(tmp, "[[", "mu"), Q = lapply(tmp, "[[", "Q"), Q.inv = lapply(tmp, "[[", "Q.inv"), b = lapply(tmp, "[[", "b"), diag = diag))
     }
     do.call(c, tmp)
 
@@ -135,7 +135,7 @@ conj_matnorm_mu <- function(y, V, U = NULL, mu0 = NULL, Q0, ...,
     if(params.only) {
       newQ.inv <- chol2inv(newQ.chol)
       mu <- drop(newQ.inv %*% b)
-      gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv, b = drop(b))
+      gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv, b = drop(b), diag = diag)
     } else {
       newQ <- if(!missing(newQ.chol) && is.matrix(newQ.chol)) {
         gu_chol(newQ.chol, take.chol = FALSE) # the cholesky shouldn't be taken anymore after this
@@ -215,7 +215,7 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ..., XtU = if(is.
       }
     }, v = spam::diag(V), q = Q0.mat.lst, mm = mu0.lst, xtuyy = XtUy.lst, zz = zero.lst)
     if(params.only) {
-      return(gu_params(mu = lapply(tmp, "[[", "mu"), Q = lapply(tmp, "[[", "Q"), Q.inv = lapply(tmp, "[[", "Q.inv"), b = lapply(tmp, "[[", "b")))
+      return(gu_params(mu = lapply(tmp, "[[", "mu"), Q = lapply(tmp, "[[", "Q"), Q.inv = lapply(tmp, "[[", "Q.inv"), b = lapply(tmp, "[[", "b"), diag = diag))
     }
     do.call(c, tmp)
 
@@ -235,7 +235,7 @@ conj_matlm_beta <- function(y, X, V, U = NULL, mu0 = NULL, Q0, ..., XtU = if(is.
     if(params.only) {
       newQ.inv <- chol2inv(newQ.chol)
       mu <- drop(newQ.inv %*% b)
-      gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv, b = drop(b))
+      gu_params(mu = mu, Q = newQ, Q.inv = newQ.inv, b = drop(b), diag = diag)
     } else {
       newQ <- if(!missing(newQ.chol) && is.matrix(newQ.chol)) {
         gu_chol(newQ.chol, take.chol = FALSE) # the cholesky shouldn't be taken anymore after this
