@@ -8,6 +8,9 @@
 - Added the `diag=` argument to `conj_matnorm_mu()` and `conj_matlm_beta()` output when
   `params.only=TRUE`.
   
+- `diag=TRUE` now works for `gs_matlm_beta()`. It's slightly slower when the dimensions
+  are small, but MUCH faster when the dimensions get large.
+
 # gibbs.utils v4.9.6
 
 - Fixed a bug in `conj_matlm_beta()` and `conj_matnorm_mu()` when `diag=TRUE` and a dimension is 1.

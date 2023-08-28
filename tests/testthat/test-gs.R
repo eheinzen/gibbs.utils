@@ -25,3 +25,41 @@ test_that("Conjugacy works for 2-D independent cases", {
   expect_equal(mu1, unlist(mu8$mu))
   expect_equal(mu1, mu7$mu)
 })
+
+test_that("diag=TRUE works", {
+  X <- cbind(1, c(1, 1, 0, 0))
+  Y <- matrix(1:8, 4, 2)
+  V <- diag(1, 2)
+  Q0 <- diag(1, 4)
+  set.seed(20230828)
+  conj <- conj_matlm_beta(y = Y, X = X, V = V, U = NULL, mu0 = NULL, Q0 = Q0, diag = FALSE)
+  set.seed(20230828)
+  conjd <- conj_matlm_beta(y = Y, X = X, V = V, U = NULL, mu0 = NULL, Q0 = Q0, diag = TRUE)
+  expect_equal(conj, conjd)
+
+  set.seed(20230828)
+  conj <- gs_matlm_beta(beta = rep(0, 4), y = Y, X = X, V = V, U = NULL, mu0 = NULL, Q0 = Q0, diag = FALSE)
+  set.seed(20230828)
+  conjd <- gs_matlm_beta(beta = rep(0, 4), y = Y, X = X, V = V, U = NULL, mu0 = NULL, Q0 = Q0, diag = TRUE)
+  expect_equal(conj, conjd)
+
+
+  ## when there is just one column, the conjugacy should give the same result as the gibbs sampling
+  X <- matrix(1, nrow = 4, ncol = 1)
+  Y <- matrix(1:8, 4, 2)
+  V <- diag(1, 2)
+  Q0 <- diag(1, 2)
+  set.seed(20230828)
+  conj1 <- conj_matlm_beta(y = Y, X = X, V = V, U = NULL, mu0 = NULL, Q0 = Q0, diag = FALSE)
+  set.seed(20230828)
+  conjd1 <- conj_matlm_beta(y = Y, X = X, V = V, U = NULL, mu0 = NULL, Q0 = Q0, diag = TRUE)
+
+  set.seed(20230828)
+  conj2 <- gs_matlm_beta(beta = rep(0, 2), y = Y, X = X, V = V, U = NULL, mu0 = NULL, Q0 = Q0, diag = FALSE)
+  set.seed(20230828)
+  conjd2 <- gs_matlm_beta(beta = rep(0, 2), y = Y, X = X, V = V, U = NULL, mu0 = NULL, Q0 = Q0, diag = TRUE)
+  expect_equal(conj1, conjd1)
+  expect_equal(conj2, conjd2)
+  expect_equal(conj1, conj2)
+
+})

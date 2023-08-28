@@ -175,3 +175,62 @@ abind::abind(out, out2, out3, out4, along = 0L) %>%
 
 
 
+# -------------------------------------------------------------------------
+
+mean <- p <- matrix(0, nrow = 1, ncol = 3)
+k <- matrix(c(0, 5400, 1), 1, 3)
+z <- matrix(1, 1, 3)
+Q <- diag(1, 2)
+mean <- mean[, -2, drop = FALSE]
+
+
+out <- array(0, c(10000, dim(p)))
+for(i in seq_len(10000-1)) {
+  oo <- out[i, , ]
+  dim(oo) <- dim(out)[-1]
+  out[i+1, , ] <-  sample_multinom_reg(p = oo, z = z, k = k, mean = mean, precision = Q, method = "slice", ref = 2)
+}
+
+stopifnot(out[, , 2] == 0)
+
+library(tidyverse)
+out %>%
+  reshape2::melt(c("iter", "r", "i")) %>%
+  filter(iter > 9000) %>%
+  ggplot(aes(x = value, color = factor(i))) +
+  facet_wrap(~ r, scales = "free") +
+  geom_density()
+
+
+
+
+
+
+
+
+# -------------------------------------------------------------------------
+
+library(tidyverse)
+set.seed(20230828)
+BETA <- matrix(c(1, 0.4, 1, 0.4), nrow = 2)
+X <- cbind(1, rep(0:1, times = c(50, 50)))
+y <- X %*% BETA + scale(matrix(rnorm(200, sd = 1), nrow = 100, ncol = 2))
+Q0 <- diag(0.1, 4)
+Q <- diag(1, 2)
+out <- out2 <- out3 <- array(0, dim = c(10000, 2, 2))
+for(i in seq_len(10000-1)) {
+  out[i+1, ,] <- conj_matlm_beta(y = y, X = X, U = NULL, V = Q, mu0 = NULL, Q0 = Q0)
+  out2[i+1, ,] <- conj_matlm_beta(y = y, X = X, U = NULL, V = Q, mu0 = NULL, Q0 = Q0, diag = TRUE)
+}
+
+abind::abind(out, out2, along = 0L) %>%
+  reshape2::melt(c("method", "iter", "i", "j")) %>%
+  ggplot(aes(x = value, color = factor(method))) +
+  facet_grid(j ~ i, scales = "free") +
+  geom_density()
+
+unclass(params <- conj_matlm_beta(y = y, X = X, U = NULL, V = Q, mu0 = NULL, Q0 = Q0, params.only = TRUE))
+unclass(params <- conj_matlm_beta(beta = BETA, y = y, X = X, U = NULL, V = Q, mu0 = NULL, Q0 = Q0, diag = TRUE, params.only = TRUE))
+
+unclass(params <- gs_matlm_beta(beta = BETA, y = y, X = X, U = NULL, V = Q, mu0 = NULL, Q0 = Q0, params.only = TRUE))
+unclass(params <- gs_matlm_beta(beta = BETA, y = y, X = X, U = NULL, V = Q, mu0 = NULL, Q0 = Q0, params.only = TRUE, diag = TRUE))
