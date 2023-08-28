@@ -1,4 +1,4 @@
-# gibbs.utils v4.9.6.9000
+# gibbs.utils v4.9.7
 
 - Enforce `spam >= 2.9-2` because of a critical bug fix related to the element-wise
   multipliction of a full `spam` object. This led to incorrect densities.
