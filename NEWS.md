@@ -1,3 +1,7 @@
+# gibbs.utils v4.9.8
+
+- Added the argument `b=` to `dmvnorm_diff()` for the canonical representation.
+
 # gibbs.utils v4.9.7
 
 - Enforce `spam >= 2.9-2` because of a critical bug fix related to the element-wise
