@@ -37,7 +37,7 @@ dmvlnorm(
   log = TRUE
 )
 
-dmvnorm_diff(x, y, mu, Q, log = TRUE, byrow = FALSE)
+dmvnorm_diff(x, y, mu, Q, b, log = TRUE, byrow = FALSE)
 
 dmvlnorm_diff(x, y, mu, Q, log = TRUE, byrow = FALSE)
 
@@ -85,6 +85,8 @@ vector/matrix of all zeros, but a little faster.}
 
 \item{log}{Should the log-density be returned?}
 
+\item{b}{Bounds for the truncated exponential distribution or the multivariate normal canonical representation parameter.}
+
 \item{byrow}{Should the densities be summed (FALSE, the default) or returned separately by row (TRUE).}
 
 \item{tau, Q}{the precision (matrix)}
@@ -106,7 +108,7 @@ vector/matrix of all zeros, but a little faster.}
 \item{rate}{the Exponential rate parameter. If zero, a normal distribution is used instead. If negative,
 the problem is flipped and calculated using \code{-rate}.}
 
-\item{a, b}{Bounds for the truncated exponential distribution.}
+\item{a}{Bounds for the truncated exponential distribution.}
 
 \item{q}{A quantile}
 

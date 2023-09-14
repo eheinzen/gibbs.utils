@@ -49,6 +49,21 @@ test_that("*_diff", {
   )
 
   expect_equal(
+    dmvnorm_diff(x, y, mu, Q, log = TRUE),
+    dmvnorm_diff(x, y, Q = Q, b = mu %*% Q, log = TRUE)
+  )
+
+
+  expect_equal(
+    dnorm_diff(1.1, 2.2, mu = 0.5, tau = 10.1, log = TRUE),
+    dmvnorm_diff(1.1, 2.2, mu = 0.5, Q = matrix(10.1, 1, 1), log = TRUE)
+  )
+  expect_equal(
+    dnorm_diff(1.1, 2.2, mu = 0.5, tau = 10.1, log = TRUE),
+    dmvnorm_diff(1.1, 2.2, b = 0.5 * 10.1, Q = matrix(10.1, 1, 1), log = TRUE)
+  )
+
+  expect_equal(
     dmvlnorm(exp(x), mu, Q, log = TRUE) - dmvlnorm(exp(y), mu, Q, log = TRUE),
     dmvlnorm_diff(exp(x), exp(y), mu, Q, log = TRUE)
   )

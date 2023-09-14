@@ -13,7 +13,8 @@
 #' @param n Number of deviates to produce.
 #' @param rate the Exponential rate parameter. If zero, a normal distribution is used instead. If negative,
 #'   the problem is flipped and calculated using \code{-rate}.
-#' @param a,b Bounds for the truncated exponential distribution.
+#' @param a Bounds for the truncated exponential distribution.
+#' @param b Bounds for the truncated exponential distribution or the multivariate normal canonical representation parameter.
 #' @param q A quantile
 #' @param p A probability
 #' @param lower.tail Should lower tail probabilities be returned (default) or upper?
@@ -75,21 +76,37 @@ dmvlnorm <- function(x, mu = NULL, Q, detQ = determinant(Q, logarithm = TRUE)$mo
 
 #' @rdname distributions
 #' @export
-dmvnorm_diff <- function(x, y, mu, Q, log = TRUE, byrow = FALSE) {
+dmvnorm_diff <- function(x, y, mu, Q, b, log = TRUE, byrow = FALSE) {
+  if((has.b <- missing(mu)) + missing(b) != 1) stop("Exactly one of 'mu' or 'b' must be specified")
   if(!is.matrix(x)) {
     x <- matrix(x, nrow = 1)
     y <- matrix(y, nrow = 1)
-    mu <- matrix(mu, nrow = 1)
+    if(has.b) {
+      b <- matrix(b, nrow = 1)
+    } else {
+      mu <- matrix(mu, nrow = 1)
+    }
   }
-  # tr((x - mu) Q (x - mu)^T - (y - mu) Q (y - mu)^T)
-  # tr(XQX^T - YQY^T - 2(X - Y)Q mu^T)
-  # tr((X - Y)Q(X^T + Y^T - 2 mu^T))
-  # tr((X + Y - 2 mu)^T (X - Y) Q)
+
   FUN <- if(byrow) rowSums else sum
-  num <- -0.5*FUN((x + y - 2*mu) * ((x - y) %*% Q))
+  if(has.b) {
+    # tr((b^T x -  0.5*xQx^T) - (b^T y -  0.5*yQy^T))
+    # tr(-0.5*(XQX^T - YQY^T)) + tr(b^T(x - y)))
+    # tr(-0.5*(XQX^T - YQY^T)) + vec(b)^T vec(x - y)
+    # -0.5*tr((X - Y)Q(X^T + Y^T)) + vec(b)^T vec(x - y)
+    # -0.5*tr(Q(X^T + Y^T)(X - Y)) + vec(b)^T vec(x - y)
+    # -0.5*vec((X + Y)Q)^T vec(X - Y) + vec(b)^T vec(x - y)
+    # (-0.5*vec((X + Y)Q)^T + vec(b)^T)vec(X - Y)
+    num <- FUN((-0.5*(x + y) %*% Q + b) * (x - y))
+  } else {
+    # tr((x - mu) Q (x - mu)^T - (y - mu) Q (y - mu)^T)
+    # tr(XQX^T - YQY^T - 2(X - Y)Q mu^T)
+    # tr((X - Y)Q(X^T + Y^T - 2 mu^T))
+    # tr((X + Y - 2 mu)^T (X - Y) Q)
+    num <- -0.5*FUN((x + y - 2*mu) * ((x - y) %*% Q))
+  }
   if(log) num else exp(num)
 }
-
 
 #' @rdname distributions
 #' @export
