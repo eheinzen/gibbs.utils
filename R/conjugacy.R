@@ -331,7 +331,7 @@ conj_binom_p <- function(k, n, a0 = 1, b0 = 1, params.only = FALSE) {
 #' @rdname conjugacy
 #' @export
 conj_gamma_b <- function(x, a, a0, b0, params.only = FALSE) {
-  a <- a0 + length(x)
+  a <- a0 + length(x)*a
   b <- b0 + sum(x)
   if(params.only) return(gu_params(a = a, b = b))
   stats::rgamma(1, a, b)

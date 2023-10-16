@@ -1,3 +1,7 @@
+# gibbs.utils v4.9.9
+
+- Fixed a bug in the conjugacy in `conj_gamma_b()`.
+
 # gibbs.utils v4.9.8
 
 - Added the argument `b=` to `dmvnorm_diff()` for the canonical representation.
@@ -5,7 +9,7 @@
 # gibbs.utils v4.9.7
 
 - Enforce `spam >= 2.9-2` because of a critical bug fix related to the element-wise
-  multipliction of a full `spam` object. This led to incorrect densities.
+  multiplication of a full `spam` object. This led to incorrect densities.
   Note: if you can't find a compatible version on CRAN, try the source GitLab,
   which has tarballs of the packages.
   
