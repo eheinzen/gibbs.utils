@@ -1,3 +1,8 @@
+# gibbs.utils v5.0.0
+
+- Removed `times_flat_ar1()`, which wasn't well-documented and no longer
+  all that useful to me.
+
 # gibbs.utils v4.9.9
 
 - Fixed a bug in the conjugacy in `conj_gamma_b()`.

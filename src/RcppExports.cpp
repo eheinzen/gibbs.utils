@@ -293,18 +293,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// times_flat_ar1_cpp
-NumericVector times_flat_ar1_cpp(const NumericMatrix xt, const NumericMatrix flat_ar1);
-RcppExport SEXP _gibbs_utils_times_flat_ar1_cpp(SEXP xtSEXP, SEXP flat_ar1SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const NumericMatrix >::type xt(xtSEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix >::type flat_ar1(flat_ar1SEXP);
-    rcpp_result_gen = Rcpp::wrap(times_flat_ar1_cpp(xt, flat_ar1));
-    return rcpp_result_gen;
-END_RCPP
-}
 // accept_reject
 bool accept_reject(const double ratio);
 RcppExport SEXP _gibbs_utils_accept_reject(SEXP ratioSEXP) {
@@ -332,7 +320,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gibbs_utils_one_pois_slice", (DL_FUNC) &_gibbs_utils_one_pois_slice, 9},
     {"_gibbs_utils_slice_sample_pois", (DL_FUNC) &_gibbs_utils_slice_sample_pois, 10},
     {"_gibbs_utils_slice_sample_pois_mv", (DL_FUNC) &_gibbs_utils_slice_sample_pois_mv, 12},
-    {"_gibbs_utils_times_flat_ar1_cpp", (DL_FUNC) &_gibbs_utils_times_flat_ar1_cpp, 2},
     {"_gibbs_utils_accept_reject", (DL_FUNC) &_gibbs_utils_accept_reject, 1},
     {NULL, NULL, 0}
 };

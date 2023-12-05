@@ -57,10 +57,6 @@ slice_sample_pois_mv <- function(L, k, k_na, mean, Q, trunc_at, lower, use_norm,
     .Call('_gibbs_utils_slice_sample_pois_mv', PACKAGE = 'gibbs.utils', L, k, k_na, mean, Q, trunc_at, lower, use_norm, norm, w, nexpand, ncontract)
 }
 
-times_flat_ar1_cpp <- function(xt, flat_ar1) {
-    .Call('_gibbs_utils_times_flat_ar1_cpp', PACKAGE = 'gibbs.utils', xt, flat_ar1)
-}
-
 accept_reject <- function(ratio) {
     .Call('_gibbs_utils_accept_reject', PACKAGE = 'gibbs.utils', ratio)
 }
