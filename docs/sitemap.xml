@@ -25,6 +25,9 @@
     <loc>/reference/approximations.html</loc>
   </url>
   <url>
+    <loc>/reference/bss.html</loc>
+  </url>
+  <url>
     <loc>/reference/conditional.html</loc>
   </url>
   <url>
@@ -50,9 +53,6 @@
   </url>
   <url>
     <loc>/reference/sample_pois_reg.html</loc>
-  </url>
-  <url>
-    <loc>/reference/times_flat_ar1.html</loc>
   </url>
   <url>
     <loc>/reference/utilities.html</loc>

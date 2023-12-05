@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.9.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">5.0.0</span>
       </span>
     </div>
 
@@ -55,8 +55,21 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="5.0.0" id="gibbsutils-v500">gibbs.utils v5.0.0<a class="anchor" aria-label="anchor" href="#gibbsutils-v500"></a></h2>
+<ul><li><p>Removed <code>times_flat_ar1()</code>, which wasn’t well-documented and no longer all that useful to me.</p></li>
+<li><p>Added <code><a href="../reference/bss.html">bss()</a></code> and friends.</p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="4.9.9" id="gibbsutils-v499">gibbs.utils v4.9.9<a class="anchor" aria-label="anchor" href="#gibbsutils-v499"></a></h2>
+<ul><li>Fixed a bug in the conjugacy in <code><a href="../reference/conjugacy.html">conj_gamma_b()</a></code>.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="4.9.8" id="gibbsutils-v498">gibbs.utils v4.9.8<a class="anchor" aria-label="anchor" href="#gibbsutils-v498"></a></h2>
+<ul><li>Added the argument <code>b=</code> to <code><a href="../reference/distributions.html">dmvnorm_diff()</a></code> for the canonical representation.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="4.9.7" id="gibbsutils-v497">gibbs.utils v4.9.7<a class="anchor" aria-label="anchor" href="#gibbsutils-v497"></a></h2>
-<ul><li><p>Enforce <code>spam &gt;= 2.9-2</code> because of a critical bug fix related to the element-wise multipliction of a full <code>spam</code> object. This led to incorrect densities. Note: if you can’t find a compatible version on CRAN, try the source GitLab, which has tarballs of the packages.</p></li>
+<ul><li><p>Enforce <code>spam &gt;= 2.9-2</code> because of a critical bug fix related to the element-wise multiplication of a full <code>spam</code> object. This led to incorrect densities. Note: if you can’t find a compatible version on CRAN, try the source GitLab, which has tarballs of the packages.</p></li>
 <li><p>Added the <code>diag=</code> argument to <code><a href="../reference/conjugacy.html">conj_matnorm_mu()</a></code> and <code><a href="../reference/conjugacy.html">conj_matlm_beta()</a></code> output when <code>params.only=TRUE</code>.</p></li>
 <li><p><code>diag=TRUE</code> now works for <code><a href="../reference/gibbs.html">gs_matlm_beta()</a></code>. It’s slightly slower when the dimensions are small, but MUCH faster when the dimensions get large.</p></li>
 </ul></div>
@@ -126,7 +139,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="4.4.0" id="gibbsutils-v440">gibbs.utils v4.4.0<a class="anchor" aria-label="anchor" href="#gibbsutils-v440"></a></h2>
-<ul><li><p>Added the <code><a href="../reference/times_flat_ar1.html">times_flat_ar1()</a></code> function, whose details will undoubtedly come in another release.</p></li>
+<ul><li><p>Added the <code>times_flat_ar1()</code> function, whose details will undoubtedly come in another release.</p></li>
 <li><p>Documented the <code>diag=</code> argument from v4.3.0.</p></li>
 </ul></div>
     <div class="section level2">

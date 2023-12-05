@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gibbs.utils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.9.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">5.0.0</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@
 <span>  log <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">dmvnorm_diff</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">mu</span>, <span class="va">Q</span>, log <span class="op">=</span> <span class="cn">TRUE</span>, byrow <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">dmvnorm_diff</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">mu</span>, <span class="va">Q</span>, <span class="va">b</span>, log <span class="op">=</span> <span class="cn">TRUE</span>, byrow <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">dmvlnorm_diff</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">mu</span>, <span class="va">Q</span>, log <span class="op">=</span> <span class="cn">TRUE</span>, byrow <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
@@ -134,6 +134,10 @@ vector/matrix of all zeros, but a little faster.</p></dd>
 <dd><p>Should the log-density be returned?</p></dd>
 
 
+<dt>b</dt>
+<dd><p>Bounds for the truncated exponential distribution or the multivariate normal canonical representation parameter.</p></dd>
+
+
 <dt>byrow</dt>
 <dd><p>Should the densities be summed (FALSE, the default) or returned separately by row (TRUE).</p></dd>
 
@@ -175,7 +179,7 @@ vector/matrix of all zeros, but a little faster.</p></dd>
 the problem is flipped and calculated using <code>-rate</code>.</p></dd>
 
 
-<dt>a, b</dt>
+<dt>a</dt>
 <dd><p>Bounds for the truncated exponential distribution.</p></dd>
 
 
