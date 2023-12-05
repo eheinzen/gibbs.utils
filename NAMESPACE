@@ -2,6 +2,10 @@
 
 S3method(chol,gu_chol)
 S3method(print,gibbs_utils_params)
+export(B1)
+export(B2)
+export(B4)
+export(bss)
 export(chol_inv)
 export(cond_mvnorm)
 export(conj_binom_p)

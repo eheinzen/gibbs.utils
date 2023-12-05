@@ -2,6 +2,8 @@
 
 - Removed `times_flat_ar1()`, which wasn't well-documented and no longer
   all that useful to me.
+  
+- Added `bss()` and friends.
 
 # gibbs.utils v4.9.9
 
