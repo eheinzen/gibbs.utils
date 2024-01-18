@@ -2,7 +2,8 @@
 #'
 #' @param L the previous iteration of the log-rate
 #' @param k the realized value from the Poisson distribution
-#' @param mean the prior mean
+#' @param mean the prior mean. If this is negative infinity, \code{precision} must not
+#'   be a matrix, and \code{k} must be 0.
 #' @param precision the prior precision
 #' @param ... Other arguments (not used)
 #' @param nexpand The maximum number of expansions (to the right and left each)
@@ -88,6 +89,7 @@ sample_pois_reg <- function(L, k, mean, precision,
       k <- matrix(k, nrow = 1)
     }
     dim(lower.tail) <- dim(at) <- dim(mean) <- dim(L)
+    if(any(is.infinite(mean))) stop("Infinite means aren't implemented for multivariate priors.")
 
     use_norm <- rowSums(!is.na(k)) == 0 & rowSums(at >= 0) == 0
     norm <- if(any(use_norm)) {
@@ -101,10 +103,16 @@ sample_pois_reg <- function(L, k, mean, precision,
     } else if(method == "mv gamma") {
       warning("'mv gamma' is being interpreted as 'gamma' because 'precision' is not a matrix.")
       method <- "gamma"
-    } else if(method == "mv ind quadratic taylor") {
+    } else if(method %in% c("mv ind quadratic taylor", "mv truncated exponential")) {
       stop(paste0("'", method, "' requires 'precision' to be a matrix"))
     }
     precision <- check_one_or_all(precision, length(L))
+    inf <- is.infinite(mean)
+    if(any(inf & mean > 0)) {
+      stop("'mean' is positive infinite")
+    } else if(any(inf)) {
+      if(!all(k[inf] %in% c(0, NA_real_))) stop("If mean = -Inf, then k should be 0.")
+    }
   }
 
   if(method == "slice") {
@@ -115,7 +123,7 @@ sample_pois_reg <- function(L, k, mean, precision,
                                   w = width, nexpand = nexpand, ncontract = ncontract)
     } else {
       precision <- check_one_or_all(precision, length(L))
-      out <- slice_sample_pois(L = L, k = k, k_na = is.na(k), mean = mean, precision = precision,
+      out <- slice_sample_pois(L = L, k = k, k_na = is.na(k), mean = mean, mean_inf = inf, precision = precision,
                                trunc_at = at, lower = lower.tail,
                                w = width, nexpand = nexpand, ncontract = ncontract)
     }
@@ -139,7 +147,7 @@ sample_pois_reg <- function(L, k, mean, precision,
       out <- mh_pois_mv(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean, Q = precision,
                         trunc_at = at, lower = lower.tail, use_norm = use_norm, norm = norm, acceptance = acceptance)
     } else {
-      out <- mh_pois(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean, precision = precision,
+      out <- mh_pois(method = m, L = L, proposal = prop, k = k, k_na = is.na(k), mean = mean, mean_inf = inf, precision = precision,
                      trunc_at = at, lower = lower.tail, acceptance = acceptance)
     }
   } else if(method %in% c("mv gamma", "mv ind quadratic taylor", "mv truncated exponential")) {

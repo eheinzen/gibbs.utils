@@ -1,3 +1,7 @@
+# gibbs.utils v5.0.1
+
+- Allowed negative infinity means in `sample_pois_reg()` in some circumstances.
+
 # gibbs.utils v5.0.0
 
 - Removed `times_flat_ar1()`, which wasn't well-documented and no longer

@@ -24,7 +24,8 @@ sample_pois_reg(
 
 \item{k}{the realized value from the Poisson distribution}
 
-\item{mean}{the prior mean}
+\item{mean}{the prior mean. If this is negative infinity, \code{precision} must not
+be a matrix, and \code{k} must be 0.}
 
 \item{precision}{the prior precision}
 

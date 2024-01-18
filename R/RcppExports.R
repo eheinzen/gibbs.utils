@@ -17,8 +17,8 @@ mh_multinom_mv <- function(qt, p_ij, proposal, z_ij, which_i, is_ref, k_ij, n_ij
     .Call('_gibbs_utils_mh_multinom_mv', PACKAGE = 'gibbs.utils', qt, p_ij, proposal, z_ij, which_i, is_ref, k_ij, n_ij, mean, Q, Qdiag, use_norm, norm, diag, acceptance)
 }
 
-mh_pois <- function(method, L, proposal, k, k_na, mean, precision, trunc_at, lower, acceptance) {
-    .Call('_gibbs_utils_mh_pois', PACKAGE = 'gibbs.utils', method, L, proposal, k, k_na, mean, precision, trunc_at, lower, acceptance)
+mh_pois <- function(method, L, proposal, k, k_na, mean, mean_inf, precision, trunc_at, lower, acceptance) {
+    .Call('_gibbs_utils_mh_pois', PACKAGE = 'gibbs.utils', method, L, proposal, k, k_na, mean, mean_inf, precision, trunc_at, lower, acceptance)
 }
 
 mh_pois_mv <- function(method, L, proposal, k, k_na, mean, Q, trunc_at, lower, use_norm, norm, acceptance) {
@@ -49,8 +49,8 @@ one_pois_slice <- function(L, k, mean, precision, trunc_at, lower, w, nexpand, n
     .Call('_gibbs_utils_one_pois_slice', PACKAGE = 'gibbs.utils', L, k, mean, precision, trunc_at, lower, w, nexpand, ncontract)
 }
 
-slice_sample_pois <- function(L, k, k_na, mean, precision, trunc_at, lower, w, nexpand, ncontract) {
-    .Call('_gibbs_utils_slice_sample_pois', PACKAGE = 'gibbs.utils', L, k, k_na, mean, precision, trunc_at, lower, w, nexpand, ncontract)
+slice_sample_pois <- function(L, k, k_na, mean, mean_inf, precision, trunc_at, lower, w, nexpand, ncontract) {
+    .Call('_gibbs_utils_slice_sample_pois', PACKAGE = 'gibbs.utils', L, k, k_na, mean, mean_inf, precision, trunc_at, lower, w, nexpand, ncontract)
 }
 
 slice_sample_pois_mv <- function(L, k, k_na, mean, Q, trunc_at, lower, use_norm, norm, w, nexpand, ncontract) {

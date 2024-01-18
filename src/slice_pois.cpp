@@ -36,13 +36,16 @@ double one_pois_slice(const double L, const double k,
 // [[Rcpp::export]]
 NumericVector slice_sample_pois(const NumericVector L,
                                 const NumericVector k, const LogicalVector k_na,
-                                const NumericVector mean, const NumericVector precision,
+                                const NumericVector mean, const LogicalVector mean_inf, const NumericVector precision,
                                 const NumericVector trunc_at, const LogicalVector lower,
                                 const double w, const int nexpand, const int ncontract) {
   NumericVector out(L.size());
   for(int i=0; i < L.size(); i++) {
     if(k_na[i]) {
       out[i] = R::rnorm(mean[i], 1.0/sqrt(precision[i]));
+      continue;
+    } else if(mean_inf[i]) {
+      out[i] = R_NegInf;
       continue;
     }
     out[i] = one_pois_slice(L[i], k[i], mean[i], precision[i], trunc_at[i], lower[i], w, nexpand, ncontract);

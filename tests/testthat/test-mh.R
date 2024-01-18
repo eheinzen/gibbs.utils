@@ -212,3 +212,37 @@ test_that("Some k == NA gives the same results for some methods", {
 })
 
 
+test_that("mean = -Inf works", {
+  k <- c(0, NA, 0, 1)
+  prec <- L <- c(1, 1, 1, 1)
+  expect_error(sample_pois_reg(L, k, mean = -Inf, precision = prec, method = "normal"), "then k should be 0")
+  expect_error(sample_pois_reg(L, k, mean = Inf, precision = prec, method = "normal"), "positive infinite")
+
+
+
+  mn <- c(-Inf, -Inf, 0, 0)
+  set.seed(20240118)
+  one <- sample_pois_reg(L, k, mean = mn, precision = prec, method = "normal")
+  set.seed(20240118)
+  two <- sample_pois_reg(L, k, mean = mn, precision = prec, method = "unif")
+  set.seed(20240118)
+  three <- sample_pois_reg(L, k, mean = mn, precision = prec, method = "quad")
+  set.seed(20240118)
+  four <- sample_pois_reg(L, k, mean = mn, precision = prec, method = "slice")
+  set.seed(20240118)
+  six <- sample_pois_reg(L, k, mean = mn, precision = prec, method = "gamma")
+
+  expect_error(sample_pois_reg(L, k, mean = mn, precision = matrix(prec, 2, 2), method = "mv quad"), "multivariate priors")
+  expect_error(sample_pois_reg(L, k, mean = mn, precision = matrix(prec, 2, 2), method = "mv gamma"), "multivariate priors")
+  expect_error(sample_pois_reg(L, k, mean = mn, precision = matrix(prec, 2, 2), method = "mv trunc"), "multivariate priors")
+  expect_error(sample_pois_reg(L, k, mean = mn, precision = matrix(prec, 2, 2), method = "mv ind qu"), "multivariate priors")
+
+
+
+  expect_equal(one[1:2], c(-Inf, -Inf))
+  expect_equal(one[1:2], two[1:2])
+  expect_equal(one[1:2], three[1:2])
+  expect_equal(one[1:2], four[1:2])
+  expect_equal(one[1:2], six[1:2])
+
+})

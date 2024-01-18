@@ -87,7 +87,7 @@ void one_gamma_pois_proposal_ratio(const double L, const double mult, const doub
 // [[Rcpp::export]]
 NumericVector mh_pois(const int method, const NumericVector L, const NumericVector proposal,
                       const NumericVector k, const LogicalVector k_na,
-                      const NumericVector mean, const NumericVector precision,
+                      const NumericVector mean, const LogicalVector mean_inf, const NumericVector precision,
                       const NumericVector trunc_at, const LogicalVector lower,
                       const int acceptance) {
   NumericVector out = clone(L);
@@ -96,6 +96,10 @@ NumericVector mh_pois(const int method, const NumericVector L, const NumericVect
   for(int i=0; i < L.size(); i++) {
     if(k_na[i]) {
       out[i] = R::rnorm(mean[i], 1.0/sqrt(precision[i]));
+      accept[i] = true;
+      continue;
+    } else if(mean_inf[i]) {
+      out[i] = R_NegInf;
       accept[i] = true;
       continue;
     }
