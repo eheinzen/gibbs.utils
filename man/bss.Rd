@@ -13,7 +13,7 @@ B2(x)
 
 B4(x)
 
-bss(x, n_basis, first_two = TRUE)
+bss(x, n_basis, first_two = TRUE, from = min(x), to = max(x))
 }
 \arguments{
 \item{x}{for \code{bss}, an integer vector to calculate the basis expansion for.
@@ -22,6 +22,8 @@ For \code{B1}, \code{B2}, \code{B4}: a numeric vector between 0 and 1.}
 \item{n_basis}{Number of basis terms to use}
 
 \item{first_two}{Should the first two BSS terms (linear and quadratic) be included?}
+
+\item{from, to}{The min and max values that \code{x} can attain.}
 }
 \description{
 Calculate Bayesian Smoothing Spline (BSS) for Integers
