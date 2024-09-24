@@ -1,3 +1,7 @@
+# gibbs.utils v5.0.2
+
+- Fixed a bug in `bss()` when `x=` wasn't spanning all its possible values.
+
 # gibbs.utils v5.0.1
 
 - Allowed negative infinity means in `sample_pois_reg()` in some circumstances.
